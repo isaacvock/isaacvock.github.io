@@ -1,0 +1,55 @@
+---
+title: "Isaac Vock"
+about:
+  template: solana
+  image: myphoto.jpg
+  links:
+    - icon: github
+      text: Github
+      href: https://github.com/isaacvock
+    - icon: filetype-pdf
+      text: CV
+      href: Isaac_Vock_CV.pdf
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/isaac-vock-30b410129/
+    - icon: google
+      text: Publications
+      href: https://scholar.google.com/citations?hl=en&user=XKFPG1MAAAAJ&view_op=list_works&gmla=AC6lMd_03530ox08mQjOPJmAUeQzKSVF2eCn5Mf2qNXazMsZ4qYldwO0I15IZDgWRKg2ARBsnsUp_vGz3LLbMYoA
+  image-shape: round
+---
+
+I am a PhD student at Yale University in the lab of Matthew Simon. I have developed a number of bioinformatic tools for processing and analyzing nucleotide recoding RNA-seq (NR-seq) experiments. NR-seq is a class of methods for probing the dynamics of RNA synthesis and degradation. 
+
+## Education
+
+Yale University | New Haven, CT | August 2019 - May 2025
+
+- PhD in Molecular Biophysics and Biochemistry
+
+Centre College | Danville, KY | August 2015 - May 2019
+
+- B.S. in Physics, Minor in Math
+
+## Experience
+
+Programming in R (since 2019)
+
+  - Scripting
+  - R package development (most significantly, [EZbakR](https://github.com/isaacvock/EZbakR))
+  - Shiny app development (e.g., interactive [TimeLapse-seq simulator](https://isaacvock.shinyapps.io/tl_sim/))
+  
+Snakemake pipeline development (since 2021)
+
+  - [fastq2EZbakR](https://github.com/isaacvock/fastq2EZbakR)
+  - [NRsim](https://github.com/isaacvock/NRsim)
+  - [AnnotationCleaner](https://github.com/isaacvock/AnnotationCleaner)
+  - [THE_Aligner](https://github.com/isaacvock/THE_Aligner)
+  - [PROseq_etal](https://github.com/isaacvock/PROseq_etal)
+  
+Other experience
+
+  - Python (since 2021)
+  - C (since 2023)
+  - Pytorch (since 2023)
+

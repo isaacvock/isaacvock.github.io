@@ -1,0 +1,54 @@
+---
+title: "About"
+---
+
+
+## Analyzing transcript isoform dynamics
+
+
+## The EZbakR-suite
+
+### Summary
+
+::: {.grid}
+
+::: {.g-col-8}
+- Introduced Snakemake pipeline ([fastq2EZbakR](https://github.com/isaacvock/fastq2EZbakR)) and R package ([EZbakR](https://github.com/isaacvock/EZbakR))
+- Generalized feature assignment: the set of annotated genomic features that you can perform analyses on
+- Generalized mixture modeling: how the fraction of reads from labeled RNA are estimated.
+- Generalized dynamical systems modeling: how kinetic parameters are estimated from NR-seq data
+- Generalized comparative analyses: how kinetic parameters are compared across biological conditions
+
+### Citation
+
+
+:::
+
+::: {.g-col-4}
+![](EZbakR.png){width=100%}
+:::
+
+:::
+
+## bakR
+
+### Summary
+
+::: {.grid}
+
+::: {.g-col-8}
+
+- Introduced an R package ([bakR](https://github.com/simonlabcode/bakR)) designed to compare RNA synthesis and degradation
+rate constants across biological conditions.
+- Also introduced a hierarchical modeling strategy to increase statistical power of
+these comparisons.
+
+### Citation
+
+:::
+
+::: {.g-col-4}
+![](bakR.png){width=100%}
+:::
+
+:::
