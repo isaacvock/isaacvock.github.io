@@ -42,11 +42,11 @@
     "text": "bakR\n\nSummary\n\n\n\nIntroduced an R package (bakR) designed to compare RNA synthesis and degradation rate constants across biological conditions.\nAlso introduced a hierarchical modeling strategy to increase statistical power of these comparisons.\n\nLink to paper"
   },
   {
-    "objectID": "posts/welcome/index.html",
-    "href": "posts/welcome/index.html",
-    "title": "Welcome To My Blog",
+    "objectID": "blog.html",
+    "href": "blog.html",
+    "title": "Isaac’s blog",
     "section": "",
-    "text": "This is the first post in a Quarto blog. Welcome!\n\nSince this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
+    "text": "Introduction to NR-seq\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\nDec 16, 2024\n\n\nIsaac Vock\n\n\n\n\n\n\n\n\n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\nDec 13, 2024\n\n\nIsaac Vock\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/post-with-code/index.html",
@@ -75,12 +75,5 @@
     "title": "Introduction to NR-seq",
     "section": "Summary",
     "text": "Summary\nIn this post, we introduced NR-seq, and built a simulation of NR-seq data to explore several aspects of NR-seq data. In the next post, we will discuss various strategies for analyzing this data, using the simulation we built here to test our strategies."
-  },
-  {
-    "objectID": "blog.html",
-    "href": "blog.html",
-    "title": "Isaac’s blog",
-    "section": "",
-    "text": "Introduction to NR-seq\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\nDec 16, 2024\n\n\nIsaac Vock\n\n\n\n\n\n\n\n\n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\nDec 13, 2024\n\n\nIsaac Vock\n\n\n\n\n\n\nNo matching items"
   }
 ]
