@@ -1,9 +1,6 @@
 ---
-title: "About"
+title: "My main projects"
 ---
-
-
-## Analyzing transcript isoform dynamics
 
 
 ## The EZbakR-suite
@@ -14,12 +11,12 @@ title: "About"
 
 ::: {.g-col-8}
 - Introduced Snakemake pipeline ([fastq2EZbakR](https://github.com/isaacvock/fastq2EZbakR)) and R package ([EZbakR](https://github.com/isaacvock/EZbakR))
-- Generalized feature assignment: the set of annotated genomic features that you can perform analyses on
-- Generalized mixture modeling: how the fraction of reads from labeled RNA are estimated.
-- Generalized dynamical systems modeling: how kinetic parameters are estimated from NR-seq data
-- Generalized comparative analyses: how kinetic parameters are compared across biological conditions
+- Generalizes feature assignment: the set of annotated genomic features that you can perform analyses on.
+- Generalizes mixture modeling: how the fraction of reads from labeled RNA are estimated.
+- Generalizes dynamical systems modeling: how kinetic parameters are estimated from NR-seq data.
+- Generalizes comparative analyses: how kinetic parameters are compared across biological conditions.
 
-### Citation
+[Link to preprint](https://www.biorxiv.org/content/10.1101/2024.10.14.617411v1)
 
 
 :::
@@ -43,7 +40,7 @@ rate constants across biological conditions.
 - Also introduced a hierarchical modeling strategy to increase statistical power of
 these comparisons.
 
-### Citation
+[Link to paper](https://rnajournal.cshlp.org/content/29/7/958.full)
 
 :::
 

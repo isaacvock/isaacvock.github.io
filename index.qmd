@@ -23,33 +23,45 @@ I am a PhD student at Yale University in the lab of Matthew Simon. I have develo
 
 ## Education
 
-Yale University | New Haven, CT | August 2019 - May 2025
+---
 
-- PhD in Molecular Biophysics and Biochemistry
+#### **Yale University | New Haven, CT | August 2019 - Present**
 
-Centre College | Danville, KY | August 2015 - May 2019
+PhD in Molecular Biophysics and Biochemistry
 
-- B.S. in Physics, Minor in Math
+#### **Centre College | Danville, KY | August 2015 - May 2019**
+
+B.S. in Physics, minor in Math
 
 ## Experience
 
-Programming in R (since 2019)
+---
 
-  - Scripting
-  - R package development (most significantly, [EZbakR](https://github.com/isaacvock/EZbakR))
-  - Shiny app development (e.g., interactive [TimeLapse-seq simulator](https://isaacvock.shinyapps.io/tl_sim/))
+#### **Programming in R (since 2019)**
+
+Scripting ([example repo](https://github.com/isaacvock/EZbakRsuite_paper_code))
+
+R package development (most notably, [EZbakR](https://github.com/isaacvock/EZbakR))
+
+Shiny app development (e.g., interactive [TimeLapse-seq simulator](https://isaacvock.shinyapps.io/tl_sim/))
   
-Snakemake pipeline development (since 2021)
+#### **Snakemake pipeline development (since 2021)**
 
-  - [fastq2EZbakR](https://github.com/isaacvock/fastq2EZbakR)
-  - [NRsim](https://github.com/isaacvock/NRsim)
-  - [AnnotationCleaner](https://github.com/isaacvock/AnnotationCleaner)
-  - [THE_Aligner](https://github.com/isaacvock/THE_Aligner)
-  - [PROseq_etal](https://github.com/isaacvock/PROseq_etal)
+[fastq2EZbakR](https://github.com/isaacvock/fastq2EZbakR): Flexible processing of NR-seq data.
+
+[NRsim](https://github.com/isaacvock/NRsim): Simulating NR-seq data to test analysis strategies and pipelines.
+
+[AnnotationCleaner](https://github.com/isaacvock/AnnotationCleaner): Assembling annotations using StringTie and some custom scripts.
+
+[THE_Aligner](https://github.com/isaacvock/THE_Aligner): Aligning almost any kind of RNA-seq data.
+
+[PROseq_etal](https://github.com/isaacvock/PROseq_etal): PRO-seq/ChIP-seq/ATAC-seq pipeline.
   
-Other experience
+#### **Other experience**
 
-  - Python (since 2021)
-  - C (since 2023)
-  - Pytorch (since 2023)
+Python (since 2021; used throughout Snakemake pipelines listed above)
+
+C (since 2023; [example repo](https://github.com/isaacvock/Learning_C))
+
+Pytorch (since 2023; [example repo](https://github.com/isaacvock/Learning_Pytorch))
 

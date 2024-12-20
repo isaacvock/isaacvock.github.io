@@ -12,6 +12,8 @@ website:
         text: Home
       - href: about.qmd
         text: Research
+      - href: blog.qmd
+        text: Blog
 
 format:
   html:
