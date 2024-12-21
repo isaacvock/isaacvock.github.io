@@ -1,5 +1,5 @@
 ---
-title: "Introduction to NR-seq"
+title: "Introducing NR-seq by simulating NR-seq"
 author: "Isaac Vock"
 date: "2024-12-16"
 categories: [news, code, analysis]
@@ -32,6 +32,8 @@ This post introduces the main ideas behind the modeling of NR-seq data.
 
 ## A brief introduction to NR-seq
 
+![Schematic of an NR-seq experiment. Adapted from Schofield et al. 2018.](TimeLapse.png)
+
 Developing a mechanistic understanding of gene expression regulation requires methods to probe the kinetics of RNA synthesis, processing, and degradation. While standard RNA-seq begins to solve this problem, it provides limited information about the kinetics of the processes which determine an RNA’s abundance. Nucleotide recoding RNA-seq (NR-seq; TimeLapse-seq, SLAM-seq, TUC-seq, etc.) overcomes these limitations.  NR-seq combines metabolic labeling with novel chemistries that recode the hydrogen bonding pattern of a metabolic label so as to facilitate detection of labeled RNA via these chemically induced mutations in sequencing reads, absolving the need for biochemical enrichment of labeled RNA. By providing information about both overall RNA abundance and the dynamics of nascent and pre-existing RNA, NR-seq resolves the kinetic ambiguities of standard RNA-seq.
 
 One way to intuit how metabolic labeling provides information about the dynamics of RNA is to consider one of the populations being tracked: the old, unlabeled RNA. Since this RNA can only degrade, its dynamics are entirely determined by its turnover kinetics. Combining this with the abundance information provided by standard RNA-seq provides information about the RNA's synthesis kinetics (transcription + processing). 
@@ -47,25 +49,127 @@ Below is a summary of the entire simulation which we will walk through
 piece by piece in the following sections.
 
 ```{webr}
-# Quarto live can be weird sometimes
-# Best to explicitly set background as white
-par(bg = "white")
-
 ### Simulation parameters
-reads <- 100
-fn <- 0.5
+
+# Number of transcripts to simulate
+nt <- 100
+
+# Distribution parameters
+kdeg_logmean <- -1.9
+kdeg_logsd <- 0.7
+ksyn_logmean <- 2.3
+ksyn_logsd <- 0.7
+Ucont_alpha <- 25
+Ucont_beta <- 75
+
+# Experimental parameters
+seqdepth <- 25000
+readlen <- 150
+tl <- 4
 pnew <- 0.05
 pold <- 0.002
-Ucont <- 0.25
-readlen <- 150
 
-### Simulation
-nT <- rbinom(reads, size = readlen, prob = Ucont)
-newness <- rbinom(reads, size = 1, prob = fn)
-TC <- rbinom(reads, size = nT, prob = pnew*newness + (1-newness)*pold)
+
+### Simulate transcript parameters
+kdegs <- rlnorm(nt, kdeg_logmean, kdeg_logsd)
+ksyns <- rlnorm(nt, ksyn_logmean, ksyn_logsd)
+Rss <- ksyns / kdegs
+rel_abundance <- Rss / sum(Rss)
+fns <- 1 - exp(-kdegs*tl)
+
+Uconts <- rbeta(nt, Ucont_alpha, Ucont_beta)
+
+### Simulate read counts for each transcript
+reads_per_t <- rmultinom(1, 
+                         size = seqdepth,
+                         prob = rel_abundance)[,1]
+
+### Simulate read-specific data
+
+newness <- rbinom(seqdepth,
+                  size = 1,
+                  prob = rep(fns, times = reads_per_t))
+
+nT <- rbinom(seqdepth,
+             size = readlen,
+             prob = rep(Uconts, times = reads_per_t))
+
+TC <- rbinom(seqdepth,
+             size = nT,
+             prob = pnew * newness + pold)
+
+### Compile data
+
+sim_df <- tibble(
+  transcript = paste0("transcript", rep(1:nt, times = reads_per_t)),
+  TC = TC,
+  nT = nT,
+  newness = newness
+)
+
+par_df <- tibble(
+  transcript = paste0("transcript", 1:nt),
+  kdeg = kdegs,
+  ksyn = ksyns,
+  fn = fns,
+  reads = reads_per_t
+)
 
 ### Visualize
-hist(TC / nT)
+# Panel 1: kdeg distribution
+# Panel 2: ksyn distribution
+# Panel 3: fn distribution
+# Panel 4: read count distribution
+# Panel 5: new read mutation distribution
+# Panel 6: old read mutation distribution
+p1 <- ggplot(par_df,
+             aes(x = kdeg)) +
+  geom_histogram() +
+  theme_classic() + 
+  xlab("kdeg's") + 
+  ylab("transcript count")
+
+p2 <- ggplot(par_df,
+             aes(x = ksyn)) +
+  geom_histogram() +
+  theme_classic() + 
+  xlab("ksyn's") + 
+  ylab("transcript count")
+
+p3 <- ggplot(par_df,
+             aes(x = fns)) +
+  geom_histogram() +
+  theme_classic() + 
+  xlab("Fraction new") + 
+  ylab("transcript count")
+
+p4 <- ggplot(par_df,
+             aes(x = log10(reads + 1))) +
+  geom_histogram() +
+  theme_classic() + 
+  xlab("log10(reads + 1)") + 
+  ylab("transcript count")
+
+p5 <- ggplot(sim_df %>% 
+               dplyr::filter(nT > 0 & newness == 0),
+             aes(x = TC / nT)) +
+  geom_histogram(fill = 'darkgray') +
+  theme_classic() + 
+  xlab("Mutation rate for old reads") + 
+  ylab("transcript count")
+
+p6 <- ggplot(sim_df %>% 
+               dplyr::filter(nT > 0 & newness == 1),
+             aes(x = TC / nT)) +
+  geom_histogram(fill = 'darkred') +
+  theme_classic() + 
+  xlab("Mutation rate for new reads") + 
+  ylab("transcript count")
+
+
+grid.arrange(p1, p2, p3, p4, p5, p6,
+             nrow = 3,
+             ncol = 2)
 ```
 
 ### Mutable nucleotide content
@@ -89,7 +193,7 @@ with the number of reads we want to simulate, and the length of each
 read. It's simplest to assume that each nucleotide in a read has some
 set probability of being a U, and that this probability is the same for
 all nucleotides. In this case, we can draw the number of U's (or cDNA
-T's) from a binomial distribution:
+T's) from a [binomial distribution](https://en.wikipedia.org/wiki/Binomial_distribution):
 
 ```{webr}
 # Quarto live can be weird sometimes
@@ -138,7 +242,7 @@ sequencing read. Each species of RNA will have a characteristic
 "fraction new", which is the fraction of RNA molecules present at RNA
 extraction time that were exposed to metabolic label. We can then model
 sequencing reads as being randomly drawn from this pool, with fraction
-new probability of sampling a labeled RNA. Simulating all of this looks
+new probability of sampling a labeled RNA. These processess are all well modeled with binomial distributions, so simulating all of this looks
 like:
 
 ```{webr}
