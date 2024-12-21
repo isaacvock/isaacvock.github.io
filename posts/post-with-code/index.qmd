@@ -32,7 +32,7 @@ This post introduces the main ideas behind the modeling of NR-seq data.
 
 ## A brief introduction to NR-seq
 
-![Schematic of an NR-seq experiment. Adapted from Schofield et al. 2018.](TimeLapse.png)
+![Schematic of an NR-seq experiment. Adapted from Schofield et al. 2018.]()
 
 Developing a mechanistic understanding of gene expression regulation requires methods to probe the kinetics of RNA synthesis, processing, and degradation. While standard RNA-seq begins to solve this problem, it provides limited information about the kinetics of the processes which determine an RNA’s abundance. Nucleotide recoding RNA-seq (NR-seq; TimeLapse-seq, SLAM-seq, TUC-seq, etc.) overcomes these limitations.  NR-seq combines metabolic labeling with novel chemistries that recode the hydrogen bonding pattern of a metabolic label so as to facilitate detection of labeled RNA via these chemically induced mutations in sequencing reads, absolving the need for biochemical enrichment of labeled RNA. By providing information about both overall RNA abundance and the dynamics of nascent and pre-existing RNA, NR-seq resolves the kinetic ambiguities of standard RNA-seq.
 
