@@ -6,6 +6,7 @@ project:
 
 website:
   title: "isaacvock.github.io"
+  page-navigation: true
   navbar:
     left:
       - href: index.qmd

@@ -3,7 +3,9 @@ title: "Introducing NR-seq by simulating NR-seq"
 author: "Isaac Vock"
 date: "2024-12-16"
 categories: [news, code, analysis]
-format: live-html
+format: 
+  live-html:
+    toc: true
 webr:
   packages:
     - dplyr
