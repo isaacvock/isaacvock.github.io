@@ -15,6 +15,7 @@ engine: knitr
 editor: 
   markdown: 
     wrap: 72
+image: "tcbmm.png"
 ---
 
 {{< include ../../_extensions/r-wasm/live/_knitr.qmd >}}
