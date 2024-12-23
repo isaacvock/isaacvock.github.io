@@ -226,5 +226,12 @@ These are actually the exact assumptions that we used to simulate data above and
 
 "mixture model" = you don't know which population any given data point comes from. This is known as a "latent-variable model", which can pose some computational challenges when trying to estimate the parameters of such a model. These challenges will turn out to be fairly easy to navigate in this setting, but will limit our efforts to extend and improve this model in future sections.
 
-To summarize, we are assuming that each sequencing read comes from one of two populations: old RNA or new RNA. The mutational content of both types of reads is well modeled as following a binomial distribution. The parameters of these binomial distributions are the number of mutable nucleotides and the probability that each of these nucleotides gets mutated. We don't need to estimate the number of mutable nucleotides (this is just more data), but we do not know a priori the two mutation rates. Thus, we need to estimate these two parameters, as well as the quantity of primary interest: the fraction new.
+To summarize, we are assuming that each sequencing read comes from one of two populations: old RNA or new RNA. The mutational content of both types of reads is well modeled as following a binomial distribution. The parameters of these binomial distributions are the number of mutable nucleotides and the probability that each of these nucleotides gets mutated. We don't need to estimate the number of mutable nucleotides (this is just more data), but we do not know a priori the two mutation rates. Thus, we need to estimate these two parameters, as well as the quantity of primary interest: the fraction new. We can schematize this model as such:
+
+![Two-component binomial mixture model](tcbmm.png)
+
+
+## Fitting a two-component binomial mixture model
+
+
 
