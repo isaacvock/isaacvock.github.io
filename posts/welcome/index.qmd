@@ -2,7 +2,7 @@
 title: "Welcome To My Blog"
 author: "Isaac Vock"
 date: "2024-12-13"
-categories: [news]
+categories: [nrseq, stats]
 ---
 
 In this blog, I plan to discuss the following topics:

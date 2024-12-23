@@ -2,7 +2,7 @@
 title: "Introducing NR-seq by simulating NR-seq"
 author: "Isaac Vock"
 date: "2024-12-16"
-categories: [news, code, analysis]
+categories: [nrseq]
 format: 
   live-html:
     toc: true
