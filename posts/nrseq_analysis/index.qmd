@@ -114,8 +114,6 @@ simulate_nrseq <- function(nt = 200,
   
 }
 
-
-#' 
 ```
 
 ## A simple approach: mutational cutoffs
