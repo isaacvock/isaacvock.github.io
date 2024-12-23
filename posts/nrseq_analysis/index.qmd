@@ -144,7 +144,7 @@ estimates <- simdata$cB %>%
 
 ### Assess analysis accuracy
 p1 <- estimates %>%
-  dplyr::inner_join(estimates,
+  dplyr::inner_join(simdata$truth,
                     by = "transcript") %>%
   ggplot(aes(x = fn,
              y = fraction_new_1plus)) +
@@ -159,7 +159,7 @@ p1 <- estimates %>%
   ylab("1+ mutation fn est.")
 
 p2 <- estimates %>%
-  dplyr::inner_join(estimates,
+  dplyr::inner_join(simdata$truth,
                     by = "transcript") %>%
   ggplot(aes(x = fn,
              y = fraction_new_2plus)) +
