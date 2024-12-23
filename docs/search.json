@@ -1,24 +1,38 @@
 [
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Isaac Vock",
+    "objectID": "posts/welcome/index.html",
+    "href": "posts/welcome/index.html",
+    "title": "Welcome To My Blog",
     "section": "",
-    "text": "I am a PhD student at Yale University in the lab of Matthew Simon. I have developed a number of bioinformatic tools for processing and analyzing nucleotide recoding RNA-seq (NR-seq) experiments. NR-seq is a class of methods for quantifying the kinetics of RNA synthesis and degradation, and includes methods like TimeLapse-seq (developed in the Simon lab), SLAM-seq, TUC-seq, etc. These are powerful tools that are allowing us to study the dynamic lives of RNA at unprecedented resolution, and I have had a lot of fun dreaming up ways in which we can extract exciting biological insights from NR-seq data.\nI am also a statistician, and have developed a number of novel methods for analyzing NR-seq data. One of my passions is helping biologists better understand the statistical methods powering their favorite bioinformatic tools. This led me to develop a course at Yale called “Statistical Intuition for Modern (RNA) Biochemists”. It’s inspired by Susan Holmes and Wolfgang Huber’s book of a similar title and Richard McCelreath’s cultural phenomenon “Statistical Rethinking”. It aims to be an accessible introduction to statistics for biochemistry majors. We will be covering the basic machinery of statistical modeling and its use in popular methods like linear modeling and clustering. Rather than relying on mathematical formalism to convey these concepts though, we will be making use of simulations and interactive exercises to help students develop an intuition for key concepts. Finally, we will start the course by introducing student’s to RNA-seq, so as to have a common data language that we can connect all conecpts back to. Eventually, all of the course material will be hosted at this repo."
+    "text": "In this blog, I plan to discuss the following topics:\n\nAnything and everything nucleotide recoding RNA-seq (NR-seq). Other metabolic labeling RNA-seq extensions are also potentially free game.\nThe use of statistics in bioinformatics. I developed a course on this topic and will use this setting to post some of my class material in blog format.\n\nI am also excited to use this as a platform to play around with the recently developed Quarto Live!"
   },
   {
-    "objectID": "index.html#education",
-    "href": "index.html#education",
-    "title": "Isaac Vock",
-    "section": "Education",
-    "text": "Education\n\n\nYale University | New Haven, CT | August 2019 - Present\nPhD in Molecular Biophysics and Biochemistry\n\n\nCentre College | Danville, KY | August 2015 - May 2019\nB.S. in Physics, minor in Math"
+    "objectID": "posts/nrseq_analysis/index.html",
+    "href": "posts/nrseq_analysis/index.html",
+    "title": "Analyzing NR-seq data: the basics",
+    "section": "",
+    "text": "In my last post, I introduced NR-seq by walking through the development of an NR-seq simulator. That post implicitly introduced some of the complexities of interpreting NR-seq data. In this post, we will tackle these challenges head-on and build up a rigorous strategy by which to analyze NR-seq data. We will do this in a piece-meal fashion, first developing a simple but flawed strategy, until eventually working up to mixture modeling (the current gold-standard for NR-seq analyses). No statistical model is perfect though, so we will finish with a discussion and exploration of the limitations of this gold-standard."
   },
   {
-    "objectID": "index.html#experience",
-    "href": "index.html#experience",
-    "title": "Isaac Vock",
-    "section": "Experience",
-    "text": "Experience\n\n\nProgramming in R (since 2019)\nScripting (example repo)\nR package development (most notably, EZbakR)\nShiny app development (e.g., interactive TimeLapse-seq simulator)\n\n\nSnakemake pipeline development (since 2021)\nfastq2EZbakR: Flexible processing of NR-seq data.\nNRsim: Simulating NR-seq data to test analysis strategies and pipelines.\nAnnotationCleaner: Assembling annotations using StringTie and some custom scripts.\nTHE_Aligner: Aligning almost any kind of RNA-seq data.\nPROseq_etal: PRO-seq/ChIP-seq/ATAC-seq pipeline.\n\n\nOther experience\nPython (since 2021; used throughout Snakemake pipelines listed above)\nC (since 2023; example repo)\nPytorch (since 2023; example repo)"
+    "objectID": "posts/nrseq_analysis/index.html#nr-seq-a-reminder",
+    "href": "posts/nrseq_analysis/index.html#nr-seq-a-reminder",
+    "title": "Analyzing NR-seq data: the basics",
+    "section": "NR-seq: a reminder",
+    "text": "NR-seq: a reminder\nIn an NR-seq experiment, there are two populations of RNA: those synthesized in the presence of label (a.k.a. labeled, or new, RNA) and those which were synthesized prior to metabolic labeling (a.k.a unlabeled, or old, RNA). The first task of any NR-seq analysis is for a given species of RNA (e.g., RNA transcribed from a particular gene), quantify the relative amounts of these two populations. This is referred to as that species’ “fraction new” or “new-to-total ratio (NTR)”. Downstream analyses are then aimed at interpreting these fraction news/NTRs. This post will only concern itself with fraction new estimation. I will use the term “fraction new” for the remainder of this post.\nTo estimate the fraction new, we rely on the mutational content of mapped sequencing reads. NR-seq involves chemically recoding metabolic label (e.g., s4U) so that reverse transcriptase reads it as a different nucleotide (e.g., a cytosine). Thus, reads from new RNA will have, on average, more mutations than reads from old RNA. This observation is the key to analyzing NR-seq data.\nTo test the strategies discussed, we will use simulated data. This allows us to know the ground truth and explore the robustness of any approach. Here is the function that we will use to simulate data, as well as some helper functions we can use to assess analysis strategies:"
+  },
+  {
+    "objectID": "posts/nrseq_analysis/index.html#a-simple-approach-mutational-cutoffs",
+    "href": "posts/nrseq_analysis/index.html#a-simple-approach-mutational-cutoffs",
+    "title": "Analyzing NR-seq data: the basics",
+    "section": "A simple approach: mutational cutoffs",
+    "text": "A simple approach: mutational cutoffs\nIf reads from new RNA have more mutations on average than those from old RNA, maybe we can just use a simple mutational cutoff to classify individual reads as from old or new RNA. The fraction of reads that come from the latter is then our estimate for the fraction new. Let’s simulate some data and test out this approach"
+  },
+  {
+    "objectID": "blog.html",
+    "href": "blog.html",
+    "title": "Isaac’s blog",
+    "section": "",
+    "text": "Analyzing NR-seq data: the basics\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\nDec 22, 2024\n\n\nIsaac Vock\n\n\n\n\n\n\n\n\n\n\n\n\nIntroducing NR-seq by simulating NR-seq\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\nDec 16, 2024\n\n\nIsaac Vock\n\n\n\n\n\n\n\n\n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\nDec 13, 2024\n\n\nIsaac Vock\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "about.html",
@@ -42,11 +56,25 @@
     "text": "bakR\n\nSummary\n\n\n\nIntroduced an R package (bakR) designed to compare RNA synthesis and degradation rate constants across biological conditions.\nAlso introduced a hierarchical modeling strategy to increase statistical power of these comparisons.\n\nLink to paper"
   },
   {
-    "objectID": "blog.html",
-    "href": "blog.html",
-    "title": "Isaac’s blog",
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Isaac Vock",
     "section": "",
-    "text": "Introducing NR-seq by simulating NR-seq\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\nDec 16, 2024\n\n\nIsaac Vock\n\n\n\n\n\n\n\n\n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\nDec 13, 2024\n\n\nIsaac Vock\n\n\n\n\n\n\nNo matching items"
+    "text": "I am a PhD student at Yale University in the lab of Matthew Simon. I have developed a number of bioinformatic tools for processing and analyzing nucleotide recoding RNA-seq (NR-seq) experiments. NR-seq is a class of methods for quantifying the kinetics of RNA synthesis and degradation, and includes methods like TimeLapse-seq (developed in the Simon lab), SLAM-seq, TUC-seq, etc. These are powerful tools that are allowing us to study the dynamic lives of RNA at unprecedented resolution, and I have had a lot of fun dreaming up ways in which we can extract exciting biological insights from NR-seq data.\nI am also a statistician, and have developed a number of novel methods for analyzing NR-seq data. One of my passions is helping biologists better understand the statistical methods powering their favorite bioinformatic tools. This led me to develop a course at Yale called “Statistical Intuition for Modern (RNA) Biochemists”. It’s inspired by Susan Holmes and Wolfgang Huber’s book of a similar title and Richard McCelreath’s cultural phenomenon “Statistical Rethinking”. It aims to be an accessible introduction to statistics for biochemistry majors. We will be covering the basic machinery of statistical modeling and its use in popular methods like linear modeling and clustering. Rather than relying on mathematical formalism to convey these concepts though, we will be making use of simulations and interactive exercises to help students develop an intuition for key concepts. Finally, we will start the course by introducing student’s to RNA-seq, so as to have a common data language that we can connect all conecpts back to. Eventually, all of the course material will be hosted at this repo."
+  },
+  {
+    "objectID": "index.html#education",
+    "href": "index.html#education",
+    "title": "Isaac Vock",
+    "section": "Education",
+    "text": "Education\n\n\nYale University | New Haven, CT | August 2019 - Present\nPhD in Molecular Biophysics and Biochemistry\n\n\nCentre College | Danville, KY | August 2015 - May 2019\nB.S. in Physics, minor in Math"
+  },
+  {
+    "objectID": "index.html#experience",
+    "href": "index.html#experience",
+    "title": "Isaac Vock",
+    "section": "Experience",
+    "text": "Experience\n\n\nProgramming in R (since 2019)\nScripting (example repo)\nR package development (most notably, EZbakR)\nShiny app development (e.g., interactive TimeLapse-seq simulator)\n\n\nSnakemake pipeline development (since 2021)\nfastq2EZbakR: Flexible processing of NR-seq data.\nNRsim: Simulating NR-seq data to test analysis strategies and pipelines.\nAnnotationCleaner: Assembling annotations using StringTie and some custom scripts.\nTHE_Aligner: Aligning almost any kind of RNA-seq data.\nPROseq_etal: PRO-seq/ChIP-seq/ATAC-seq pipeline.\n\n\nOther experience\nPython (since 2021; used throughout Snakemake pipelines listed above)\nC (since 2023; example repo)\nPytorch (since 2023; example repo)"
   },
   {
     "objectID": "posts/post-with-code/index.html",

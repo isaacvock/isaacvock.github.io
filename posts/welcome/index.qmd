@@ -5,3 +5,9 @@ date: "2024-12-13"
 categories: [news]
 ---
 
+In this blog, I plan to discuss the following topics:
+
+1. Anything and everything nucleotide recoding RNA-seq (NR-seq). Other metabolic labeling RNA-seq extensions are also potentially free game.
+1. The use of statistics in bioinformatics. I developed a course on this topic and will use this setting to post some of my class material in blog format.
+
+I am also excited to use this as a platform to play around with the recently developed [Quarto Live](https://r-wasm.github.io/quarto-live/)!

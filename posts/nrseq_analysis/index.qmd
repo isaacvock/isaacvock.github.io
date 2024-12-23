@@ -1,0 +1,185 @@
+---
+title: "Analyzing NR-seq data: the basics"
+author: "Isaac Vock"
+date: "2024-12-22"
+categories: [news, code, analysis]
+format: 
+  live-html:
+    toc: true
+webr:
+  packages:
+    - dplyr
+    - ggplot2
+    - gridExtra
+engine: knitr
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+{{< include ../../_extensions/r-wasm/live/_knitr.qmd >}}
+
+In my last post, I introduced NR-seq by walking through the development of an NR-seq simulator. That post implicitly introduced some of the complexities of interpreting NR-seq data. In this post, we will tackle these challenges head-on and build up a rigorous strategy by which to analyze NR-seq data. We will do this in a piece-meal fashion, first developing a simple but flawed strategy, until eventually working up to mixture modeling (the current gold-standard for NR-seq analyses). No statistical model is perfect though, so we will finish with a discussion and exploration of the limitations of this gold-standard.
+
+## NR-seq: a reminder
+
+In an NR-seq experiment, there are two populations of RNA: those synthesized in the presence of label (a.k.a. labeled, or new, RNA) and those which were synthesized prior to metabolic labeling (a.k.a unlabeled, or old, RNA). The first task of any NR-seq analysis is for a given species of RNA (e.g., RNA transcribed from a particular gene), quantify the relative amounts of these two populations. This is referred to as that species' "fraction new" or "new-to-total ratio (NTR)". Downstream analyses are then aimed at interpreting these fraction news/NTRs. This post will only concern itself with fraction new estimation. I will use the term "fraction new" for the remainder of this post.
+
+To estimate the fraction new, we rely on the mutational content of mapped sequencing reads. NR-seq involves chemically recoding metabolic label (e.g., s4U) so that reverse transcriptase reads it as a different nucleotide (e.g., a cytosine). Thus, reads from new RNA will have, on average, more mutations than reads from old RNA. This observation is the key to analyzing NR-seq data.
+
+To test the strategies discussed, we will use simulated data. This allows us to know the ground truth and explore the robustness of any approach. Here is the function that we will use to simulate data, as well as some helper functions we can use to assess analysis strategies:
+
+```{webr}
+#| edit: false
+
+#' Simulate NR-seq data
+#' 
+#'@param nt Number of transcripts.
+#'@param seqdepth Total number of reads.
+#'@param readlen Read length.
+#'@param tl Length of labeling.
+#'@param pnew Metabolic label incorporation and conversion rate.
+#'@param pold Background mutation rate.
+#'@param kdeg_logmean Average transcript log(kdeg).
+#'@param kdeg_logsd Standard deviation of transcript log(kdeg)'s.
+#'@param ksyn_logmean Average transcript log(ksyn).
+#'@param ksyn_logsd Standard deviation of transcript log(kdeg)'s.
+#'@param Ucont_alpha Beta distribution parameter for transcript U-contents.
+#'@param Ucont_beta Other beta distribution parameter for transcript U-contents.
+simulate_nrseq <- function(nt = 200, 
+                           seqdepth = 50000,
+                           readlen = 150,
+                           tl = 4,
+                           pnew = 0.05,
+                           pold = 0.002,
+                           kdeg_logmean = -1.9,
+                           kdeg_logsd = 0.7,
+                           ksyn_logmean = 2.3,
+                           ksyn_logsd = 0.7,
+                           Ucont_alpha = 25,
+                           Ucont_beta = 75){
+  
+  ### Simulate transcript parameters
+  kdegs <- rlnorm(nt, kdeg_logmean, kdeg_logsd)
+  ksyns <- rlnorm(nt, ksyn_logmean, ksyn_logsd)
+  Rss <- ksyns / kdegs
+  rel_abundance <- Rss / sum(Rss)
+  fns <- 1 - exp(-kdegs*tl)
+  
+  Uconts <- rbeta(nt, Ucont_alpha, Ucont_beta)
+  
+  ### Simulate read counts for each transcript
+  reads_per_t <- rmultinom(1, 
+                           size = seqdepth,
+                           prob = rel_abundance)[,1]
+  
+  ### Simulate read-specific data
+  
+  newness <- rbinom(seqdepth,
+                    size = 1,
+                    prob = rep(fns, times = reads_per_t))
+  
+  nT <- rbinom(seqdepth,
+               size = readlen,
+               prob = rep(Uconts, times = reads_per_t))
+  
+  TC <- rbinom(seqdepth,
+               size = nT,
+               prob = pnew * newness + pold)
+  
+  ### Compile data
+  
+  sim_df <- tibble(
+    transcript = paste0("transcript", rep(1:nt, times = reads_per_t)),
+    TC = TC,
+    nT = nT,
+    newness = newness
+  )
+  
+  par_df <- tibble(
+    transcript = paste0("transcript", 1:nt),
+    kdeg = kdegs,
+    ksyn = ksyns,
+    fn = fns,
+    reads = reads_per_t
+  )
+  
+  return(
+    list(
+      cB = sim_df,
+      truth = par_df
+    )
+  )
+  
+}
+
+
+#' 
+```
+
+## A simple approach: mutational cutoffs
+
+If reads from new RNA have more mutations on average than those from old RNA, maybe we can just use a simple mutational cutoff to classify individual reads as from old or new RNA. The fraction of reads that come from the latter is then our estimate for the fraction new. This approach has been popular since the advent of NR-seq, and is implemented in popular bioinformatic tools for analyzing NR-seq data like SLAMDUNK. Let's simulate some data and test out this approach
+
+
+```{webr}
+### Simulate data
+simdata <- simulate_nrseq()
+
+
+### Analyze data
+estimates <- simdata$cB %>%
+  dplyr::count(transcript, TC, nT) %>%
+  dplyr::group_by(transcript) %>%
+  dplyr::summarise(
+    new_1plus = sum(n[TC > 0]),
+    new_2plus = sum(n[TC > 1]),
+    reads = sum(n)
+  ) %>%
+  dplyr::mutate(
+    fraction_new_1plus = new_1plus / reads,
+    fraction_new_2plus = new_2plus / reads
+  )
+
+
+### Assess analysis accuracy
+p1 <- estimates %>%
+  dplyr::inner_join(estimates,
+                    by = "transcript") %>%
+  ggplot(aes(x = fn,
+             y = fraction_new_1plus)) +
+  geom_point(alpha = 0.5) + 
+  theme_classic() + 
+  geom_abline(slope = 1,
+              intercept = 0,
+              color = 'darkred',
+              linewidth = 1,
+              linetype = 'dotted') + 
+  xlab("True fn") + 
+  ylab("1+ mutation fn est.")
+
+p2 <- estimates %>%
+  dplyr::inner_join(estimates,
+                    by = "transcript") %>%
+  ggplot(aes(x = fn,
+             y = fraction_new_2plus)) +
+  geom_point(alpha = 0.5) + 
+  theme_classic() + 
+  geom_abline(slope = 1,
+              intercept = 0,
+              color = 'darkred',
+              linewidth = 1,
+              linetype = 'dotted') + 
+  xlab("True fn") + 
+  ylab("2+ mutation fn est.")
+
+grid.arrange(p1, p2,
+             nrow = 1,
+             ncol = 2)
+```
+
+If you run this code with the default simulation parameters, you'll see that the estimates are decent. The 1+ mutation cutoff for newness looks better than the 2+ cutoff, with the former yielding estimates that consistently correlate pretty well with the simulated ground truth. 
+
+So that's all it takes to analyze NR-seq data? Not so fast. In our simulation, there is a default metabolic label incorporation + conversion rate of 5%. While this is a standard "good" incorporation rate, if you analyze as many NR-seq datasets as I have you will quickly notice that there is a lot of dataset-to-dataset variation in the incorporation rate. For example, there is a tremendous amount of cell line-to-cell line variation in the readiness of s4U incorporation, with some cell lines (e.g., HEK293 and HeLa) uptaking s4U with great tenacity and others (e.g., neuronal cell lines) having typically much lower s4U incorporation rates. In addition, incorporation rates also can correlate with biological condition. For example, knocking out key factors in RNA metabolism (e.g., degradation factors) can significantly impact incorporation rates. In general, incorporation rates seem to correlate strongly with general metabolic rates, and anything that perturbs these rates will likely affect incorporation rates.
+
+This lattermost observation is particularly dangerous when it comes to applying the simple mutation content cutoff analysis strategy. Often, we don't just care about what an RNA's dynamics look like in one biological condition, but rather how it differs between two more different conditions (e.g., WT vs. KO of your favorite gene, untreated vs. drug treated, etc.). If an analysis method is not robust to changes. 
