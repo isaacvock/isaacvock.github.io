@@ -229,7 +229,7 @@ These are actually the exact assumptions that we used to simulate data above and
 
 To summarize, we are assuming that each sequencing read comes from one of two populations: old RNA or new RNA. The mutational content of both types of reads is well modeled as following a binomial distribution. The parameters of these binomial distributions are the number of mutable nucleotides and the probability that each of these nucleotides gets mutated. We don't need to estimate the number of mutable nucleotides (this is just more data), but we do not know a priori the two mutation rates. Thus, we need to estimate these two parameters, as well as the quantity of primary interest: the fraction new. We can schematize this model as such:
 
-![Two-component binomial mixture model](tcbmm.png)
+![Two-component binomial mixture model](tcbmm.png){width=50%}
 
 
 ## Fitting a two-component binomial mixture model
