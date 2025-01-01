@@ -11,6 +11,7 @@ webr:
     - dplyr
     - ggplot2
     - gridExtra
+    - purrr
 engine: knitr
 editor: 
   markdown: 
@@ -48,7 +49,7 @@ To test the strategies discussed, we will use simulated data. This allows us to 
 #'@param Ucont_alpha Beta distribution parameter for transcript U-contents.
 #'@param Ucont_beta Other beta distribution parameter for transcript U-contents.
 simulate_nrseq <- function(nt = 200, 
-                           seqdepth = 50000,
+                           seqdepth = 1000*nt,
                            readlen = 150,
                            tl = 4,
                            pnew = 0.05,
@@ -113,6 +114,11 @@ simulate_nrseq <- function(nt = 200,
   )
   
 }
+
+
+### Calculate logit and inverse logit
+logit <- function(x) log(x / (1-x))
+inv_logit <- function(x) exp(x) / (1 + exp(x))
 
 ```
 
@@ -232,5 +238,105 @@ To summarize, we are assuming that each sequencing read comes from one of two po
 
 ## Fitting a two-component binomial mixture model
 
+A TCBMM has three parameters that need to be estimated for each RNA feature: 
+
+1. The fraction new
+1. The probability of a mutation in reads from new RNA ($p_{\text{high,TC}}$ in the TCBMM figure above)
+1. The probability of a mutation in reads from old RNA ($p_{\text{low,TC}}$ in the TCBMM figure above)
 
 
+::: {.callout-tip collapse="true"}
+## What is an "RNA feature"?
+
+Our goal is to estimate the fraction of RNA molecules that are new/labeled for a given species of RNA. Our definition of "species" is technically flexible, and is what I refer to as an "RNA feature". The most common choice for a feature is a gene. That is, we estimate the fraction of RNA molecules produced from a given gene that are new. In practice though, there are a lot more features we may be interested in analyzing. See the [EZbakR preprint](https://www.biorxiv.org/content/10.1101/2024.10.14.617411v1) for a description of some other options.
+
+:::
+
+In this post, we will estimate these via the method of maximum likelihood. That means we will find parameter estimates that maximum the likelihood of our data. In theory, this is simple: just write a function to calculate the likelihood for any combination of parameter values and data, and use the optimization algorithm of your choice. Here's what that might look like for the TCBMM:
+
+
+```{webr}
+
+### Define the data likelihood
+tcbmm_L <- function(params, muts, nucs, n){
+  
+  ### Convert to natural scale
+  phigh <- inv_logit(params[1])
+  plow <- inv_logit(params[2])
+  fxn_new <- inv_logit(params[3])
+  
+  ### Calculate likelihood
+  L <- n*log(
+    fxn_new * dbinom(muts, nucs, prob = phigh) + 
+      (1 - fxn_new) * dbinom(muts, nucs, prob = plow)
+  )
+  
+  ### optim() minimizes by default
+  ### minimizing negative likelihood = maximizing likelihood
+  return(-sum(L))
+  
+}
+
+### Simulate data
+simdata <- simulate_nrseq(nt = 200)
+
+
+### Analyze data
+estimates <- simdata$cB %>%
+  dplyr::count(transcript, TC, nT) %>%
+  dplyr::ungroup() %>%
+  dplyr::group_by(transcript) %>%
+  
+  ## Fit model
+  dplyr::summarise(
+    fit = list(I(optim(
+      c(logit(0.05),
+        logit(0.002),
+        logit(0.5)),
+      fn = tcbmm_L,
+      muts = TC,
+      nucs = nT,
+      n = n,
+      method = "L-BFGS-B",
+      lower = c(-9, -9, -9),
+      upper = c(0, 0, 9)
+    )))
+  ) %>%
+  
+  ## Extract parameter estimates
+  dplyr::mutate(
+    p1 = inv_logit(purrr::map_dbl(fit, ~ .x$par[1])),
+    p2 = inv_logit(purrr::map_dbl(fit, ~ .x$par[2])),
+    fxn = inv_logit(purrr::map_dbl(fit, ~ .x$par[3]))
+  ) %>%
+  dplyr::ungroup() %>%
+  dplyr::rowwise() %>%
+  
+  ## Deal with potential label flipping
+  dplyr::mutate(
+    phigh = pmax(p1, p2),
+    plow = pmin(p1, p2),
+    fxn_new = ifelse(p1 > p2, fxn, 1 - fxn)
+  )
+
+### Assess accuracy
+ptcbmm_rcol <- estimates %>%
+  dplyr::inner_join(simdata$truth,
+                    by = "transcript") %>%
+  ggplot(aes(x = fn,
+             y = fxn_new,
+             color = log10(reads))) +
+  geom_point(alpha = 0.75) + 
+  scale_color_viridis_c() + 
+  theme_classic() + 
+  geom_abline(slope = 1,
+              intercept = 0,
+              color = 'darkred',
+              linewidth = 1,
+              linetype = 'dotted') + 
+  xlab("True fn") + 
+  ylab("TCBMM fn est.")
+
+ptcbmm_rcol
+
+```
