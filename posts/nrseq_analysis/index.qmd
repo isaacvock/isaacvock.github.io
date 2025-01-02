@@ -40,7 +40,7 @@ To test the strategies discussed, we will use simulated data. This allows us to 
 #'@param seqdepth Total number of reads.
 #'@param readlen Read length.
 #'@param tl Length of labeling.
-#'@param pnew Metabolic label incorporation and conversion rate.
+#'@param phigh Metabolic label incorporation and conversion rate.
 #'@param pold Background mutation rate.
 #'@param kdeg_logmean Average transcript log(kdeg).
 #'@param kdeg_logsd Standard deviation of transcript log(kdeg)'s.
@@ -52,7 +52,7 @@ simulate_nrseq <- function(nt = 200,
                            seqdepth = 1000*nt,
                            readlen = 150,
                            tl = 4,
-                           pnew = 0.05,
+                           phigh = 0.05,
                            pold = 0.002,
                            kdeg_logmean = -1.9,
                            kdeg_logsd = 0.7,
@@ -87,7 +87,7 @@ simulate_nrseq <- function(nt = 200,
   
   TC <- rbinom(seqdepth,
                size = nT,
-               prob = pnew * newness + pold)
+               prob = phigh * newness + pold)
   
   ### Compile data
   
@@ -189,9 +189,9 @@ So that's all it takes to analyze NR-seq data? Not so fast. In our simulation, t
 
 This lattermost observation is particularly dangerous when it comes to applying the simple mutation content cutoff analysis strategy. Often, we don't just care about what an RNA's dynamics look like in one biological condition, but rather how it differs between two more different conditions (e.g., WT vs. KO of your favorite gene, untreated vs. drug treated, etc.). If an analysis method is not robust to variation in incorporation rates, it risks making technical variability look like biological signal.
 
-Thus, what happens if we simulate a different incorporation rate? If you tweak the simulation above (set `pnew` in `simulate_nrseq()` to a different value than its default of 0.05 and rerun code):
+Thus, what happens if we simulate a different incorporation rate? If you tweak the simulation above (set `phigh` in `simulate_nrseq()` to a different value than its default of 0.05 and rerun code):
 
-![Accuracy of cutoff approach for range of pnews](Cutoff_vs_pnew.png)
+![Accuracy of cutoff approach for range of phighs](Cutoff_vs_pnew.png)
 
 The key takeaway from this investigation is that the accuracy of the cutoff-based approach is heavily reliant on the incorporation rate. Since incorporation rate often correlates with biology, this represents a dangerous confounder for mutation cutoff analyses. **We need a more robust analysis strategy.**
 
@@ -215,7 +215,7 @@ The likelihood of a data point is the probability of seeing that data, given all
 
 In practice, this often involves specifying a convenient to work with probability distribution that describes the variability in your data. To do this, you need to make some assumptions about your data. For NR-seq data, it is common to assume:
 
-1. For reads from new RNA, there is a set probability (call it pnew) that a given mutable nucleotide (e.g., uridines in an s4U labeling NR-seq experiment) is mutated. This pnew is the same for all such reads, regardless of the RNA species of origin.
+1. For reads from new RNA, there is a set probability (call it phigh) that a given mutable nucleotide (e.g., uridines in an s4U labeling NR-seq experiment) is mutated. This phigh is the same for all such reads, regardless of the RNA species of origin.
 1. For reads from old RNA, there is also a set probability of mutation (call it pold) for all such reads.
 1. All nucleotides are independent. Whether or not a given nucleotide is mutated has no impact on the probability that other nucleotides in that read are also mutated (given the status of the read as coming from old or new RNA).
 
@@ -280,7 +280,7 @@ tcbmm_L <- function(params, muts, nucs, n){
 }
 
 ### Simulate data
-simdata <- simulate_nrseq(nt = 1000, pnew = 0.02)
+simdata <- simulate_nrseq(nt = 1000, phigh = 0.02)
 
 
 ### Analyze data
@@ -384,7 +384,7 @@ tcbmm_L <- function(params, muts, nucs, n,
 }
 
 ### Simulate data
-simdata <- simulate_nrseq(nt = 1000, pnew = 0.02)
+simdata <- simulate_nrseq(nt = 1000, phigh = 0.02)
 
 
 ### Step 1: estimate phigh and plow
@@ -483,7 +483,11 @@ ptcbmm_rcol
 
 ```
 
-This should look notably better. Of course, it will always be more difficult to estimate the fraction new for a low coverage feature vs. a high coverage one. Despite this, complete pooling of the mutation rate estimates has significantly stabilized low coverage estimates, making them far more accurate than in the no pooling case.
+This should look notably better. For example, here is what I get from a 200 feature simulation for a range of phighs:
+
+![Accuracy of cutoff approach for range of phighs](Cutoff_vs_pnew_tcbmm.png)
+
+Of course, it will always be more difficult to estimate the fraction new for a low coverage feature vs. a high coverage one. Despite this, complete pooling of the mutation rate estimates has significantly stabilized low coverage estimates, making them far more accurate than in the no pooling case.
 
 
 ## Going beyond TCBMM
