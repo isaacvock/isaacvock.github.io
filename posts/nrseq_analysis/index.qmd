@@ -129,7 +129,7 @@ If reads from new RNA have more mutations on average than those from old RNA, ma
 
 ```{webr}
 ### Simulate data
-simdata <- simulate_nrseq()
+simdata <- simulate_nrseq(nt = 1000)
 
 
 ### Analyze data
@@ -278,7 +278,7 @@ tcbmm_L <- function(params, muts, nucs, n){
 }
 
 ### Simulate data
-simdata <- simulate_nrseq(nt = 200)
+simdata <- simulate_nrseq(nt = 1000, pnew = 0.02)
 
 
 ### Analyze data
@@ -340,3 +340,7 @@ ptcbmm_rcol <- estimates %>%
 ptcbmm_rcol
 
 ```
+
+Already, this quickly whipped up strategy is working pretty well. For one, we have largely solved the problem of phigh/plow dependence on estimate accuracy. Play around with different values of plow/phigh in the simulation and prove this for yourself, but that is the main advantage of the TCBMM approach. You can also see that the more data we have, the better our estimates get (on average). This is a nice trend, and means that paying for more sequencing depth can have a significant positive impact on the quality of our estimates. Technically, a similar trend holds for the mutation content cutoff strategy, but because we can't be sure if our estimates are biased or not, more reads could just yield higher confidence wrong estimates.
+
+One thing you should note though is that there are some pretty bad outliers
