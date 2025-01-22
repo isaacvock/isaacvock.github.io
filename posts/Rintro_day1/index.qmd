@@ -14,6 +14,7 @@ editor:
 
 This worksheet will walk you through some basic concepts in R. I would suggest copying code shown here into an R script and running it yourself so that you can play around with the presented examples.
 
+
 ## Pre-requisite knowledge for `simple_calc()`
 
 ### Math in R
@@ -28,7 +29,7 @@ The simplest use case of R is using it to do math:
 5 ^ 2 # Exponentiation
 ```
 
-### Numeric ariables in R
+### Numeric variables in R
 
 You can store numbers in "variables". This is like a special box in your computer's memory labeled with a name (like `my_number`). When you put a number into this box (for example, `10`), we say you have assigned the value 10 to the variable `my_number`.
 
@@ -81,9 +82,55 @@ my_string2
 
 You tell R that you are storing text by wrapping that text in `""` or `''`.
 
+
+::: {.callout-tip collapse="true"}
+## Useful string tools (aka functions)
+
+Below are some useful tools that R provide you to work with strings. These are called functions, a concept discussed later. 
+
+1. `paste(..., sep = " ")`: `paste()` allows you to stitch together multiple strings, with a chosen separator text between strings (`sep` argument). Having no separator (`sep = ""`) is identical to using a different function `paste0()`:
+
+```{r}
+string1 <- "Hello"
+string2 <- "friend."
+string3 <- "It's been too long"
+
+paste(string1, string2)
+paste(string1, string2, sep = "")
+paste0(string1, string2)
+paste(string1, string2, string3)
+paste(string1, string2, collapse = "_")
+```
+
+2. `nchar()`: This will give you the number of individual characters in your text string:
+
+```{r}
+string1 <- "Hello"
+nchar(string1)
+```
+
+3. `gsub(pattern, replacement, x)`: This allows you to look for the string `pattern` in the query string `x`, and replace it with the string `replacement`:
+
+```{r}
+text <- "Hello, Hello, Hello!"
+gsub("Hello", "Hi", text)
+```
+
+4. `grepl(pattern, x)`: This is similar to `gsub()` but just searches for string `pattern` in string `x` and spits out `TRUE` if it finds it
+
+```{r}
+text <- "Hello, Hello, Hello!"
+grepl("Hello", text)
+```
+
+There is a whole R package called [stringr](https://stringr.tidyverse.org/) devoted to making working with strings in R easier and more intuitive, so you might want to look into that as well!
+:::
+
+
+
 ### Booleans in R
 
-Another thing that is commonly stored in variables is logical values (TRUE or FALSE), otherwise known as "Booleans":
+Another thing that is commonly stored in variables is logical values (TRUE or FALSE), otherwise known as "booleans":
 
 ```{r}
 my_bool <- TRUE
@@ -93,11 +140,11 @@ my_bool
 my_bool2
 ```
 
-You can do a sort of math with Booleans, referred to as "Boolean logic". This takes as input two (in the case of AND and OR) or one (in the case of NOT) Boolean variables and outputs a new Boolean. The most common examples are:
+You can do a sort of math with booleans, referred to as "boolean logic". This takes as input two (in the case of AND and OR) or one (in the case of NOT) boolean variables and outputs a new boolean. The most common examples are:
 
 **AND (`&`)**
 
--   Both of the Booleans must be TRUE for the output to be TRUE:
+-   Both of the booleans must be TRUE for the output to be TRUE:
 
 ```{r}
 TRUE & TRUE # This is TRUE
@@ -108,7 +155,7 @@ FALSE & FALSE # This is FALSE
 
 **OR (`|`)**
 
--   At least one of the Booleans must be TRUE for the output of this to be TRUE
+-   At least one of the booleans must be TRUE for the output of this to be TRUE
 
 ```{r}
 TRUE | TRUE # This is TRUE
@@ -119,8 +166,8 @@ FALSE | FALSE # This is FALSE
 
 **NOT (`!`)**
 
--   Unlike AND and OR, this takes a single Boolean value as input
--   This reverses the value of the Boolean:
+-   Unlike AND and OR, this takes a single boolean value as input
+-   This reverses the value of the boolean:
 
 ```{r}
 !TRUE # This is FALSE
@@ -167,7 +214,7 @@ my_function <- function(x, y){
 -   Inside the `{ ... }`, you can write as much code as you want; this is the instructions for what you want the function to do with the inputs
 -   `return(result)` sends the output of the function back to you.
 
-After creating `my_function`, you can *call* it (computer science lingo meaning "use the function\*) by typing:
+After creating `my_function`, you can *call* it (computer science lingo meaning "use the function") by typing:
 
 ```{r}
 my_function(3,5)
@@ -187,7 +234,7 @@ my_new_function <- function(x, y = 10){
 }
 ```
 
-`my_new_function` now only needs you to supply x. You can supply `x` and `y`, but if you don't supply `y`, it will give `y` a default value of y by default:
+`my_new_function` now only needs you to supply x. You can supply `x` and `y`, but if you don't supply `y`, it will give `y` a default value of 10 by default:
 
 ```{r}
 my_new_function(x = 1)
@@ -255,8 +302,8 @@ This function will work as normal if `a` and `b` are numbers, but will throw inf
 
 An if-else statement is one of the most common ways to control the flow of a program. It lets your code make decisions based on whether a condition is `TRUE` or `FALSE`.
 
--   if checks if something is `TRUE`
--   else covers what happens if it is not `TRUE`
+-   `if` checks if something is `TRUE`
+-   `else` covers what happens if it is not `TRUE`
 -   You can add extra steps in between using `else if` to handle different possible conditions
 
 The basic structure looks like:
@@ -322,7 +369,7 @@ greetUser("Comment allez-vous?")
 
 ### Vectors
 
-In R, a vector is a container that holds multiple vlaues of the **same data type** (such as numbers, strings, or booleans). You can think of it like a row of boxes, each containing a value of the same kind.
+In R, a vector is a container that holds multiple values of the **same data type** (such as numbers, strings, or booleans). You can think of it like a row of boxes, each containing a value of the same kind.
 
 You can create a vector with the `c()` function (short for "combine" or "concatenate"). Here are a few example:
 
@@ -512,7 +559,7 @@ You can specify a file path to `setwd()` in one of two ways:
 
 ### Reading a file with readr
 
-The `readr` package (part of the tidyverse collection of packages), provides user-friendly functions for reading in data. For example, you can read a csv file like so:
+The [readr](https://readr.tidyverse.org/) package (part of the tidyverse collection of packages), provides user-friendly functions for reading in data. For example, you can read a csv file like so:
 
 ```{r}
 #| eval: false
