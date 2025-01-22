@@ -662,3 +662,71 @@ my_list[["name"]]
 
 my_list[[1]]
 ```
+
+
+::: {.callout-tip collapse="true"}
+## Fancy looping over lists (and data frames)
+
+Often, you will want to go element by element of a list and do something with each element. In addition, data frame columns are equivalent to elements of a list (actually, under the hood, a data frame is just a list that forces the list elements to be the same size). You could write a for loop, but there are popular alternatives that can make your code cleaner and easier to read. R has a version of these, but the R package `purrr` has improved versions of these that I prefer.
+
+1. `map()`: takes a single list as input
+
+```{r}
+library(purrr)
+
+numbers <- list(
+  c(1, 2, 3),
+  c(4, 5, 6),
+  c(10, 20, 30, 40, 50)
+)
+
+# Outputs a list, one element for original element of the list
+map(numbers, function(x) sum(x))
+
+# Outputs a vector numbers, one element per original list element
+# Also using an alternative notation
+map_dbl(numbers, ~ sum(.x))
+
+```
+
+
+2. `map2()`: takes two lists as input
+
+```{r}
+
+numbers <- list(
+  c(1, 2, 3),
+  c(4, 5, 6),
+  c(10, 20, 30, 40, 50)
+)
+
+numbers2 <- list(
+  c(-1, -2, -3),
+  c(12, 13),
+  c(2, 4, 6, 8, 10, 12)
+)
+
+# Outputs a list, one element for original element of the list
+map2(numbers, numbers2, ~ sum(.x) + sum(.y))
+
+# Outputs a vector numbers, one element per original list element
+map2_dbl(numbers, numbers2, function(x, y) sum(x) + sum(y))
+
+
+```
+
+3. `pmap()` allows you to provide a named list of inputs:
+
+```{r}
+# A list of vectors
+lists_of_inputs <- list(
+  a = c(1, 3, 5),
+  b = c(2, 4, 6),
+  c = c(10, 20, 30)
+)
+
+pmap(lists_of_inputs, function(a, b, c) a + b + c)
+pmap_dbl(lists_of_inputs, function(a, b, c) a + b + c)
+```
+:::
+
