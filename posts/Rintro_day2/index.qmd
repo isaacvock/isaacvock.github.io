@@ -13,7 +13,7 @@ editor:
 ---
 
 Much of this class will center on manipulating and visualizing data. This 
-section gets into that.
+section gets into how to do that in R. Further details about these topics can be found in the amazing and totally free [R for Data Science (R4DS)](https://r4ds.hadley.nz/). Chapters 1 and 3 will be especially useful, but all of the content in chapters 1-20 (sounds like a lot, but each chapter is fairly short) may be worth checking out.
 
 To run much of the code in this walkthrough, you will need to load the tidyverse libraries (technically we will primarily use `ggplot`, `dplyr`, and `tidyr`, with a tiny bit of `tibble`):
 
@@ -349,6 +349,105 @@ mtcars %>%
 
 - `all(hp > 150)` means every car in the group must have `hp` greater than 150.
 
+
+### Combining tables with joins
+
+When you have two data frames that share at least one common column, you can join them together. For example, you  might have:
+
+- sample: The name of a sample that data came from
+- gene_id: An identifier for a gene
+
+There are 4 major types of joins that you can consider doing in this situation (`df1` and `df2` refer to the data frames being joined):
+
+1. `inner_join(df1, df2)`: Combines the tables so that only rows with matching values in the join columns of both tables are kept. In the example below, we are joining by the shared column "sample", and "sampleC" is unique to one data frame while "sampleD" and "sampleZ" are unique to the other. Thus, the rows for these three cases are dropped:
+
+```{r}
+dfleft <- tibble(
+  sample = c("sampleA", "sampleB", "sampleC"),
+  reads = c(10, 100, 1000)
+)
+
+dfright <- tibble(
+  sample = c("sampleA", "sampleB", "sampleD", "sampleZ"),
+  treatment = c("drug", "nodrug", "drug", "nodrug")
+)
+
+df_joined <- inner_join(
+  dfleft,
+  dfright,
+  by = "sample"
+)
+
+print(df_joined)
+```
+
+2. `left_join(df1, df2)`: Keeps all rows from the "left table" (`df1`, as it is the argument on the left). If any of the entries in join columns in the left table are not found in the right table, `NA` will be placed in the `df2` column values in the new table. If an entry is found in `df2` but not `df1`, it will not be in the output. For example, below, "sampleC" is present in the left data frame but not the right, so the column unique to the right data frame (`treatment`) is given a value of `NA` for that row.
+
+```{r}
+dfleft <- tibble(
+  sample = c("sampleA", "sampleB", "sampleC"),
+  reads = c(10, 100, 1000)
+)
+
+dfright <- tibble(
+  sample = c("sampleA", "sampleB", "sampleD", "sampleZ"),
+  treatment = c("drug", "nodrug", "drug", "nodrug")
+)
+
+df_joined <- left_join(
+  dfleft,
+  dfright,
+  by = "sample"
+)
+
+print(df_joined)
+```
+
+3. `right_join(df1, df2)`: Same as left join but now the "right table" (`df2` in this case) keeps all of its rows and the "left table" columns will be replaced with NAs when a right table entry is not present in the left table.
+
+```{r}
+dfleft <- tibble(
+  sample = c("sampleA", "sampleB", "sampleC"),
+  reads = c(10, 100, 1000)
+)
+
+dfright <- tibble(
+  sample = c("sampleA", "sampleB", "sampleD", "sampleZ"),
+  treatment = c("drug", "nodrug", "drug", "nodrug")
+)
+
+df_joined <- right_join(
+  dfleft,
+  dfright,
+  by = "sample"
+)
+
+print(df_joined)
+```
+
+4. `full_join(df1, df2)`: Everything from both tables is kept, and `NA` fills any entry not present in the original table:
+
+```{r}
+dfleft <- tibble(
+  sample = c("sampleA", "sampleB", "sampleC"),
+  reads = c(10, 100, 1000)
+)
+
+dfright <- tibble(
+  sample = c("sampleA", "sampleB", "sampleD", "sampleZ"),
+  treatment = c("drug", "nodrug", "drug", "nodrug")
+)
+
+df_joined <- full_join(
+  dfleft,
+  dfright,
+  by = "sample"
+)
+
+print(df_joined)
+```
+
+There is a really nice visualization for all of the join strategies in [R4DS here](https://r4ds.hadley.nz/joins#fig-join-setup2). Other kinds of joins are discussed in R4DS, but aren't necessary for the exercises in this unit.
 
 ### Pivoting data longer and wider with `tidyr`
 
