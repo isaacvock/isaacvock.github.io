@@ -15,7 +15,8 @@ editor:
 Much of this class will center on manipulating and visualizing data. This 
 section gets into how to do that in R. Further details about these topics can be found in the amazing and totally free [R for Data Science (R4DS)](https://r4ds.hadley.nz/). Chapters 1 and 3 will be especially useful, but all of the content in chapters 1-20 (sounds like a lot, but each chapter is fairly short) may be worth checking out.
 
-To run much of the code in this walkthrough, you will need to load the tidyverse libraries (technically we will primarily use `ggplot`, `dplyr`, and `tidyr`, with a tiny bit of `tibble`):
+
+To the code in this walkthrough, you will need to load the tidyverse libraries (technically we will primarily use `ggplot`, `dplyr`, and `tidyr`, with a tiny bit of `tibble`):
 
 ```{r}
 # tidyverse packages
@@ -48,15 +49,15 @@ ggplot(data = <DATA>,
 where things in `<...>` are general placeholders that you would have to edit to get working code. The general features are:
 
   - `ggplot(data = ...)`: specifies the dataset.
-  - `aes()`: Which columns map to the x-axis, y-axis, color, size, etc. of the plot
-  - `<GEOM_FUNCTION>`, which in practice often looks like `geom_*()`: The geometry or type of plot (points, bars, lines, tiles, lines, tiles, etc.)
+  - `aes()`: specifies which columns map to the x-axis, y-axis, color, size, etc. of the plot
+  - `<GEOM_FUNCTION>`, which in practice often looks like `geom_*()`: specifies the geometry or type of plot (points, bars, lines, tiles, etc.)
 
 
 ### Making scatter plots with `geom_point()`
 
 Scatter plots are used to visualize the relationship between two numeric variables.
 
-Example Plot `mpg` (miles per gallon) against `wt` (weight of the car) from the `mtcars` dataset:
+As an example, consider plotting `mpg` (miles per gallon) against `wt` (weight of the car) from the `mtcars` dataset to see if mileage is correlated with weight:
 
 ```{r}
 ggplot(data = mtcars, aes(x = wt, y = mpg)) + 
@@ -71,8 +72,7 @@ You can add more aesthetics, for example coloring the points by the number of cy
 ```{r}
 ggplot(data = mtcars,
        aes(x = wt, y = mpg, color = factor(cyl))) +
-  geom_point() + 
-  labs(color = "Cylinders")
+  geom_point()
 ```
 
 Note that `cyl` is numeric in `mtcars`, so we can convert it to a factor (`factor(cyl)`) when using it as a categorical variable (a variable with a finite set of values). 
@@ -80,7 +80,7 @@ Note that `cyl` is numeric in `mtcars`, so we can convert it to a factor (`facto
 
 ### Jittered scatter plots with `geom_jitter()`
 
-A jitter plot helps when data points overlap (i.e., have identical x or y values). It adds a small random noise to the position of each point, preventing them from lying exactly on top of each other
+A jitter plot helps when data points overlap (i.e., have identical x or y values). It adds a small random noise to the position of each point, preventing them from lying exactly on top of each other:
 
 ```{r}
 ggplot(
@@ -95,7 +95,7 @@ ggplot(
 ```
 
 - Here, x is `factor(cyl)`, turning cylinders into discrete categories.
-- We add jitter on the x-axis (using `width = 0.2`), and none on the y-axis (`height = 0`).
+- We add jitter on the x-axis (using `width = 0.2`), and none on the y-axis (`height = 0`). This makes sense as the x-axis is not numeric, so points being more to the left or right than they "should" doesn't effect interpretation. The y-axis is a continuous numeric variable though, so adding jitter in that direction distorts the data and could mislead someone looking at the plot.
 - `alpha = 0.7` makes the points slightly transparent to give you a sense of point density.
 
 
@@ -126,7 +126,7 @@ ggplot(data = mtcars, aes(x = mpg)) +
 
 A heatmap is useful for visualizing a matrix of values or the relationship between two categorical variables, colored by a numeric value. One common example is a correlation matrix among numeric variables.
 
-A somewhat silly example of this is below; all you need to know is that `data` ends up being a data frame with columns `X`, `Y`, and `Z`, where `X` and `Y` are categorical variables (i.e., they take on a finite set of values) and `Z` is a continuous numeric variable:
+A somewhat silly example of this is below; all you need to know is that `data` ends up being a data frame with columns `X`, `Y`, and `Z`, where `X` and `Y` are categorical variables (i.e., they take on a finite set of values) and `Z` is a continuous numeric variable created using a particular random number generator (`runif()`):
 
 ```{r}
 # Dummy data
@@ -179,7 +179,7 @@ So far, we have discussed the basics of how to plot data with ggplot. One thing 
 
 To change these aspects, we can use the concept of "themes" in ggplot2. This is done through the `theme()` function.
 
-Starting with the simple scatter plot we made earlier, we can update it's look with a number of [built-in themes](https://ggplot2.tidyverse.org/reference/ggtheme.html) that ggplot provides. For example, I am a fan of the "classic" theme:
+Starting with the simple scatter plot we made earlier, we can update its look with a number of [built-in themes](https://ggplot2.tidyverse.org/reference/ggtheme.html) that ggplot provides. For example, I am a fan of the "classic" theme:
 
 ```{r}
 ggplot(data = mtcars, aes(x = wt, y = mpg)) + 
@@ -221,10 +221,10 @@ themes [here](https://rpubs.com/mclaire19/ggplot2-custom-themes).
 
 ## An introduction to dplyr and tidyr
 
-dplyr and tidyr are both part of the tidyverse collection of packages:
+[dplyr](https://dplyr.tidyverse.org/) and [tidyr](https://tidyr.tidyverse.org/) are both part of the tidyverse collection of packages:
 
-  - dplyr: Focuses on data manipulation and transformation. It provides a set of "verbs" that correspond to common data manipulation tasks (e.g., filter, select, mutate, summarise, arrange). These functions are often used together in a pipeline (with the `%>%` operator) to create clean, readable code that closely expresses the steps of your data processing.
-  - tidyr: Specializes in reshaping data between wide and long (the latter called "tidy") formats. In a tidy dataset, each variable is its own column, each observation is its own row, and each value is in its own cell. By using functions like `pivot_longer()` and `pivot_wider()`, tidyr helps you reorganize your data so that it's consistent with these tidy data principles, facilitating analysis and visualization later on.
+  - dplyr focuses on data manipulation and transformation. It provides a set of "verbs" that correspond to common data manipulation tasks (e.g., filter, select, mutate, summarise, arrange). These functions are often used together in a pipeline (with the `%>%` operator) to create clean, readable code that closely expresses the steps of your data processing.
+  - tidyr specializes in reshaping data between wide and long (the latter called ["tidy"](https://r4ds.hadley.nz/data-tidy.html)) formats. In a tidy dataset, each variable is its own column, each observation is its own row, and each value is in its own cell. By using functions like `pivot_longer()` and `pivot_wider()`, tidyr helps you reorganize your data so that it's consistent with these tidy data principles, facilitating analysis and visualization later on.
 
 ### Combining commands with `%>%`
 
@@ -307,7 +307,7 @@ mtcars_new <- mtcars %>%
 
 When working with data grouped by categories, you can compute summary statistics per group. 
 
-Example: find the average miles per gallon (`mpg`) for each number of cylinders:
+Example: find the average miles per gallon (`mpg`) for each number of cylinders, and also track how many car models there are in each group:
 
 ```{r}
 mtcars %>%
@@ -328,7 +328,7 @@ mtcars %>%
   filter(mpg > 20)
 ```
 
-You can also combine filtering with grouping and only keep entire groups that pass a certain filter, for example by using `any()` and `all()`. For example, to keep only the groups of cars with the same cylinder that have at least one member of the group with more than 150 horsepower:
+You can also combine filtering with grouping and only keep entire groups that pass a certain filter (e.g., by using `any()` and `all()`). For example, to keep only the groups of cars with the same cylinder that have at least one member of the group with more than 150 horsepower:
 
 ```{r}
 mtcars %>%
@@ -352,14 +352,14 @@ mtcars %>%
 
 ### Combining tables with joins
 
-When you have two data frames that share at least one common column, you can join them together. For example, you  might have:
+When you have two data frames that share at least one common column, you can join them together. For example, you might have:
 
 - sample: The name of a sample that data came from
 - gene_id: An identifier for a gene
 
 There are 4 major types of joins that you can consider doing in this situation (`df1` and `df2` refer to the data frames being joined):
 
-1. `inner_join(df1, df2)`: Combines the tables so that only rows with matching values in the join columns of both tables are kept. In the example below, we are joining by the shared column "sample", and "sampleC" is unique to one data frame while "sampleD" and "sampleZ" are unique to the other. Thus, the rows for these three cases are dropped:
+1. `inner_join(df1, df2)`: Combines the tables so that only rows with matching values in the join columns of both tables are kept. In the example below (moving away from `mtcars` for just the join examples), we are joining by the shared column "sample", and "sampleC" is unique to one data frame while "sampleD" and "sampleZ" are unique to the other. Thus, the rows for these three cases are dropped:
 
 ```{r}
 dfleft <- tibble(
@@ -381,7 +381,7 @@ df_joined <- inner_join(
 print(df_joined)
 ```
 
-2. `left_join(df1, df2)`: Keeps all rows from the "left table" (`df1`, as it is the argument on the left). If any of the entries in join columns in the left table are not found in the right table, `NA` will be placed in the `df2` column values in the new table. If an entry is found in `df2` but not `df1`, it will not be in the output. For example, below, "sampleC" is present in the left data frame but not the right, so the column unique to the right data frame (`treatment`) is given a value of `NA` for that row.
+2. `left_join(df1, df2)`: Keeps all rows from the "left table" (`df1`, as it is the argument on the left). If any of the entries in join columns in the left table are not found in the right table, `NA` will be placed in the `df2` column values in the new table. If an entry is found in `df2` but not `df1`, it will not be in the output. For example, below, "sampleC" is present in the left data frame but not the right, so the column unique to the right data frame (`treatment`) is given a value of `NA` for that row:
 
 ```{r}
 dfleft <- tibble(
@@ -403,7 +403,7 @@ df_joined <- left_join(
 print(df_joined)
 ```
 
-3. `right_join(df1, df2)`: Same as left join but now the "right table" (`df2` in this case) keeps all of its rows and the "left table" columns will be replaced with NAs when a right table entry is not present in the left table.
+3. `right_join(df1, df2)`: Same as left join but now the "right table" (`df2` in this case) keeps all of its rows and the "left table" columns will be replaced with `NA` when a right table entry is not present in the left table:
 
 ```{r}
 dfleft <- tibble(
@@ -451,12 +451,12 @@ There is a really nice visualization for all of the join strategies in [R4DS her
 
 ### Pivoting data longer and wider with `tidyr`
 
-The `tidyr` package provides convenient functions to reshape data:
+The `tidyr` package provides convenient functions to [reshape data](https://tidyr.tidyverse.org/articles/pivot.html):
 
-- `pivot_longer()`: Makes wide data longer, gathering columns into key-value pairs.
-- `pivot_wider()`: Spreads long (tidy) data into wider format, creating new columns.
+- `pivot_longer()`: Makes wide data longer, gathering columns into key-value pairs. This can make untidy data tidy.
+- `pivot_wider()`: Spreads long (tidy) data into wider format, creating new columns. Sometimes, untidy data is better for certain visualizations and analyses.
 
-Let's create a simplifed data frame with a few columns:
+Let's create a simplified data frame with a few columns:
 
 ```{r}
 car_data <- mtcars %>%

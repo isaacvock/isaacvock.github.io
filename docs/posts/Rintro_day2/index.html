@@ -212,7 +212,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>Much of this class will center on manipulating and visualizing data. This section gets into how to do that in R. Further details about these topics can be found in the amazing and totally free <a href="https://r4ds.hadley.nz/">R for Data Science (R4DS)</a>. Chapters 1 and 3 will be especially useful, but all of the content in chapters 1-20 (sounds like a lot, but each chapter is fairly short) may be worth checking out.</p>
-<p>To run much of the code in this walkthrough, you will need to load the tidyverse libraries (technically we will primarily use <code>ggplot</code>, <code>dplyr</code>, and <code>tidyr</code>, with a tiny bit of <code>tibble</code>):</p>
+<p>To the code in this walkthrough, you will need to load the tidyverse libraries (technically we will primarily use <code>ggplot</code>, <code>dplyr</code>, and <code>tidyr</code>, with a tiny bit of <code>tibble</code>):</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># tidyverse packages</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -250,13 +250,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>where things in <code>&lt;...&gt;</code> are general placeholders that you would have to edit to get working code. The general features are:</p>
 <ul>
 <li><code>ggplot(data = ...)</code>: specifies the dataset.</li>
-<li><code>aes()</code>: Which columns map to the x-axis, y-axis, color, size, etc. of the plot</li>
-<li><code>&lt;GEOM_FUNCTION&gt;</code>, which in practice often looks like <code>geom_*()</code>: The geometry or type of plot (points, bars, lines, tiles, lines, tiles, etc.)</li>
+<li><code>aes()</code>: specifies which columns map to the x-axis, y-axis, color, size, etc. of the plot</li>
+<li><code>&lt;GEOM_FUNCTION&gt;</code>, which in practice often looks like <code>geom_*()</code>: specifies the geometry or type of plot (points, bars, lines, tiles, etc.)</li>
 </ul>
 <section id="making-scatter-plots-with-geom_point" class="level3">
 <h3 class="anchored" data-anchor-id="making-scatter-plots-with-geom_point">Making scatter plots with <code>geom_point()</code></h3>
 <p>Scatter plots are used to visualize the relationship between two numeric variables.</p>
-<p>Example Plot <code>mpg</code> (miles per gallon) against <code>wt</code> (weight of the car) from the <code>mtcars</code> dataset:</p>
+<p>As an example, consider plotting <code>mpg</code> (miles per gallon) against <code>wt</code> (weight of the car) from the <code>mtcars</code> dataset to see if mileage is correlated with weight:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> mtcars, <span class="fu">aes</span>(<span class="at">x =</span> wt, <span class="at">y =</span> mpg)) <span class="sc">+</span> </span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -276,8 +276,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> mtcars,</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> wt, <span class="at">y =</span> mpg, <span class="at">color =</span> <span class="fu">factor</span>(cyl))) <span class="sc">+</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">"Cylinders"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -290,7 +289,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="jittered-scatter-plots-with-geom_jitter" class="level3">
 <h3 class="anchored" data-anchor-id="jittered-scatter-plots-with-geom_jitter">Jittered scatter plots with <code>geom_jitter()</code></h3>
-<p>A jitter plot helps when data points overlap (i.e., have identical x or y values). It adds a small random noise to the position of each point, preventing them from lying exactly on top of each other</p>
+<p>A jitter plot helps when data points overlap (i.e., have identical x or y values). It adds a small random noise to the position of each point, preventing them from lying exactly on top of each other:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> mtcars, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">factor</span>(cyl),</span>
@@ -311,7 +310,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <ul>
 <li>Here, x is <code>factor(cyl)</code>, turning cylinders into discrete categories.</li>
-<li>We add jitter on the x-axis (using <code>width = 0.2</code>), and none on the y-axis (<code>height = 0</code>).</li>
+<li>We add jitter on the x-axis (using <code>width = 0.2</code>), and none on the y-axis (<code>height = 0</code>). This makes sense as the x-axis is not numeric, so points being more to the left or right than they “should” doesn’t effect interpretation. The y-axis is a continuous numeric variable though, so adding jitter in that direction distorts the data and could mislead someone looking at the plot.</li>
 <li><code>alpha = 0.7</code> makes the points slightly transparent to give you a sense of point density.</li>
 </ul>
 </section>
@@ -362,7 +361,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="heatmaps-with-geom_tile" class="level3">
 <h3 class="anchored" data-anchor-id="heatmaps-with-geom_tile">Heatmaps with <code>geom_tile()</code></h3>
 <p>A heatmap is useful for visualizing a matrix of values or the relationship between two categorical variables, colored by a numeric value. One common example is a correlation matrix among numeric variables.</p>
-<p>A somewhat silly example of this is below; all you need to know is that <code>data</code> ends up being a data frame with columns <code>X</code>, <code>Y</code>, and <code>Z</code>, where <code>X</code> and <code>Y</code> are categorical variables (i.e., they take on a finite set of values) and <code>Z</code> is a continuous numeric variable:</p>
+<p>A somewhat silly example of this is below; all you need to know is that <code>data</code> ends up being a data frame with columns <code>X</code>, <code>Y</code>, and <code>Z</code>, where <code>X</code> and <code>Y</code> are categorical variables (i.e., they take on a finite set of values) and <code>Z</code> is a continuous numeric variable created using a particular random number generator (<code>runif()</code>):</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Dummy data</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> LETTERS[<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>]</span>
@@ -425,7 +424,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>etc.</li>
 </ul>
 <p>To change these aspects, we can use the concept of “themes” in ggplot2. This is done through the <code>theme()</code> function.</p>
-<p>Starting with the simple scatter plot we made earlier, we can update it’s look with a number of <a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">built-in themes</a> that ggplot provides. For example, I am a fan of the “classic” theme:</p>
+<p>Starting with the simple scatter plot we made earlier, we can update its look with a number of <a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">built-in themes</a> that ggplot provides. For example, I am a fan of the “classic” theme:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> mtcars, <span class="fu">aes</span>(<span class="at">x =</span> wt, <span class="at">y =</span> mpg)) <span class="sc">+</span> </span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
@@ -475,10 +474,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="an-introduction-to-dplyr-and-tidyr" class="level2">
 <h2 class="anchored" data-anchor-id="an-introduction-to-dplyr-and-tidyr">An introduction to dplyr and tidyr</h2>
-<p>dplyr and tidyr are both part of the tidyverse collection of packages:</p>
+<p><a href="https://dplyr.tidyverse.org/">dplyr</a> and <a href="https://tidyr.tidyverse.org/">tidyr</a> are both part of the tidyverse collection of packages:</p>
 <ul>
-<li>dplyr: Focuses on data manipulation and transformation. It provides a set of “verbs” that correspond to common data manipulation tasks (e.g., filter, select, mutate, summarise, arrange). These functions are often used together in a pipeline (with the <code>%&gt;%</code> operator) to create clean, readable code that closely expresses the steps of your data processing.</li>
-<li>tidyr: Specializes in reshaping data between wide and long (the latter called “tidy”) formats. In a tidy dataset, each variable is its own column, each observation is its own row, and each value is in its own cell. By using functions like <code>pivot_longer()</code> and <code>pivot_wider()</code>, tidyr helps you reorganize your data so that it’s consistent with these tidy data principles, facilitating analysis and visualization later on.</li>
+<li>dplyr focuses on data manipulation and transformation. It provides a set of “verbs” that correspond to common data manipulation tasks (e.g., filter, select, mutate, summarise, arrange). These functions are often used together in a pipeline (with the <code>%&gt;%</code> operator) to create clean, readable code that closely expresses the steps of your data processing.</li>
+<li>tidyr specializes in reshaping data between wide and long (the latter called <a href="https://r4ds.hadley.nz/data-tidy.html">“tidy”</a>) formats. In a tidy dataset, each variable is its own column, each observation is its own row, and each value is in its own cell. By using functions like <code>pivot_longer()</code> and <code>pivot_wider()</code>, tidyr helps you reorganize your data so that it’s consistent with these tidy data principles, facilitating analysis and visualization later on.</li>
 </ul>
 <section id="combining-commands-with" class="level3">
 <h3 class="anchored" data-anchor-id="combining-commands-with">Combining commands with <code>%&gt;%</code></h3>
@@ -585,7 +584,7 @@ Valiant           18.1 3.460</code></pre>
 <section id="grouping-and-summarizing-with-dplyrsummarise-and-dplyrgroup_by" class="level3">
 <h3 class="anchored" data-anchor-id="grouping-and-summarizing-with-dplyrsummarise-and-dplyrgroup_by">Grouping and summarizing with <code>dplyr::summarise()</code> and <code>dplyr::group_by()</code></h3>
 <p>When working with data grouped by categories, you can compute summary statistics per group.</p>
-<p>Example: find the average miles per gallon (<code>mpg</code>) for each number of cylinders:</p>
+<p>Example: find the average miles per gallon (<code>mpg</code>) for each number of cylinders, and also track how many car models there are in each group:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">%&gt;%</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(cyl) <span class="sc">%&gt;%</span> </span>
@@ -628,7 +627,7 @@ Lotus Europa   30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2
 Volvo 142E     21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2</code></pre>
 </div>
 </div>
-<p>You can also combine filtering with grouping and only keep entire groups that pass a certain filter, for example by using <code>any()</code> and <code>all()</code>. For example, to keep only the groups of cars with the same cylinder that have at least one member of the group with more than 150 horsepower:</p>
+<p>You can also combine filtering with grouping and only keep entire groups that pass a certain filter (e.g., by using <code>any()</code> and <code>all()</code>). For example, to keep only the groups of cars with the same cylinder that have at least one member of the group with more than 150 horsepower:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">%&gt;%</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(cyl) <span class="sc">%&gt;%</span></span>
@@ -680,7 +679,7 @@ Volvo 142E     21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2</code></pre>
 </ul>
 <p>There are 4 major types of joins that you can consider doing in this situation (<code>df1</code> and <code>df2</code> refer to the data frames being joined):</p>
 <ol type="1">
-<li><code>inner_join(df1, df2)</code>: Combines the tables so that only rows with matching values in the join columns of both tables are kept. In the example below, we are joining by the shared column “sample”, and “sampleC” is unique to one data frame while “sampleD” and “sampleZ” are unique to the other. Thus, the rows for these three cases are dropped:</li>
+<li><code>inner_join(df1, df2)</code>: Combines the tables so that only rows with matching values in the join columns of both tables are kept. In the example below (moving away from <code>mtcars</code> for just the join examples), we are joining by the shared column “sample”, and “sampleC” is unique to one data frame while “sampleD” and “sampleZ” are unique to the other. Thus, the rows for these three cases are dropped:</li>
 </ol>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>dfleft <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
@@ -709,7 +708,7 @@ Volvo 142E     21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2</code></pre>
 </div>
 </div>
 <ol start="2" type="1">
-<li><code>left_join(df1, df2)</code>: Keeps all rows from the “left table” (<code>df1</code>, as it is the argument on the left). If any of the entries in join columns in the left table are not found in the right table, <code>NA</code> will be placed in the <code>df2</code> column values in the new table. If an entry is found in <code>df2</code> but not <code>df1</code>, it will not be in the output. For example, below, “sampleC” is present in the left data frame but not the right, so the column unique to the right data frame (<code>treatment</code>) is given a value of <code>NA</code> for that row.</li>
+<li><code>left_join(df1, df2)</code>: Keeps all rows from the “left table” (<code>df1</code>, as it is the argument on the left). If any of the entries in join columns in the left table are not found in the right table, <code>NA</code> will be placed in the <code>df2</code> column values in the new table. If an entry is found in <code>df2</code> but not <code>df1</code>, it will not be in the output. For example, below, “sampleC” is present in the left data frame but not the right, so the column unique to the right data frame (<code>treatment</code>) is given a value of <code>NA</code> for that row:</li>
 </ol>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>dfleft <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
@@ -739,7 +738,7 @@ Volvo 142E     21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2</code></pre>
 </div>
 </div>
 <ol start="3" type="1">
-<li><code>right_join(df1, df2)</code>: Same as left join but now the “right table” (<code>df2</code> in this case) keeps all of its rows and the “left table” columns will be replaced with NAs when a right table entry is not present in the left table.</li>
+<li><code>right_join(df1, df2)</code>: Same as left join but now the “right table” (<code>df2</code> in this case) keeps all of its rows and the “left table” columns will be replaced with <code>NA</code> when a right table entry is not present in the left table:</li>
 </ol>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>dfleft <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
@@ -805,12 +804,12 @@ Volvo 142E     21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2</code></pre>
 </section>
 <section id="pivoting-data-longer-and-wider-with-tidyr" class="level3">
 <h3 class="anchored" data-anchor-id="pivoting-data-longer-and-wider-with-tidyr">Pivoting data longer and wider with <code>tidyr</code></h3>
-<p>The <code>tidyr</code> package provides convenient functions to reshape data:</p>
+<p>The <code>tidyr</code> package provides convenient functions to <a href="https://tidyr.tidyverse.org/articles/pivot.html">reshape data</a>:</p>
 <ul>
-<li><code>pivot_longer()</code>: Makes wide data longer, gathering columns into key-value pairs.</li>
-<li><code>pivot_wider()</code>: Spreads long (tidy) data into wider format, creating new columns.</li>
+<li><code>pivot_longer()</code>: Makes wide data longer, gathering columns into key-value pairs. This can make untidy data tidy.</li>
+<li><code>pivot_wider()</code>: Spreads long (tidy) data into wider format, creating new columns. Sometimes, untidy data is better for certain visualizations and analyses.</li>
 </ul>
-<p>Let’s create a simplifed data frame with a few columns:</p>
+<p>Let’s create a simplified data frame with a few columns:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>car_data <span class="ot">&lt;-</span> mtcars <span class="sc">%&gt;%</span></span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(mpg, cyl, hp, wt) <span class="sc">%&gt;%</span></span>
