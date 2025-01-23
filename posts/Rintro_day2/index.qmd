@@ -49,7 +49,7 @@ where things in `<...>` are general placeholders that you would have to edit to 
 
   - `ggplot(data = ...)`: specifies the dataset.
   - `aes()`: Which columns map to the x-axis, y-axis, color, size, etc. of the plot
-  - `geom_*()`: The geometry or type of plot (points, bars, lines, tiles, lines, tiles, etc.)
+  - `<GEOM_FUNCTION>`, which in practice often looks like `geom_*()`: The geometry or type of plot (points, bars, lines, tiles, lines, tiles, etc.)
 
 
 ### Making scatter plots with `geom_point()`
