@@ -1,7 +1,10 @@
 ---
 title: "Intro to ggplot, dplyr, and pivoting"
+author: "Isaac Vock"
+date: "2025-01-23"
+categories: [stats]
 format: 
-  pdf:
+  html:
     toc: true
 editor: visual
 ---
