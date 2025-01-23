@@ -6,7 +6,10 @@ categories: [stats]
 format: 
   html:
     toc: true
-editor: visual
+engine: knitr
+editor: 
+  markdown: 
+    wrap: 72
 ---
 
 Much of this class will center on manipulating and visualizing data. This 
