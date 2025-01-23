@@ -81,7 +81,7 @@
     "href": "blog.html",
     "title": "Isaac’s blog",
     "section": "",
-    "text": "Intro to R: Day 1\n\n\n\n\n\n\nstats\n\n\n\n\n\n\n\n\n\nJan 21, 2025\n\n\nIsaac Vock\n\n\n\n\n\n\n\n\n\n\n\n\nAnalyzing NR-seq data: the basics\n\n\n\n\n\n\nnrseq\n\n\n\n\n\n\n\n\n\nDec 22, 2024\n\n\nIsaac Vock\n\n\n\n\n\n\n\n\n\n\n\n\nIntroducing NR-seq by simulating NR-seq\n\n\n\n\n\n\nnrseq\n\n\n\n\n\n\n\n\n\nDec 16, 2024\n\n\nIsaac Vock\n\n\n\n\n\n\n\n\n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\nnrseq\n\n\nstats\n\n\n\n\n\n\n\n\n\nDec 13, 2024\n\n\nIsaac Vock\n\n\n\n\n\n\nNo matching items"
+    "text": "Intro to ggplot, dplyr, and pivoting\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nIntro to R: Day 1\n\n\n\n\n\n\nstats\n\n\n\n\n\n\n\n\n\nJan 21, 2025\n\n\nIsaac Vock\n\n\n\n\n\n\n\n\n\n\n\n\nAnalyzing NR-seq data: the basics\n\n\n\n\n\n\nnrseq\n\n\n\n\n\n\n\n\n\nDec 22, 2024\n\n\nIsaac Vock\n\n\n\n\n\n\n\n\n\n\n\n\nIntroducing NR-seq by simulating NR-seq\n\n\n\n\n\n\nnrseq\n\n\n\n\n\n\n\n\n\nDec 16, 2024\n\n\nIsaac Vock\n\n\n\n\n\n\n\n\n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\nnrseq\n\n\nstats\n\n\n\n\n\n\n\n\n\nDec 13, 2024\n\n\nIsaac Vock\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/nrseq_analysis/index.html",
