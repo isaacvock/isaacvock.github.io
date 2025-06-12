@@ -1,0 +1,67 @@
+---
+title: "Probability Distributions as Tools to Simulate Data"
+author: "Isaac Vock"
+date: "2025-02-04"
+categories: [stats]
+format: 
+  live-html:
+    toc: true
+webr:
+  packages:
+    - dplyr
+    - ggplot2
+engine: knitr
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+## Intro
+
+
+## Two types of Distributions
+
+
+## Continuous Distributions
+
+
+### Normal distribution
+
+
+### Uniform distribution
+
+
+### Exponential distribution
+
+
+### Gamma distribution
+
+
+### Log-Normal distribution
+
+
+### Chi-square distribution
+
+
+### Student-t distribution
+
+
+## Discrete distributions
+
+
+### Binomial distribution
+
+
+### Poisson distribution
+
+
+### Negative Binomial distribution
+
+
+### Mulitnomial distribution
+
+
+### Geometric distribution
+
+
+### Hypergeometric distribution

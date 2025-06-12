@@ -280,7 +280,7 @@ tcbmm_L <- function(params, muts, nucs, n){
 }
 
 ### Simulate data
-simdata <- simulate_nrseq(nt = 1000, phigh = 0.02)
+simdata <- simulate_nrseq(nt = 1000)
 
 
 ### Analyze data
@@ -347,7 +347,7 @@ Already, this quickly whipped up strategy is working pretty well. For one, we ha
 
 ### Complete pooling to improve estimate stability
 
-One thing you should note though is that there are a handful of highly inaccurate estimates. These are almost always low coverage features, but can we do better? I will argue yes, thanks to a two-step fitting approach that is implemented in tools like bakR/EZbakR and GRAND-SLAM.
+One thing you should note though is that there are a handful of highly inaccurate estimates. The frequency of these increases if you decrease the simulated s4U incorporation rate (e.g., try phigh = 0.02 for instance). These are usually lower coverage features, but can we do better? I will argue yes, thanks to a two-step fitting approach that is implemented in tools like bakR/EZbakR and GRAND-SLAM.
 
 Having to estimate both the labeled/unlabeled read mutation rates as well as the fraction of reads from each population is fundamentally challenging. While it is technically identifiable (ignoring label flipping, which is easy to deal with in this setting), low coverage features typically have too little information to accurately estimate all of these parameters. Does a feature have only a few high mutation content reads because the fraction new is low, or because the mutation rate in reads from new RNA (phigh) low? Tough to distinguish these two if you only have 10s of reads. The common solution to this problem is "complete pooling of the mutation rate estimates". 
 
@@ -384,13 +384,13 @@ tcbmm_L <- function(params, muts, nucs, n,
 }
 
 ### Simulate data
-simdata <- simulate_nrseq(nt = 1000, phigh = 0.02)
+simdata <- simulate_nrseq(nt = 1000)
 
 
 ### Step 1: estimate phigh and plow
 p_ests <- simdata$cB %>%
   dplyr::count(TC, nT) %>%
-  dplyr::group_by(TC, nT) %>%
+  dplyr::ungroup() %>%
   dplyr::summarise(
     fit = list(I(optim(
       c(logit(0.05),
@@ -447,19 +447,9 @@ estimates <- simdata$cB %>%
   
   ## Extract parameter estimates
   dplyr::mutate(
-    p1 = inv_logit(purrr::map_dbl(fit, ~ .x$par[1])),
-    p2 = inv_logit(purrr::map_dbl(fit, ~ .x$par[2])),
-    fxn = inv_logit(purrr::map_dbl(fit, ~ .x$par[3]))
+    fxn_new = inv_logit(purrr::map_dbl(fit, ~ .x$par[1]))
   ) %>%
-  dplyr::ungroup() %>%
-  dplyr::rowwise() %>%
-  
-  ## Deal with potential label flipping
-  dplyr::mutate(
-    phigh = pmax(p1, p2),
-    plow = pmin(p1, p2),
-    fxn_new = ifelse(p1 > p2, fxn, 1 - fxn)
-  )
+  dplyr::ungroup()
 
 ### Assess accuracy
 ptcbmm_rcol <- estimates %>%

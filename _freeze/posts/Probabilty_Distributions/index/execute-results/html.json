@@ -1,0 +1,15 @@
+{
+  "hash": "447e289864037836bd1215f223ebdeb9",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Probability Distributions as Tools to Simulate Data\"\nauthor: \"Isaac Vock\"\ndate: \"2025-02-04\"\ncategories: [stats]\nformat: \n  live-html:\n    toc: true\nwebr:\n  packages:\n    - dplyr\n    - ggplot2\nengine: knitr\neditor: \n  markdown: \n    wrap: 72\n---\n\n## Intro\n\n\n## Two types of Distributions\n\n\n## Continuous Distributions\n\n\n### Normal distribution\n\n\n### Uniform distribution\n\n\n### Exponential distribution\n\n\n### Gamma distribution\n\n\n### Log-Normal distribution\n\n\n### Chi-square distribution\n\n\n### Student-t distribution\n\n\n## Discrete distributions\n\n\n### Binomial distribution\n\n\n### Poisson distribution\n\n\n### Negative Binomial distribution\n\n\n### Mulitnomial distribution\n\n\n### Geometric distribution\n\n\n### Hypergeometric distribution\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
