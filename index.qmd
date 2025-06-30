@@ -45,7 +45,7 @@ Scripting ([example repo](https://github.com/isaacvock/EZbakRsuite_paper_code))
 
 R package development (most notably, [EZbakR](https://github.com/isaacvock/EZbakR))
 
-Shiny app development (e.g., interactive [TimeLapse-seq simulator](https://isaacvock.shinyapps.io/tl_sim/))
+Shiny app development (e.g., [RNAdecayCafe](https://isaacvock.shinyapps.io/rnadecaycafe/))
   
 #### **Snakemake pipeline development (since 2021)**
 

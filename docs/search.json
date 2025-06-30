@@ -81,7 +81,7 @@
     "href": "index.html#experience",
     "title": "Isaac Vock",
     "section": "Experience",
-    "text": "Experience\n\n\nProgramming in R (since 2019)\nScripting (example repo)\nR package development (most notably, EZbakR)\nShiny app development (e.g., interactive TimeLapse-seq simulator)\n\n\nSnakemake pipeline development (since 2021)\nfastq2EZbakR: Flexible processing of NR-seq data.\nNRsim: Simulating NR-seq data to test analysis strategies and pipelines.\nAnnotationCleaner: Assembling annotations using StringTie and some custom scripts.\nTHE_Aligner: Aligning almost any kind of RNA-seq data.\nPROseq_etal: PRO-seq/ChIP-seq/ATAC-seq pipeline.\n\n\nOther experience\nPython (since 2021; used throughout Snakemake pipelines listed above)\nC (since 2023; example repo)\nPytorch (since 2023; example repo)"
+    "text": "Experience\n\n\nProgramming in R (since 2019)\nScripting (example repo)\nR package development (most notably, EZbakR)\nShiny app development (e.g., RNAdecayCafe)\n\n\nSnakemake pipeline development (since 2021)\nfastq2EZbakR: Flexible processing of NR-seq data.\nNRsim: Simulating NR-seq data to test analysis strategies and pipelines.\nAnnotationCleaner: Assembling annotations using StringTie and some custom scripts.\nTHE_Aligner: Aligning almost any kind of RNA-seq data.\nPROseq_etal: PRO-seq/ChIP-seq/ATAC-seq pipeline.\n\n\nOther experience\nPython (since 2021; used throughout Snakemake pipelines listed above)\nC (since 2023; example repo)\nPytorch (since 2023; example repo)"
   },
   {
     "objectID": "about.html",
