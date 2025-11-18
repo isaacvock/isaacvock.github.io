@@ -12,8 +12,9 @@ editor:
     wrap: 72
 ---
 
-This worksheet will walk you through some basic concepts in R. I would suggest copying code shown here into an R script and running it yourself so that you can play around with the presented examples.
-
+This worksheet will walk you through some basic concepts in R. I would
+suggest copying code shown here into an R script and running it yourself
+so that you can play around with the presented examples.
 
 ## Pre-requisite knowledge for `simple_calc()`
 
@@ -31,7 +32,10 @@ The simplest use case of R is using it to do math:
 
 ### Numeric variables in R
 
-You can store numbers in "variables". This is like a special box in your computer's memory labeled with a name (like `my_number`). When you put a number into this box (for example, `10`), we say you have assigned the value 10 to the variable `my_number`.
+You can store numbers in "variables". This is like a special box in your
+computer's memory labeled with a name (like `my_number`). When you put a
+number into this box (for example, `10`), we say you have assigned the
+value 10 to the variable `my_number`.
 
 In R, you'd do this by writing:
 
@@ -43,13 +47,15 @@ my_number
 ::: {.callout-tip collapse="true"}
 ## Seeing the value of variables
 
-Typing and executing `print(my_number)` or just `my_number` will print out the value of the variable to your console.
+Typing and executing `print(my_number)` or just `my_number` will print
+out the value of the variable to your console.
 :::
 
 Here is what's happening in this code:
 
 1.  `my_number` is the label on the box in memory.
-2.  `<-` is like an arrow pointing from the value to the box, meaning "put this value in that box".
+2.  `<-` is like an arrow pointing from the value to the box, meaning
+    "put this value in that box".
 3.  \`10 is the actual number you are storing.
 
 You can then do math like this just like with regular numbers:
@@ -60,7 +66,9 @@ my_number ^ 3
 my_number - 4
 ```
 
-`my_number` does not change value in any of the above lines. To change the value of `my_number`, you would have to assign it the new value with `<-` again:
+`my_number` does not change value in any of the above lines. To change
+the value of `my_number`, you would have to assign it the new value with
+`<-` again:
 
 ```{r}
 my_number # my_number is 10
@@ -70,7 +78,8 @@ my_number # Confirm new value of my_number
 
 ### Strings in R
 
-You can store more than numbers in variables. For example, you can store text, which is referred to as a "string":
+You can store more than numbers in variables. For example, you can store
+text, which is referred to as a "string":
 
 ```{r}
 my_string <- "Hello"
@@ -80,15 +89,19 @@ my_string
 my_string2
 ```
 
-You tell R that you are storing text by wrapping that text in `""` or `''`.
-
+You tell R that you are storing text by wrapping that text in `""` or
+`''`.
 
 ::: {.callout-tip collapse="true"}
 ## Useful string tools (aka functions)
 
-Below are some useful tools that R provide you to work with strings. These are called functions, a concept discussed later. 
+Below are some useful tools that R provide you to work with strings.
+These are called functions, a concept discussed later.
 
-1. `paste(..., sep = " ")`: `paste()` allows you to stitch together multiple strings, with a chosen separator text between strings (`sep` argument). Having no separator (`sep = ""`) is identical to using a different function `paste0()`:
+1.  `paste(..., sep = " ")`: `paste()` allows you to stitch together
+    multiple strings, with a chosen separator text between strings
+    (`sep` argument). Having no separator (`sep = ""`) is identical to
+    using a different function `paste0()`:
 
 ```{r}
 string1 <- "Hello"
@@ -102,35 +115,42 @@ paste(string1, string2, string3)
 paste(string1, string2, collapse = "_")
 ```
 
-2. `nchar()`: This will give you the number of individual characters in your text string:
+2.  `nchar()`: This will give you the number of individual characters in
+    your text string:
 
 ```{r}
 string1 <- "Hello"
 nchar(string1)
 ```
 
-3. `gsub(pattern, replacement, x)`: This allows you to look for the string `pattern` in the query string `x`, and replace it with the string `replacement`:
+3.  `gsub(pattern, replacement, x)`: This allows you to look for the
+    string `pattern` in the query string `x`, and replace it with the
+    string `replacement`:
 
 ```{r}
 text <- "Hello, Hello, Hello!"
 gsub("Hello", "Hi", text)
 ```
 
-4. `grepl(pattern, x)`: This is similar to `gsub()` but just searches for string `pattern` in string `x` and spits out `TRUE` if it finds it
+4.  `grepl(pattern, x)`: This is similar to `gsub()` but just searches
+    for string `pattern` in string `x` and spits out `TRUE` if it finds
+    it
 
 ```{r}
 text <- "Hello, Hello, Hello!"
 grepl("Hello", text)
 ```
 
-There is a whole R package called [stringr](https://stringr.tidyverse.org/) devoted to making working with strings in R easier and more intuitive, so you might want to look into that as well!
+There is a whole R package called
+[stringr](https://stringr.tidyverse.org/) devoted to making working with
+strings in R easier and more intuitive, so you might want to look into
+that as well!
 :::
-
-
 
 ### Booleans in R
 
-Another thing that is commonly stored in variables is logical values (TRUE or FALSE), otherwise known as "booleans":
+Another thing that is commonly stored in variables is logical values
+(TRUE or FALSE), otherwise known as "booleans":
 
 ```{r}
 my_bool <- TRUE
@@ -140,7 +160,10 @@ my_bool
 my_bool2
 ```
 
-You can do a sort of math with booleans, referred to as "boolean logic". This takes as input two (in the case of AND and OR) or one (in the case of NOT) boolean variables and outputs a new boolean. The most common examples are:
+You can do a sort of math with booleans, referred to as "boolean logic".
+This takes as input two (in the case of AND and OR) or one (in the case
+of NOT) boolean variables and outputs a new boolean. The most common
+examples are:
 
 **AND (`&`)**
 
@@ -155,7 +178,8 @@ FALSE & FALSE # This is FALSE
 
 **OR (`|`)**
 
--   At least one of the booleans must be TRUE for the output of this to be TRUE
+-   At least one of the booleans must be TRUE for the output of this to
+    be TRUE
 
 ```{r}
 TRUE | TRUE # This is TRUE
@@ -174,7 +198,9 @@ FALSE | FALSE # This is FALSE
 !FALSE # This is TRUE
 ```
 
-Finally, you can compare the value of two variables to see if they are the same. If the are `variable_1 == variable_2` will return `TRUE`, otherwise it will return `FALSE`:
+Finally, you can compare the value of two variables to see if they are
+the same. If the are `variable_1 == variable_2` will return `TRUE`,
+otherwise it will return `FALSE`:
 
 ```{r}
 "Hello" == "Hello" # TRUE
@@ -188,9 +214,12 @@ my_number == my_number2
 
 ### Functions in R
 
-A function in R is like a "recipe" for a mini "machine" that does one specific job. You give it some inputs (called *arguments*), it follows the steps you've defined, and then it gives you a result.
+A function in R is like a "recipe" for a mini "machine" that does one
+specific job. You give it some inputs (called *arguments*), it follows
+the steps you've defined, and then it gives you a result.
 
-Functions help you organize your code so you can reuse it instead of writing the same steps again and again. Here is a simple example:
+Functions help you organize your code so you can reuse it instead of
+writing the same steps again and again. Here is a simple example:
 
 ```{r}
 # Function name: my_function
@@ -209,12 +238,17 @@ my_function <- function(x, y){
 }
 ```
 
--   `my_function` is the name of the function (like a label on the mini machine).
--   `function(x,y) { ... }` says "I am creating a function that expects two inputs, called `x` and `y`.
--   Inside the `{ ... }`, you can write as much code as you want; this is the instructions for what you want the function to do with the inputs
+-   `my_function` is the name of the function (like a label on the mini
+    machine).
+-   `function(x,y) { ... }` says "I am creating a function that expects
+    two inputs, called `x` and `y`.
+-   Inside the `{ ... }`, you can write as much code as you want; this
+    is the instructions for what you want the function to do with the
+    inputs
 -   `return(result)` sends the output of the function back to you.
 
-After creating `my_function`, you can *call* it (computer science lingo meaning "use the function") by typing:
+After creating `my_function`, you can *call* it (computer science lingo
+meaning "use the function") by typing:
 
 ```{r}
 my_function(3,5)
@@ -222,7 +256,9 @@ my_new_number <- my_function(2, 2)
 my_new_number
 ```
 
-Sometimes, you want one (or more) of your function's inputs to have a "fallback" value if the user doesn't supply one. That's where **default arguments** come in. For example:
+Sometimes, you want one (or more) of your function's inputs to have a
+"fallback" value if the user doesn't supply one. That's where **default
+arguments** come in. For example:
 
 ```{r}
 my_new_function <- function(x, y = 10){
@@ -234,7 +270,9 @@ my_new_function <- function(x, y = 10){
 }
 ```
 
-`my_new_function` now only needs you to supply x. You can supply `x` and `y`, but if you don't supply `y`, it will give `y` a default value of 10 by default:
+`my_new_function` now only needs you to supply x. You can supply `x` and
+`y`, but if you don't supply `y`, it will give `y` a default value of 10
+by default:
 
 ```{r}
 my_new_function(x = 1)
@@ -247,7 +285,9 @@ my_new_function(2, 20) # Will fill arguments in order, so x = 2 and y = 20 here
 
 ### Tip 1: argument with small set of possible values
 
-Sometimes, one of the arguments of your function may have a set number of possible values that you intend for a user to input. You can specify this as such:
+Sometimes, one of the arguments of your function may have a set number
+of possible values that you intend for a user to input. You can specify
+this as such:
 
 ```{r}
 my_options <- function(a, b, greeting = c("Hi", "Bye", "Huh?")){
@@ -272,7 +312,11 @@ my_options(2, 2, "Huh?")
 
 ### Tip 2: Catching errors
 
-In all of our examples so far, we have assumed that the user has supplied a particular kind of data for each argument. Mostly, we have assumed that numbers are being passed to many of our example functions, numbers that we can add. What if they messed up though and passed a string, for example? We can catch this and throw an error message:
+In all of our examples so far, we have assumed that the user has
+supplied a particular kind of data for each argument. Mostly, we have
+assumed that numbers are being passed to many of our example functions,
+numbers that we can add. What if they messed up though and passed a
+string, for example? We can catch this and throw an error message:
 
 ```{r}
 
@@ -295,16 +339,24 @@ my_valuecheck <- function(a, b){
 }
 ```
 
-This function will work as normal if `a` and `b` are numbers, but will throw informative error messages if not. You will also get an error in the old version of this function that didn't have the `stopifnot()` lines, but this error might be far more cryptic and hard to understand. You will also get a different error depending on what is wrong about `a` and/or `b`, further confusing you or other users of this function.
+This function will work as normal if `a` and `b` are numbers, but will
+throw informative error messages if not. You will also get an error in
+the old version of this function that didn't have the `stopifnot()`
+lines, but this error might be far more cryptic and hard to understand.
+You will also get a different error depending on what is wrong about `a`
+and/or `b`, further confusing you or other users of this function.
 :::
 
 ### Control flow (if-else statements)
 
-An if-else statement is one of the most common ways to control the flow of a program. It lets your code make decisions based on whether a condition is `TRUE` or `FALSE`.
+An if-else statement is one of the most common ways to control the flow
+of a program. It lets your code make decisions based on whether a
+condition is `TRUE` or `FALSE`.
 
 -   `if` checks if something is `TRUE`
 -   `else` covers what happens if it is not `TRUE`
--   You can add extra steps in between using `else if` to handle different possible conditions
+-   You can add extra steps in between using `else if` to handle
+    different possible conditions
 
 The basic structure looks like:
 
@@ -324,7 +376,8 @@ Think of this code as asking a set of questions:
 
 -   If condition1 is `TRUE`, do something.
 -   Else if condition2 is `TRUE`, do something else
--   Else, if neither condition1 nor condition2 are `TRUE`, do a default thing.
+-   Else, if neither condition1 nor condition2 are `TRUE`, do a default
+    thing.
 
 A real example might look like:
 
@@ -340,10 +393,14 @@ if(x > 3){
 }
 ```
 
-Conditions in R must evaluate to a single `TRUE` or `FALSE`. Common ways to form conditions are comparison operators:
+Conditions in R must evaluate to a single `TRUE` or `FALSE`. Common ways
+to form conditions are comparison operators:
 
--   `==`: Check if two things are equal (e.g., `a == b`). `a` and `b` can be numbers, strings, booleans, etc.
--   `!=`: Check if two things are not equal 1 `<`, `>`, `<=`, `>=`: Less than, greater than, less than or equal to, or greater than or equal to, respectively.
+-   `==`: Check if two things are equal (e.g., `a == b`). `a` and `b`
+    can be numbers, strings, booleans, etc.
+-   `!=`: Check if two things are not equal 1 `<`, `>`, `<=`, `>=`: Less
+    than, greater than, less than or equal to, or greater than or equal
+    to, respectively.
 
 Here is an example of how you might use control flow in a function:
 
@@ -369,9 +426,12 @@ greetUser("Comment allez-vous?")
 
 ### Vectors
 
-In R, a vector is a container that holds multiple values of the **same data type** (such as numbers, strings, or booleans). You can think of it like a row of boxes, each containing a value of the same kind.
+In R, a vector is a container that holds multiple values of the **same
+data type** (such as numbers, strings, or booleans). You can think of it
+like a row of boxes, each containing a value of the same kind.
 
-You can create a vector with the `c()` function (short for "combine" or "concatenate"). Here are a few example:
+You can create a vector with the `c()` function (short for "combine" or
+"concatenate"). Here are a few example:
 
 ```{r}
 # A numeric vector
@@ -384,7 +444,8 @@ words <- c("cat", "dog", "bird")
 bools <- c(TRUE, FALSE, TRUE)
 ```
 
-Often, you will want to access specific elements or sets of elements of a vector. To do this, you can use square brackets `[ ]`:
+Often, you will want to access specific elements or sets of elements of
+a vector. To do this, you can use square brackets `[ ]`:
 
 ```{r}
 # Get the first element of 'numbers'
@@ -413,7 +474,8 @@ numbers[2] <- 99
 numbers
 ```
 
-Sometimes, it will be useful to check what kind of data is in a vector. This can be done with the `class()` function:
+Sometimes, it will be useful to check what kind of data is in a vector.
+This can be done with the `class()` function:
 
 ```{r}
 class(numbers) # "numeric"
@@ -421,7 +483,8 @@ class(words) # "character"
 class(bools) # "logical" (another word for boolean)
 ```
 
-You can also check the value with functions like `is.numeric()`. `is.character()`, or `is.logical()`:
+You can also check the value with functions like `is.numeric()`.
+`is.character()`, or `is.logical()`:
 
 ```{r}
 is.numeric(numbers) # TRUE
@@ -437,7 +500,8 @@ is.logical(bools) # TRUE
 ::: {.callout-tip collapse="true"}
 ## Useful vector functions
 
-Below are some useful functions that allow you to create vectors or lookup some information about a vector:
+Below are some useful functions that allow you to create vectors or
+lookup some information about a vector:
 
 1.  `length(v)`: returns the number of elements in the vector v:
 
@@ -445,14 +509,19 @@ Below are some useful functions that allow you to create vectors or lookup some 
 length(c(1, 2, 3))
 ```
 
-2.  `seq(from, to, length.out)` or `seq(from, to, by)`: Creates a vector starting from the number `from` (default value of 1), to the number `to` (default value of 1). If you set `length.out`, then you will get a vector of `length.out` elements. If you set `by`, then you specify the distance between adjacent elements:
+2.  `seq(from, to, length.out)` or `seq(from, to, by)`: Creates a vector
+    starting from the number `from` (default value of 1), to the number
+    `to` (default value of 1). If you set `length.out`, then you will
+    get a vector of `length.out` elements. If you set `by`, then you
+    specify the distance between adjacent elements:
 
 ```{r}
 seq(from = 1, to = 5, length.out = 5)
 seq(from = 1, to = 5, by = 1)
 ```
 
-3.  `rep(x, times)`: Creates a vector containing the value `x` repeated `times` times:
+3.  `rep(x, times)`: Creates a vector containing the value `x` repeated
+    `times` times:
 
 ```{r}
 rep(x = 1, times = 10)
@@ -468,11 +537,16 @@ rep(x = 1, times = 10)
 
 ### Loops
 
-A loop is a way to tell R to "do something multiple times". This unlocks one of the powerful aspects of computers: their ability to do multiple things quickly.
+A loop is a way to tell R to "do something multiple times". This unlocks
+one of the powerful aspects of computers: their ability to do multiple
+things quickly.
 
-There are two commonly used types of loops: **for** loops and **while** loops.
+There are two commonly used types of loops: **for** loops and **while**
+loops.
 
-A **for** loop in R iterates (or "loops") over each element of a vector and does something with it. For example, if we want to print every element of a numeric vector:
+A **for** loop in R iterates (or "loops") over each element of a vector
+and does something with it. For example, if we want to print every
+element of a numeric vector:
 
 ```{r}
 numbers <- c(10, 20, 30, 40)
@@ -501,11 +575,19 @@ for(i in seq_along(numbers)){
 
 What's happening here?
 
-1.  `for (value in numbers)` means "go through each element of `numbers` and temporarily call that element `value`. `for(i in 1:length(numbers)` creates a vector (`1:length(numbers)`) which is a vector of whole numbers from 1 to the length of the vector numbers. Each of these whole numbers is then temporarily called `i`. `seq_along(numbers)` does pretty much the same things as `1:length(numbers)`.
+1.  `for (value in numbers)` means "go through each element of `numbers`
+    and temporarily call that element `value`.
+    `for(i in 1:length(numbers)` creates a vector (`1:length(numbers)`)
+    which is a vector of whole numbers from 1 to the length of the
+    vector numbers. Each of these whole numbers is then temporarily
+    called `i`. `seq_along(numbers)` does pretty much the same things as
+    `1:length(numbers)`.
 2.  `print(value)` means we display the current `value` on the screen.
 3.  R will do this until it has gone through all elements in `numbers`.
 
-A **while** loop keeps going as long as some condition is `TRUE`. Suppose we want to keep adding numbers from a vector until the total sum exceeds 50:
+A **while** loop keeps going as long as some condition is `TRUE`.
+Suppose we want to keep adding numbers from a vector until the total sum
+exceeds 50:
 
 ```{r}
 numbers <- c(10, 20, 30, 40, 50)
@@ -528,50 +610,74 @@ print(i)
 
 What's going on here?
 
-1.  `while(i <= length(numbers) && total <= 50)` - The loop will continue running **while** two conditions are both `TRUE`:
+1.  `while(i <= length(numbers) && total <= 50)` - The loop will
+    continue running **while** two conditions are both `TRUE`:
 
--   We haven't reached the end of the vector (`i <= length(numbers)`) and
+-   We haven't reached the end of the vector (`i <= length(numbers)`)
+    and
 -   The `total` hasn't exceeded 50 (`total <= 50`).
 
 1.  Inside the loop, we add the `i`-th element of `numbers` to `total`.
 2.  We then move `i` to the next element by adding 1.
-3.  As soon as one of the conditions in 1. become `FALSE`, the loop stops.
+3.  As soon as one of the conditions in 1. become `FALSE`, the loop
+    stops.
 
 ## Pre-requisite knowledge for `calc_df_stats()`
 
 ### Navigating directories and file paths
 
-When you work in R, you'll often deal with files (like CSV files) that sit in folders (directories) on your computer. To load these files into R so that you can work with and analyze them, you need to tell R where they are. In addition, it is important to know where you are while working in R.
+When you work in R, you'll often deal with files (like CSV files) that
+sit in folders (directories) on your computer. To load these files into
+R so that you can work with and analyze them, you need to tell R where
+they are. In addition, it is important to know where you are while
+working in R.
 
-When I say "know where you are", I am referring to your "working directory". When you open up Rstudio, there is some folder on your computer that R will call your "working directory". You can see what this folder is at any time with `getwd()`:
+When I say "know where you are", I am referring to your "working
+directory". When you open up Rstudio, there is some folder on your
+computer that R will call your "working directory". You can see what
+this folder is at any time with `getwd()`:
 
 ```{r}
 # You get to see what my working directory path is
 getwd()
 ```
 
-If you want to change this directory, you can switch to a new directory with `setwd("/path/to/new/working/directory")`.
+If you want to change this directory, you can switch to a new directory
+with `setwd("/path/to/new/working/directory")`.
 
 You can specify a file path to `setwd()` in one of two ways:
 
-1.  As an **absolute path**. This means specifying *exactly* where a folder is on your computer (like "C:/Users/YourName/Documents/" on Windows or "/Users/YourName/Documents/ on Macs).
-2.  As a **relative path**. This means telling R how to get from the current working directory to the folder. For example, if you are in the directory "Documents" and want to move to a folder called "data" inside of "Documents, you could run `setwd("data")`, assuming "Documents" is your current working directory.
+1.  As an **absolute path**. This means specifying *exactly* where a
+    folder is on your computer (like "C:/Users/YourName/Documents/" on
+    Windows or "/Users/YourName/Documents/ on Macs).
+2.  As a **relative path**. This means telling R how to get from the
+    current working directory to the folder. For example, if you are in
+    the directory "Documents" and want to move to a folder called "data"
+    inside of "Documents, you could run `setwd("data")`, assuming
+    "Documents" is your current working directory.
 
 ### Reading a file with readr
 
-The [readr](https://readr.tidyverse.org/) package (part of the tidyverse collection of packages), provides user-friendly functions for reading in data. For example, you can read a csv file like so:
+The [readr](https://readr.tidyverse.org/) package (part of the tidyverse
+collection of packages), provides user-friendly functions for reading in
+data. For example, you can read a csv file like so:
 
 ```{r}
 #| eval: false
 my_data <- read_csv("path/to/mydata.csv")
 ```
 
--   `read_csv("path/to/mydata.csv")` reads the CSV file located at the specified path (either a relative or absolute path) and creates a data frame (more on those soon).
+-   `read_csv("path/to/mydata.csv")` reads the CSV file located at the
+    specified path (either a relative or absolute path) and creates a
+    data frame (more on those soon).
 -   We're storing that data frame in a variable called `my_data`.
 
 ### Data Frames
 
-A data frame is a table-like structure with rows and columns, commonly used for storign datasets in R. Each **column** is usually a vector of a particular type (numeric, character, boolean, etc.), and all columns have the **same length**.
+A data frame is a table-like structure with rows and columns, commonly
+used for storign datasets in R. Each **column** is usually a vector of a
+particular type (numeric, character, boolean, etc.), and all columns
+have the **same length**.
 
 To create a data frame you can run code like this:
 
@@ -589,9 +695,11 @@ people_df <- data.frame(
 people_df
 ```
 
-Here are some ways you can interact with the data inside of a data frame:
+Here are some ways you can interact with the data inside of a data
+frame:
 
-1.  You can grab an entire column with `$` or `[[<col name as string>]]`:
+1.  You can grab an entire column with `$` or
+    `[[<col name as string>]]`:
 
 ```{r}
 # This will give you a vector
@@ -623,7 +731,9 @@ people_df[c(1, 3), ]
 
 ### Lists
 
-A list is like a container in R that can hold a mix of different types of items, like a data frame. Lists are more flexible though, and can hold things of different sizes. A list can hold:
+A list is like a container in R that can hold a mix of different types
+of items, like a data frame. Lists are more flexible though, and can
+hold things of different sizes. A list can hold:
 
 -   A numeric vector
 -   A string vector
@@ -655,7 +765,8 @@ my_list$name
 my_list$scores
 ```
 
-2.  The `[[ ]]` operator with the element's name (if it has one), or its position:
+2.  The `[[ ]]` operator with the element's name (if it has one), or its
+    position:
 
 ```{r}
 my_list[["name"]]
@@ -663,13 +774,18 @@ my_list[["name"]]
 my_list[[1]]
 ```
 
-
 ::: {.callout-tip collapse="true"}
 ## Fancy looping over lists (and data frames)
 
-Often, you will want to go element by element of a list and do something with each element. In addition, data frame columns are equivalent to elements of a list (actually, under the hood, a data frame is just a list that forces the list elements to be the same size). You could write a for loop, but there are popular alternatives that can make your code cleaner and easier to read. R has a version of these, but the R package `purrr` has improved versions of these that I prefer.
+Often, you will want to go element by element of a list and do something
+with each element. In addition, data frame columns are equivalent to
+elements of a list (actually, under the hood, a data frame is just a
+list that forces the list elements to be the same size). You could write
+a for loop, but there are popular alternatives that can make your code
+cleaner and easier to read. R has a version of these, but the R package
+`purrr` has improved versions of these that I prefer.
 
-1. `map()`: takes a single list as input
+1.  `map()`: takes a single list as input
 
 ```{r}
 library(purrr)
@@ -689,8 +805,7 @@ map_dbl(numbers, ~ sum(.x))
 
 ```
 
-
-2. `map2()`: takes two lists as input
+2.  `map2()`: takes two lists as input
 
 ```{r}
 
@@ -715,7 +830,7 @@ map2_dbl(numbers, numbers2, function(x, y) sum(x) + sum(y))
 
 ```
 
-3. `pmap()` allows you to provide a named list of inputs:
+3.  `pmap()` allows you to provide a named list of inputs:
 
 ```{r}
 # A list of vectors
@@ -729,4 +844,3 @@ pmap(lists_of_inputs, function(a, b, c) a + b + c)
 pmap_dbl(lists_of_inputs, function(a, b, c) a + b + c)
 ```
 :::
-
