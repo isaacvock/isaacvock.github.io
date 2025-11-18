@@ -9,7 +9,7 @@ title: "My main projects"
 
 ::: {.grid}
 
-::: {.g-col-8
+::: {.g-col-8}
 - Presents a first-of-its-kind database of high quality RNA stability
 estimates from pulse-label NR-seq experiments. Data can be accessed
 [here](https://zenodo.org/records/16884513).
@@ -29,6 +29,7 @@ and in establishing differences across cell lines.
 ![](RNAdecayCafe.png){width=100%}
 :::
 
+:::
 
 ## Isoform stability quantification
 
@@ -36,7 +37,7 @@ and in establishing differences across cell lines.
 
 ::: {.grid}
 
-::: {.g-col-8
+::: {.g-col-8}
 - Developed method to quantify the stabilities of individual transcript
 isoforms from full-length (as opposed to 3'-end) NR-seq data.
 - Used this method to rigorously identify and study the properties of 
@@ -53,7 +54,7 @@ NMD-sensitive transcript isoforms.
 ![](Isoforms.png){width=100%}
 :::
 
-
+:::
 
 ## The EZbakR-suite
 
