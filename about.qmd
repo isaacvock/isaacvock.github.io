@@ -3,6 +3,58 @@ title: "My main projects"
 ---
 
 
+## RNAdecayCafe
+
+### Summary
+
+::: {.grid}
+
+::: {.g-col-8
+- Presents a first-of-its-kind database of high quality RNA stability
+estimates from pulse-label NR-seq experiments. Data can be accessed
+[here](https://zenodo.org/records/16884513).
+- Paper presents a meta-analysis that shows how pulse-label NR-seq data
+is often highly consistent across labs, cell lines, method variations,
+etc. In contrast, we found pulse-chase NR-seq data to be batch effect-ridden and difficult to consistently interpret.
+- We used this data to highlight the sometimes underappreciated role of
+RNA stability in tuning gene expression levels within a given cell line
+and in establishing differences across cell lines.
+
+
+[Link to preprint](https://www.biorxiv.org/content/10.1101/2025.08.19.671151v1)
+
+:::
+
+::: {.g-col-4}
+![](RNAdecayCafe.png){width=100%}
+:::
+
+
+## Isoform stability quantification
+
+### Summary
+
+::: {.grid}
+
+::: {.g-col-8
+- Developed method to quantify the stabilities of individual transcript
+isoforms from full-length (as opposed to 3'-end) NR-seq data.
+- Used this method to rigorously identify and study the properties of 
+NMD-sensitive transcript isoforms.
+- Developed and interpreted a simple classification model that identified features which appeared to be major drivers of NMD sensitivity.
+- Identified a unique class of alternative splicing coupled NMD that did not involve premature termination codons.
+
+
+[Link to preprint](https://www.biorxiv.org/content/10.1101/2025.03.12.642874v1)
+
+:::
+
+::: {.g-col-4}
+![](Isoforms.png){width=100%}
+:::
+
+
+
 ## The EZbakR-suite
 
 ### Summary
@@ -16,7 +68,7 @@ title: "My main projects"
 - Generalizes dynamical systems modeling: how kinetic parameters are estimated from NR-seq data.
 - Generalizes comparative analyses: how kinetic parameters are compared across biological conditions.
 
-[Link to preprint](https://www.biorxiv.org/content/10.1101/2024.10.14.617411v1)
+[Link to paper](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1013179)
 
 
 :::
