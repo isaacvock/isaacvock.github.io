@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.31">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Isaac Vock">
+<meta name="dcterms.date" content="2025-11-18">
+
+<title>NR-seq: an in-depth review – isaacvock.github.io</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-dfb324f25d9b1687192fa8be62ac8f9c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">isaacvock.github.io</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Research</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">NR-seq: an in-depth review</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">nrseq</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Isaac Vock </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 18, 2025</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#nr-seq-a-review" id="toc-nr-seq-a-review" class="nav-link active" data-scroll-target="#nr-seq-a-review">NR-seq: a review</a></li>
+  <li><a href="#abstract" id="toc-abstract" class="nav-link" data-scroll-target="#abstract">Abstract</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#a-brief-history-of-nr-seq" id="toc-a-brief-history-of-nr-seq" class="nav-link" data-scroll-target="#a-brief-history-of-nr-seq">A brief history of NR-seq</a></li>
+  <li><a href="#analyzing-nr-seq-data" id="toc-analyzing-nr-seq-data" class="nav-link" data-scroll-target="#analyzing-nr-seq-data">Analyzing NR-seq data</a>
+  <ul class="collapse">
+  <li><a href="#modeling-the-mutational-content-of-sequencing-reads" id="toc-modeling-the-mutational-content-of-sequencing-reads" class="nav-link" data-scroll-target="#modeling-the-mutational-content-of-sequencing-reads">Modeling the mutational content of sequencing reads</a></li>
+  <li><a href="#modifying-tcbmm" id="toc-modifying-tcbmm" class="nav-link" data-scroll-target="#modifying-tcbmm">Modifying TCBMM</a></li>
+  <li><a href="#transcript-isoform-analyses-of-short-read-data" id="toc-transcript-isoform-analyses-of-short-read-data" class="nav-link" data-scroll-target="#transcript-isoform-analyses-of-short-read-data">Transcript isoform analyses of short-read data</a></li>
+  <li><a href="#modeling-and-correcting-for-dropout-in-nr-seq-data" id="toc-modeling-and-correcting-for-dropout-in-nr-seq-data" class="nav-link" data-scroll-target="#modeling-and-correcting-for-dropout-in-nr-seq-data">Modeling and correcting for dropout in NR-seq data</a></li>
+  </ul></li>
+  <li><a href="#kinetic-parameter-estimation-with-nr-seq-data" id="toc-kinetic-parameter-estimation-with-nr-seq-data" class="nav-link" data-scroll-target="#kinetic-parameter-estimation-with-nr-seq-data">Kinetic parameter estimation with NR-seq data</a>
+  <ul class="collapse">
+  <li><a href="#standard-kinetic-analyses" id="toc-standard-kinetic-analyses" class="nav-link" data-scroll-target="#standard-kinetic-analyses">Standard kinetic analyses</a></li>
+  <li><a href="#non-steady-state-modeling" id="toc-non-steady-state-modeling" class="nav-link" data-scroll-target="#non-steady-state-modeling">Non-steady-state modeling</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<section id="nr-seq-a-review" class="level2">
+<h2 class="anchored" data-anchor-id="nr-seq-a-review">NR-seq: a review</h2>
+<p>This is a reproduction of Chapter 1 of <a href="https://github.com/isaacvock/Thesis">my thesis</a>, an in-depth technical review of NR-seq data. This version is currently incomplete (figures and citations aren’t included and several sections are unwritten). It is intended to be a living document that evolves as the field evolves, and will thus be occasionally updated (edit time scale: ~ monthly).</p>
+</section>
+<section id="abstract" class="level2">
+<h2 class="anchored" data-anchor-id="abstract">Abstract</h2>
+<p>The kinetics of gene expression are largely invisible to methods that only probe steady-state RNA abundances. Nucleotide recoding RNA-seq methods (TimeLapse-seq, SLAM-seq, TUC-seq, etc.) were developed to overcome this limitation. These methods combine metabolic labeling with unique chemistires to track the dynamics of labeled and unlabeled RNA and resolve the kinetic ambiguities of vanilla RNA-seq. Despite their promise, analyzing NR-seq data presents several unique bioinformatic challenges. While software packages exist that implement gold-standard analysis strategies, misconceptions about how to properly analyze and interpret NR-seq data persist. In some cases, this has led to the widespread adoption of potentially flawed analysis paradigms. To address this, I present a detailed overview of NR-seq analyses. I cover best practices, current software implementations, and optimal experimental design. I also discuss the landscape of NR-seq extensions, as these represent exciting areas with unique bioinformatic challenges. I hope that this will be a useful resource to the community of NR-seq users and developers.</p>
+</section>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>From birth to death, an RNA’s life cycle is tightly regulated. A key aspect of this regulation is fine-tuning of the rate at whcih each stage progresses, from transcription initiation to RNA degradation. Developing a mechanistic understanding of gene expression regulation requires methods to probe the kinetics of the RNA life cycle (transcription, processing, export, degradation, etc.).</p>
+<p>While standard RNA-seq begins to solve this problem, it provides limited information about the kinetics of the processes which determine an RNA’s abundance. Nucleotide recoding RNA-seq (NR-seq; TimeLapse-seq, SLAM-seq, TUC-seq, etc.) overcomes these limitations. NR-seq relies on metabolic labeling, which involves feeding cells a nucleotide analog that gets incorporated into RNA synthesized after the start of labeling. The rate at which old, unlabeled RNA degrades and new, labeled RNA accumulates provides information about the kinetics of RNA metabolism (Figure 1). To determine how much of a given population of RNA is labeled, NR-seq relies on novel chemistries that recode the hydrogen bond pattern of the metabolic label to facilitate detection of labeled RNA via chemically induced mutations in sequencing reads (Figure 1). NR-seq is thus a powerful method for resolving the kinetic ambiguities of standard RNA-seq.</p>
+<p>Unlocking the full potential of NR-seq data requires rigorous and well-founded analysis strategies. While such strategies have been put forth and implemented in a number of bioinformatic tools, misunderstanding regarding how to best interpret and analyze NR-seq data are common. Therefore, it is crucial to create gold-standard analysis guidelines for users and developers of NR-seq methods.</p>
+<p>Towards that end, I present a comprehensive overview of the analyses of NR-seq data. I will provide a combination of accessible big-picture summaries of my main points, as well as rigorous mathematical formalism to back up key assertions. I also will conclude with a brief overview of existing extensions of the original NR-seq methodology, their applications, and unique aspects of their analyses. Throughout, I will point readers to bioinformatic tools implementing gold-standard analysis strategies while also highlighting fundamental challenges posed by NR-seq analyses. I hope that this serves as a useful resource for the larger community of NR-seq users and promotes best analysis practices in this exciting and growing field.</p>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>Below I will briefly summarize the main takeaways that are expanded upon throughout the remaining of this post. There are four unique challenges when analyzing NR-seq data: 1) estimating how many reads come from labeled RNA; 2) inferring kinetic parameters from 1); 3) aligning and processing NR-seq reads; 4) optimizing the experimental design for achieving 1) and 2). I thus divide my advice into that pertaining to each of these points:</p>
+<p><strong>Inferring the number of reads that come from labeled RNA:</strong></p>
+<ul>
+<li>Mixture modeling is the most robust and accurate strategy by which to assess the fraction of reads from a given mutational population. This strategy is implemented in tools such as GRAND-SLAM, bakR, Halfpipe, and EZbakR.</li>
+<li>Mutation content cutoffs (e.g., classifying reads as “labeled” if they have a certain nubmer of T-to-C mutations) can yield highly biased estimates of labeled RNA abundance.</li>
+<li>Mixture models necessarily make assumptions about the distribution of mutations in reads from new and old RNA. It is important to assess these assumptions when interpreting mixture model fits.</li>
+<li>Extending the simplest two-component mixture model is promising but potentially fraught. Carefully validate improvements in model fit and stability of parameter estimates. Consider using regularization strategies to avoid unrealistic parameter estimates.</li>
+</ul>
+<p><strong>Inferring kinetic parameters:</strong></p>
+<ul>
+<li>Unless using a label time significantly shorter than the average half-life of RNAs of interest (for example, this is around 4 hours for mRNAs in mice an dhumans), the number of reads from labeled RNA is reflective of both transcription and turnover kinetics, not just the former.</li>
+<li>The relative abundances of reads from labeled and unlabeled RNA is best modeled as a function of both transcription and degradation rate constants. The functional form of this relationship depends on your model for the dynamics of the RNA species you are probing.</li>
+<li>Assuming that the probed RNA populations are at steady-state during labeling simplifies the task of kinetic parameter estimation. This assumption can break down when labeling is done during or following a perturbation. Analysis strategies exist which relax this assumption, but they rely on having measurements of RNA abundances at the start of labeling (i.e., no-label RNA-seq data from that time point or a labeled NR-seq data in which RNA was extracted at that point). grandR and EZbakR implement both of these analysis strategies.</li>
+<li>Combining NR-seq with subcellular fractionation is a powerful way by which to explore the kinetics of processes invisible to whole-cell NR-seq. Analyzing this data requires a strategy to normalize read counts and integrate information across all compartments. EZbakR implements such strategies.</li>
+</ul>
+<p>Processing NR-seq data</p>
+<ul>
+<li>Aligning NR-seq reads is difficult due to the chemically induced T-to-C mismatches. While 3-base genome alignment strategies, popular in analyses of bisfulite sequencing data, are a potential solution, they often provide only minimal advantages over standard 4-base alignment approaches while also suffering from their own unique biases and limitations. This is in large part due to the fact that in NR-seq reads, most Ts are not converted to Cs. Thus, the downsides of aligning to a lower complexity genome may often nullify the benefits of not penalizing T-to-C mismatches.</li>
+<li>Specialized alignment approaches may provide an improvement over either a standard 3- or 4-base genome alignment approach. grandRescue is a recently developed approach that implements 4-base alignment followed by 3-base alignment of reads that fail to align via the 4-base strategy. This approach can help recover high mutation content sequencing reads.</li>
+<li>When processing NR-seq data, you have a choice to make about what genomic features you want to assign reads to and perform analyses on. Most tools support performing analyses at the gene- (or 3’-UTR if using 3’-end sequencing) level, but fastq2EZbakR significantly expands the set of features you can analyze to incldue transcript isoforms, exon-exon junctions, etc.</li>
+</ul>
+<p>Experimental design</p>
+<ul>
+<li>Label-free control samples (a.k.a. no-label controls) are crucial to detect potential biases introduced by labeling (e.g., dorpout of labeled RNA).</li>
+<li>No-label controls can be used to both assess and correct for these biases in some cases. grandR and EZbakR provide strategies for this task.</li>
+<li>Bias correction strategies make assumptions like any statistical method, and these assumptions should be assessed when interpreting the output of bias correction.</li>
+<li>Pulse-chase experimental designs are mostly unnecessary and usually sub-optimal relative to a pulse-label experimental design. Classic studies using pulse-chases to study RNA degradation were designed such that the pulse created an RNA species whose transcription was shut off during the chase. This meant that the dynamics of these RNA were completely driven by their degradation kinetics. In pulse-label metabolic labeling experiments, the pulse already achievest his end goal: the dynamics of the pre-existing unlabeled RNA will only be driven by their degradation.</li>
+<li>While unique analysis strategies have been proposed that may be strictly compatible with pulse-chases, pulse-chases suffer from the follwing serious shortcomings:
+<ul>
+<li>Prolonged exposure to metabolic label, which can lead to adverse effects</li>
+<li>Increased variance in kinetic parameter estimation due to having to compare the estimated fraction of reads that are labeled at the end of the pulse to that at the end of the chase. Compare this with a steady-state pulse-label analysis where the only source of variance is that of the fraction labeled estimate for the pulse.</li>
+<li>The analysis is complicated by the potential for incomplete competition of metabolic label with the chase nucleotide and recycling of metabolic label from degraded RNA.</li>
+<li>Higher cost due to the necessity of more samples (set of pulses and set of chases).</li>
+</ul></li>
+<li>The best label time for standard NR-seq kinetic parameter inference is around the median half-life of the RNAs you wish to probe the kinetics of. It’s better to undershoot than overshoot this target though to avoid adverse effects of prolonged metabolic labeling.</li>
+<li>Accurate kinetic parameter estimates are obtainable with standard RNA-seq sequencing depth. More depth can significantly improve these analyses though. Sequencing depth is particularly important if wanting ot perform analyses on the sub-gene (e.g., exon-exon junction) level.</li>
+</ul>
+<p>Additionally, an exciting advance in the NR-seq field is the number of unique extensions that have been developed to apply nucleotide recoding to the study of several aspects of RNA dynamics. This review concludes with a summary of currently published NR-seq extensions.</p>
+</section>
+<section id="a-brief-history-of-nr-seq" class="level2">
+<h2 class="anchored" data-anchor-id="a-brief-history-of-nr-seq">A brief history of NR-seq</h2>
+<p>One of the first strategies to assess the kinetics of RNA synthesis and degradation combined global transcriptional inhibition with RNA-seq. RNA levels following a time coruse of inhibition could be fit to exponential decay curves to assess turnover kinetics in high-throughput. Combining this with pre-inhibition abundance information allows one to assess synthesis kinetics. While this approach continues to be widelly used, it suffers from a number of drawbacks. For one, rigorous normalization is needed to track the decreasing absolute levels of RNA. As RNA-seq only provides a relative measure of RNA abundance, this typically requires exogenous spike-ins to account for the global differences in RNA abundance between inhibition timepoints. This introduces additional experimental complexity that requires optimization. In addition, global transcription inhibition causes the cells to launch myriad stress responses, many of which affect transcript stability. This represents a confounder that complicates the interpretation of transcriptional inhibition data. Thus, a strategy to probe the kinetics of RNA without significant perturbation of the system was needed.</p>
+<p>Metabolic labeling with nucleotide analogs offers one such strategy. Cells will incorporate these labels into nascent RNA, leading to the existence of two distinct populations of RNA: unlabeled, old RNA that existed at the start of labeling and new RNA that had the potential to incorporate metabolic label. Tracking the dynamics of these two populations yields the information necessary to dissect transcription and degradation kinetics of each RNA in a population of cells. Originally, doing so required biochemically separating the two populations and sequencing each (or more specifically enriching for one and sequencing the enriched and input samples). This either relied on chemistries that conjugated biotin to incorproated labels so that labeled RNA could be separated from unlabeled via a biotin-streptavidin pull down, or immunoprecipitation via antibodies that specifically recognize the metabolic label. While powerful, these enrichment-based techniques require substantial amounts of starting RNA, introduce biochemical biases during enrichment, and cannot distinguish the desired enriched RNAs from nontrivial levels of contamination. Labeled and unlabeled spike-ins have been proposed to quantify and account for some of these challenges, but hese introduce their own experimental challenges and are unable to account for length biases in the enrichment. Further innovation was thus required to improve the robustness of metabolic labeling strategies.</p>
+<p>Several labs (including the Simon lab, where I did my PhD) addressed these shortcomings by developing nucleotide recoding RNA-seq methods (NR-seq). These techniques combine s4U metabolic labeling and nucleotide recoding chemistry (TimeLapse, SLAM, TUC, etc.) to either convert or disrupt the hydrogen bonding pattern of incorporated s4U. This yields apparent T-to-C mutations in the RNA-seq data that indicate sites of s4U incorporation and can be used to estimate the fraction of extracted RNA that was synthesized after the introduction of metabolic label. This adds kinetic information to the snapshot provided by RNA-seq while eliminating the need for enrichment of labeled RNA. A simplified schematic of NR-seq data and its analysis is presented in Figure 1. T-to-C mutations in sequencing reads can be used to bioinformatically quantify the levels of labeled and unlabeled RNA, with the Simon lab originally introducing the now gold-standard mixture modeling approach for this task. Simple kinetic models of the trajectories of these two species relate the kinetic parameters of interest to the data obtained. This is how NR-seq can quantify the kinetics of gene expression.</p>
+</section>
+<section id="analyzing-nr-seq-data" class="level2">
+<h2 class="anchored" data-anchor-id="analyzing-nr-seq-data">Analyzing NR-seq data</h2>
+<p>Here I discuss how to analyze processed NR-seq data before discussing the details of NR-seq data processing. This will allow me to better motivate the importance of optimally processed NR-seq data. This means I will assume that you have information about how many instances of a given read-vs-reference mismatch type (e.g., T-to-C mismatches) were in each read, and how many mutable nucleotides were in the reference sequence to which this read aligned (e.g., number of reference T’s). Throughout these and later sections, my discussion will assume a pulse-label (vs.&nbsp;a pule-chase) design was utilized, as the optimality of this approach will be discussed later.</p>
+<section id="modeling-the-mutational-content-of-sequencing-reads" class="level3">
+<h3 class="anchored" data-anchor-id="modeling-the-mutational-content-of-sequencing-reads">Modeling the mutational content of sequencing reads</h3>
+<p>In NR-seq data, two populations of sequencing reads exist: those originating from RNA synthesized prior to metabolic labeling (the unlabeled RNA; old RNA in a pulse-label design), and those originating from RNA synthesized during metabolic labeling (the labeled RNA; new RNA in a pulse-label design). On average, the mutational content of the latter will be higher than that of the former. Analyzing NR-seq dat requires making use of this fact to infer the fraction of reads coming from each of these two populations for a given read.</p>
+<p>Originally, two ideas were proposed. The simplest was to use a mutation content cutoff to classify reads as coming from labeled or unlabeled RNA. In other words, all reads with N or more (N usually being 1 or 2) mutations were classified as “labeled”, and all other reads were classified as “unlabeled”. This strategy is intuitive and computationally efficient. Despite this, it suffers from some serious shortcomings. For one, the mutational content of reads from labeled RNA is largely a function of three factors: 1) the U-content of the region of the RNA from which the read is derived, 2) the metabolic label incorporation and chemical recoding efficiencies, and 3) the background mutation rate. While the background mutation rate is often fairly constant across samples and RNAs, the other two factors are subject to large amounts of read-to-read and sample-to-sample variability. For example, different RNAs can have very different average U-contents. In addition, perturbing cellular metabolism often decreases label incorporation rates. This latter point is an especially concerning batch effect, as it can cause the mutation content of reads from a given feature to vary not because the amount of labeled RNA differs between two conditions, but because the incorporation rate is lower in one condition versus the other. The result is that mutation content cutoffs often provide a simple but biased estimate for the amount of labeled RNA from a given feature.</p>
+<p>A more robust analysis strategy is mixture modeling. In this strategy, assumptions are made about the distributions that best describe the expected mutational content from labeled and unlabeled RNA. For eample, the number of mutations in reads from these two populations could be modeled as following a Poisson distribution with some mean, a mean which is necessarily higher in the labeled RNA reads than the unlabeled RNA reads. Due to the high amounts of read-to-read variance in U-content though, modeling the mutational content as a binomial distribution that takes into account both the incorporation/recoding rate as well as the read’s U-content is optimal. This strategy (or slight variants of it), known as two-component binomial mixture modeling (TCBMM), was thus implemened in analysis software such as GRAND-SLAM, bakR, HalfPipe, and EZbakR. Mixture modeling has been shown to provide unbiased estimates of labeled RNA abundance, even in the face of relatively low incorporation/recoding rates (Figure 2).</p>
+<p>The likelihood function for TCBMM (Figure 3) can be generalized as such:</p>
+<p>$$ <span class="math display">\[\begin{gather}
+L(\theta, p_{\text{new}}, p_{\text{old}}) = \theta \cdot \text{Binomial}(\text{nM}, \text{nN}, p_{\text{new}}) + (1 - \theta) \cdot \text{Binomial}(\text{nM}, \text{nN}, p_{\text{old}})  \\
+\text{Binomial}(\text{nM}, \text{nN}, p_{\text{old}}) =  \binom{\text{nN}}{\text{nM}}p^{\text{nM}}(1-p)^{\text{nN} - \text{nM}} \\
+
+\theta = \text{fraction of reads from labeled RNA (aka the new-to-total ratio, or NTR)} \\
+\text{nM} = \text{number of mutations (e.g., T-to-C mutations in a standard }\text{s}^{4}\text{U} \text{ NR-seq analysis)} \\
+\text{nN} = \text{number of mutable nucleotides (e.g., Ts in a standard }\text{s}^{4}\text{U} \text{ NR-seq analysis)} \\
+
+p_{\text{new}}, p_{\text{old}} = \text{mutation probability in reads from new (labeled) and old (unlabeled) RNA}
+
+\end{gather}\]</span> $$</p>
+</section>
+<section id="modifying-tcbmm" class="level3">
+<h3 class="anchored" data-anchor-id="modifying-tcbmm">Modifying TCBMM</h3>
+<p>The power of mixture modeling lies in both its robustness as well as its extensibility. TCBMM makes several assumptions about the mutational content of NR-seq reads; namely that:</p>
+<ul>
+<li>Every uridine in an RNA synthesized in the presence of label was equally likely to get replaced with s<sup>4</sup>U. This is formalized above by there being only one <span class="math inline">\(p_{\text{new}}\)</span>.</li>
+<li>Every sequenced uridine in an unlabeled RNA was equally likely to give rise to a non-s<sup>4</sup>U-related mutation due to sequencing errors, alignment errors, etc. This is formalized above by there being only one <span class="math inline">\(p_{\text{old}}\)</span>.</li>
+<li>By default, all existing tools (GRAND-SLAM, bakR, HalfPipe, and EZbakR) assume that the mutation rate in reads from labeled and unlabeled RNA are sample-wide global parameters. That is, all RNAs transcribed from all genes are assumed to have the same rate of s<sup>4</sup>U incorporation, and reads from these RNAs are subject to the same background mutation rate. Thus<span class="math inline">\(p_{\text{new}}\)</span> and <span class="math inline">\(p_{\text{old}}\)</span> are assumed to be the same for all genes in the above formalism.</li>
+</ul>
+<p>If users find one or more of these assumptions to be violated, they can attempt to modify and extend this model. Towards thate end, several modification of standard TCBMM have been proposed. These include:</p>
+<ul>
+<li>Three-component mixture modeling, where a second population of reads from unlabeled RNA with a higher mutation rate (presumably due to heightened alignment errors) is modeled.</li>
+<li>Overdisperse mixture modeling where an overdisperse binomial distribution (e.g., a beta-binomial) replaces one or both of the binomial distribution components, or where a different incorporation rate parameter is estimated for fast and slow turnover RNA.</li>
+<li>Hierarchical mixture modelign where a sample-wide average incorporation rate is inferred and used as a strongly regularizing prior to estimate feature-specific incorporation rates.</li>
+<li>Modeling the transcription process, which at short label times leads to an expected position-dependency in the incorporation rate.</li>
+</ul>
+<p>While all of these are theoretically promising, the challenge of fitting more complex models is two-fold. 1) Their increased flexibility comes with an increased risk of overfitting. This can lead to estimate instability, where a better model fit yields extreme conclusions about RNA dynamics (e.g., unusualy high fraction new and thus unrealistically rapid turnover kinetics). 2) While an alternative model may capture one aspect of the true data generating process unaccounted for by TCBMM, it may amplify biases that arise from not accounting for some other aspect of the data generating process.</p>
+<p>To illustrate point 1, consider the task of fitting a TCBMM with feature-specific mutation rates. While in theory, it is straightforward to obtain maximum likelihood estimates for the parameters of such a model, model flexibility can make interpretation of maximum likelihood parameters fraught. Intuitively, this is because changing different parameters can have similar expected impacts on your data. A higher fraction new will yield more reads with high mutational content, but so will a low fraction new combined with a higher background mutation rate. While with enough reads these two situations can be accurately deconvolved, this analysis is highly uncertain for low coverage features.</p>
+<p>To illustrate point 2, consider the idea of three-component mixture modeling. While this can capture certain types of overdispersion in mutation rates from old RNA reads, it can amplify biases from not modeling overdispersion in mutation rates from new RNA reads. A three-component mixture model will classify many moderate mutation rate reads as “old”, when in fact they may represent a preponderance of low mutation rate new reads. This kind of overdispersion is made even more likely by the fact that metabolic label availability will likeloy ramp up and down over time. Thus, reads from RNA synthesized at different time points may have different true mutation rates.</p>
+<p>How can one navigate building more complex models while avoiding some of these problems? Point 1 can be addressed through regularization. From a Bayesian perspective, this means using one’s domain expertise or trends in these high-throughput datasets to craft informative priors that constrain the parameter search space. For example, to fit a hierarchical mixture model in EZbakR, where each feature is allowed to have its own new read mutation rate (<span class="math inline">\(p_{\text{new}}\)</span>), I crafted a strategy to infer strongly regularizing priors from sample-wide trends. These priors were designed to be very conservative to limit estimate variance.</p>
+<p>Point 2 represents the fundamental challenge of statistical modeling: crafting a model of the data generating process that faithfully captures most of the relevant sources of variance in one’s data. This is difficult, but several strategies exist to navigate this complexity. Information criteria are a popular metric by which to compare fits of a more complex model to that of a simpler model. These criteria are designed to penalize model complexity to avoid rewarding overfit models with better metrics. While simple criteria like the Akaike information criteria (AIC) are popular due to their implementation ease, more robust metrics have been developed since the advent of AIC. For example, in the context of mixture modeling, the widely applicable information criteria (WAIC; a.k.a. the Watanabe-Akaike Information Criteria) may provide a number of advantages over AIC.</p>
+<p>Information criteria are not panacea though. Information criteria are rigorous ways to assess if added model complexity is capture a significant amount of variance in your data that a simple model fails to account for. Even if a more complex model is succeeding by this metric, it could still be providing biased estimates. Thus, when designing new NR-seq models, I suggest a multi-pronged approach that weighs several metrics when deciding if a more complex model is worth using. If adopting a Bayesian approach, information criteria can be complemented with posterior predictive checks, where data is simulated from the fit model and compared to the analyzed data. Serious discrepancies between simulated and real data can reveal model mis-specifications and guide model improvement. We also suggest comparing results given by standard TCBMM with those provided by a more complex model. Extreme sample-wide discrepancies between the two may signify that the more complex model is overfitting or providing unstable estimates. Discrepancies should thus be thoroughly explored and explained. Finally, we suggest assessing model robustness through simulations from a data generating process more complicated than that used for model fitting. If the bias introduced by these true vs.&nbsp;assumed data generating process discrepancies is amplified by use of a more complex model relative to TCBMM, we urge cautio nin adopting the more complex model. The simplicity and robustness of TCBMM makes it an effective baseline with which to compare alternative models.</p>
+</section>
+<section id="transcript-isoform-analyses-of-short-read-data" class="level3">
+<h3 class="anchored" data-anchor-id="transcript-isoform-analyses-of-short-read-data">Transcript isoform analyses of short-read data</h3>
+<p>Transcript isoforms are the RNA species whose synthesis and degradation kinetics are of biological significance. Despite this, quantifying the NTRs of individual transcript isoforms in a short-read NR-seq experiment is challenging. This is because most short reads cannot be unambiguously assigned to a specific transcript isoform. Strategies have been developed to overcome these challenges in the context of quantifying the abundances of isoforms. I thus recently developd a similar approach to estimate isoform-specific NTRs in short read NR-seq data.</p>
+<p>The approach, implemented in the EZbakR suite, combines standard NR-seq TCBMM with transcript isoform quantification. This approach estimates NTRs for each observed transcript equivalence class (TEC; i.e., the set of isoforms with which a read is compatible) and integrates this with estimates of transcript isoform abundances from standard tools for this task. EZbakR is able to estimate isoform-specific NTRs by deconvolving TEC NTRs using a novel beta mixing model. I used this approach while in the Simon lab, and in collaboration with Bobby Hogg’s lab at the NIH, to study the synthesis and degradation kinetics of individual transcript isoforms, and to identify NMD sensitive isoforms.</p>
+<p>Accurate transcript isoform analyses require annotations of expressed isoforms. In our work presenting the isoform-NTR estimation strategy, we noted that standard off-the-shelf references did not faithfully reflect our particular cell line’s transcriptome. We thus explored strategies using StringTie2 and custom filtering to build more accurate, bespoke annotations. We showed that this approach significantly improved the accuracy of transcript-isoform level analyses. While a powerful approach, the need to build custom annotations adds to the complexity of the workflow. In addition, tools for building such annotations are not without their limitations, as ab initio assembly is a fundamentally difficult task. Having matched, unlabeled, long read data can improve assembly, but presents its own challenges and shortcomings. Thus, while isoform-level analyses represent a poewrful new paradigm in analyses of NR-seq data, I urge users to carefully assess the potential of annotation-related biases in their analyses.</p>
+</section>
+<section id="modeling-and-correcting-for-dropout-in-nr-seq-data" class="level3">
+<h3 class="anchored" data-anchor-id="modeling-and-correcting-for-dropout-in-nr-seq-data">Modeling and correcting for dropout in NR-seq data</h3>
+<p>Like all other RNA-seq based methods, NR-seq data can be plagued by various biases. The most prominent example of this is dropout, a phenomenon observed across many distinct datasets. Dropout is the underrepresentation of reads from labeled RNA. While its origins are not fully understood, it has been proposed to be caused by a combination of disproportionate loss of labeled RNA during RNA extraction and library preparation, loss of high mutation content reads during alignment, and toxicity due to s<sup>4</sup>U labeling.</p>
+<p>Dropout in NR-seq data can be detected and quantified with the help of no-label controls. A no-label control refers to data from samples not fed with a metabolic label. These are important controls that should be included in all NR-seq datasets. A simple model of dropout is that there exists a global rate at which label-containing RNA is lost relative to unlabeled RNA, referred to as the dropout rate. Thus, rapidly turned over RNA that are more highly labeled will be disproportionately affected compared to more stable, relatively unlabeled RNA. Comparing the estimated turnover rate in the labeled samples to the no-label vs.&nbsp;labeled read counts can thus reveal dropout. More specifically, dropout looks like a strong correlation between these quantities. Plots like those shown in Figure 4 can be easily made with both grandR and EZbakR.</p>
+<p>If your NR-seq data suffers from non-trivial amounts of dropout, you can employ strategies to correct for dropout. grandR was the first tool to implement such a strategy. It follows from a model alluded to above and assumes that there is a sample-wide rate (call it <span class="math inline">\(\text{p}_{\text{do}}\)</span>) at which labeled RNA is disproportinately lost relative to unlabeled RNA. If this is the case, then then true fraction of reads from labeled RNA (<span class="math inline">\(\theta_{\text{true}}\)</span>) is related to the dropout-biased estimate (<span class="math inline">\(\theta_{\text{do}}\)</span>) like so:</p>
+<p><span class="math display">\[
+\begin{gather}
+\theta_{\text{true}} = \frac{\theta_{\text{do}}\cdot\text{p}_{\text{do}}}{\theta_{\text{do}}\cdot\text{p}_{\text{do}} + (1-\theta_{\text{do}})}
+\end{gather}
+\]</span></p>
+<p>Similarly, a relationship exists between the true expected read counts from a given feature and the observed, labeled sample read count:</p>
+<p><span class="math display">\[
+\begin{gather}
+\text{R}_{\text{true}} = \text{R}_{\text{do}} \cdot \frac{\theta_{\text{G}}\cdot(1-\text{p}_{\text{do}}) + (1-\theta_{\text{G}})}{\theta_{\text{true}}\cdot(1-\text{p}_{\text{do}}) + (1-\theta_{\text{G}})}
+\end{gather} \\
+\theta_{\text{G}} = \frac{\theta_{\text{G,do}}}{(1-\text{p}_{\text{do}}) + \theta_{\text{G,do}} \cdot \text{p}_{\text{do}}} \\
+\theta_{\text{G,do}} = \frac{\sum_{\text{j=1}}^{\text{NF}} \theta_{\text{do,j}} \cdot \text{R}_{\text{j}}}}{\sum_{\text{j=1}}^{\text{NF} \text{R}_{\text{j}}}
+\]</span></p>
+<p>Using these theoretical relationships, a dropout rate can be estimated that, after correcting read counts, yields no correlation between the labeled vs.&nbsp;no-label read count ratio and the turnover kinetics of an RNA. This strategy is implemented in grandR. bakR implements a similar strategy by which the relationship between dropout and the NTR is modeled and fit with the method of maximum likelihood. EZbakR implements both of these strategies.</p>
+<p>Dropout correction is a powerful addition to the NR-seq analysis toolkit. Despite this, it is not without its limitations. The requirement for matched no-label samples in all conditions tested adds to the experimental burden. In addition, even when no-label data is colelcted, resource constraints often lead researchers to only collect a single replicate of this data, as it is not itself a useful NR-seq sample. This can make the dropout metric, the ratio of labeled:no-label read counts, noisy.</p>
+<p>To address these limitations, EZbakR implements a strategy I refer to as dropout normalization. Dropout normalization does not require any no-label data and involves comparing internally normalized NTRs rather than read counts across samples. The strategy starts by identifying the lowest dropout sample (e.g., that which provides the lowest median uncorrected half-life estimate) and estimating dropout in other samples relative to this sample. This estimated relative dropout rate is then used to correct NTRs and read counts in all samples. This strategy has proven particularly useful as dropout rates often correlate with biological conditions, which risks confounding comparative analyses if not properly accounted for. The downside of dropout normalization is that it tends to normalize out global differences in half-life estimates, even if tehse are biologically real and not solely the result of dropout. Dropout is thus similar in spirit to RNA-seq read count normalization methods such as the median-of-ratios or TMM, as well as a simpler median-kdeg normalization strategy implemented in grandR, which all effectively assume that there are no real global differences in RNA levels/turnover kinetics across samples. Dropout normalization alternatively assumes that any global changes in RNA turnover kinetics are dropout driven. Users should thus be aware of this assumption when using dropout normalization.</p>
+</section>
+</section>
+<section id="kinetic-parameter-estimation-with-nr-seq-data" class="level2">
+<h2 class="anchored" data-anchor-id="kinetic-parameter-estimation-with-nr-seq-data">Kinetic parameter estimation with NR-seq data</h2>
+<p>One of the original motivations for developing NR-seq was to robustly estimate the kinetics of RNA synthesis and degradation. In this section, I discuss the modeling and assumptions necessary to make this possible.</p>
+<section id="standard-kinetic-analyses" class="level3">
+<h3 class="anchored" data-anchor-id="standard-kinetic-analyses">Standard kinetic analyses</h3>
+<p>Vanilla, bulk NR-seq is a powerful method by which to quantify the kinetics of RNA synthesis and degradation. A typical kinetic analysis means modeling the NTR of reads from a feature (e.g., the union of exons at a gene) as a function of the RNA’s synthesis and degradation rate constants. The simplest identifiable model of this sort assumes that mature mRNA is synthesized at a rate <span class="math inline">\(\text{k}_{\text{syn}}\)</span> and degraded with a rate constant <span class="math inline">\(\text{k}_{\text{deg}}\)</span>. This model can be formalized via the following analytically tractable differential equation:</p>
+<p><span class="math display">\[
+\begin{gather}
+\frac{\text{dR}}{\text{dt}} = \text{k}_{\text{syn}} - \text{k}_{\text{deg}} \cdot \text{R} \\
+\text{Solution (with R(0) = 0)}: \text{R(t)} = \frac{\text{k}_{\text{syn}}}{\text{k}_{\text{deg}}} \cdot (1 - \text{e}^{\text{k}_{\text{deg}} \cdot \text{t}}) \\
+\end{gather}
+\]</span></p>
+<p>At steady-state, the following relationships hold:</p>
+<p><span class="math display">\[
+\begin{gather}
+\frac{\text{dR}}{\text{dt}} = 0;\text{ }\text{R}_{\text{ss}} = \frac{\text{k}_{\text{syn}}}{\text{k}_{\text{deg}}} \\
+\text{NTR} = \frac{\text{R(tl)}}{\text{R}_{\text{ss}}} = 1 - \text{e}^{\text{k}_{\text{deg}} \cdot \text{t}} \\
+\text{k}_{\text{deg}} = \frac{-\text{ln}(1-\text{NTR})}{\text{t}_{\text{label}}}
+\end{gather}
+\]</span> This model makes several explicit assumptions:</p>
+<ul>
+<li>Steady-state: this means that during the labeling, RNA levels are not changing. While individual cells may rarely ever be at steady-state, e.g., as transcript levels are regulated throughout the cell cycle, in bulk NR-seq this means assuming that the average RNA levels across all cells assayed are constant.</li>
+<li>Zeroth-order synthesis kinetics (i.e., transcription is a Poisson process): this means that there exists a single, constant rate of transcription during the labeling. While once again often violated in single cells due to phenomena such as transcriptional bursting, it is likely a decent model of bulk transcriptional behavior.</li>
+<li>First-order degradation (i.e., exponential decay): this means that RNAs have a characteristic half-life that does not change over either the course of the labeling or their lifetime. This means assuming that RNAs are “ageless” or that the probability an RNA degrades in the next instance is independent of how long it has been around. This assumption breaks down if multiple rate-limiting steps separate an RNA’s birth from its detah (e.g., if RNA export from the nucleus is on a similar time-scale of cytoplasmic degradation), or if there exist multiple sub-populations of RNA with different decay kientics (e.g., if nuclear mRNA is degraded at a different rate than cytoplasmic mRNA). While this assumption is inevitably violated to some extent due to the complexity of the RNA life cycle, it has consistently proven to be a reasonable approximation in a variety of settings, while still providing a useful (if somewhat biased) picture of general turnover kinetics when it is violated.</li>
+</ul>
+</section>
+<section id="non-steady-state-modeling" class="level3">
+<h3 class="anchored" data-anchor-id="non-steady-state-modeling">Non-steady-state modeling</h3>
+<p>The steady-state assumption makes analyzing and interpreting NR-seq data easy. Despite this, it is often violated in contexts where you are applying a perturbation to cells shortly before or during labeling. Narain et al.&nbsp;proposed a strategy to obtain unbiased estimates even in this setting. The intuition behind how this approach works is that no matter what, the dynamics of old (unlabeled) RNA is entirely a function of turnover kinetics. Thus, if you know the levels of an RNA at the start of labeling, then that combined with its level at the end of labeling tells you how much RNA decayed in that time frame. Formally:</p>
+<p><span class="math display">\[
+\begin{gather}
+\text{R}_{\text{old}}(\text{t}) = \text{R}_{\text{init}} \cdot e^{-\text{k}_{\text{deg}} \cdot \text{t}} \\
+\text{R}_{\text{new}}(\text{t}) = \frac{\text{k}_{\text{syn}}}{\text{k}_{\text{deg}}} \cdot (1 - e^{\text{k}_{\text{deg}} \cdot \text{t}}) \\
+-\frac{\text{ln}(\frac{\text{R}_{\text{old}}(\text{t}_{\text{label}})}{\text{R}_{\text{init}}})}{\text{t}_{\text{label}}} = \text{k}_{\text{deg}} \\
+\frac{\text{R}_{\text{new}}(\text{t}_{\text{label}})}{1-e^{\text{k}_{\text{deg}} \cdot \text{t}}}\cdot \text{k}_{\text{deg}} = \text{k}_{\text{syn}}
+\end{gather}
+\]</span></p>
+<p>An estimate for <span class="math inline">\(\text{R}_{\text{init}}\)</span> typically comes from matched RNA-seq data collected at a time point equivalent to that at which labeling was started for a given labeled sample. Note, the stability or synthesis rate of an RNA could be changing during the labeling. The <span class="math inline">\(\text{k}_{\text{deg}}\)</span> and <span class="math inline">\(\text{k}_{\text{syn}}\)</span> estimates from this strategy should thus be thought of as the time-averaged value of a potentially time-varying <span class="math inline">\(\text{k}_{\text{deg}}(\text{t})\)</span> and <span class="math inline">\(\text{k}_{\text{syn}}(\text{t})\)</span>. Both grandR and EZbakR implement this analysis strategy.</p>
+<p>While having an approach that yields theoretically unbiased estimates of turnover and synthesis kinetics even in the face of non-steady-state dynamics is powerful, it is not without its limitations. For one, a unique experimental design is required. If you are missing RNA-seq data from the start of any labeling period, this strategy cannot be applied. In addition, even with the proper experimental design, this analysis approach has some weaknesses. Its statistical properties are suboptimal relative to the steady-state analysis. In particular, the variance of the <span class="math inline">\(\text{k}_{\text{deg}}\)</span> estimation is typically higher than that of the steady-state estimate, especially at low NTRs (Figure 5). Intuitively, this is because the steady-state estimate is only a function of a single sample’s NTR, while the non-steady-state estimate requires comparing an NTR estimate combined with a normalized read count in one sample to a normalized read count in another sample. Thus, while the estimate is technically unbiased, its mean-squared error is not necessarily lower than that of the biased steady-state analysis. This problem can partially be addressed through greater sequencing depth, label time optimization, and more replicates, but it is a challenge that users should be aware of.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
