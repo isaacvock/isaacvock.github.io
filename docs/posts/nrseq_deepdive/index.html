@@ -238,19 +238,19 @@ window.Quarto = {
 <li>Assuming that the probed RNA populations are at steady-state during labeling simplifies the task of kinetic parameter estimation. This assumption can break down when labeling is done during or following a perturbation. Analysis strategies exist which relax this assumption, but they rely on having measurements of RNA abundances at the start of labeling (i.e., no-label RNA-seq data from that time point or a labeled NR-seq data in which RNA was extracted at that point). grandR and EZbakR implement both of these analysis strategies.</li>
 <li>Combining NR-seq with subcellular fractionation is a powerful way by which to explore the kinetics of processes invisible to whole-cell NR-seq. Analyzing this data requires a strategy to normalize read counts and integrate information across all compartments. EZbakR implements such strategies.</li>
 </ul>
-<p>Processing NR-seq data</p>
+<p><strong>Processing NR-seq data:</strong></p>
 <ul>
 <li>Aligning NR-seq reads is difficult due to the chemically induced T-to-C mismatches. While 3-base genome alignment strategies, popular in analyses of bisfulite sequencing data, are a potential solution, they often provide only minimal advantages over standard 4-base alignment approaches while also suffering from their own unique biases and limitations. This is in large part due to the fact that in NR-seq reads, most Ts are not converted to Cs. Thus, the downsides of aligning to a lower complexity genome may often nullify the benefits of not penalizing T-to-C mismatches.</li>
 <li>Specialized alignment approaches may provide an improvement over either a standard 3- or 4-base genome alignment approach. grandRescue is a recently developed approach that implements 4-base alignment followed by 3-base alignment of reads that fail to align via the 4-base strategy. This approach can help recover high mutation content sequencing reads.</li>
 <li>When processing NR-seq data, you have a choice to make about what genomic features you want to assign reads to and perform analyses on. Most tools support performing analyses at the gene- (or 3’-UTR if using 3’-end sequencing) level, but fastq2EZbakR significantly expands the set of features you can analyze to incldue transcript isoforms, exon-exon junctions, etc.</li>
 </ul>
-<p>Experimental design</p>
+<p><strong>Experimental design:</strong></p>
 <ul>
 <li>Label-free control samples (a.k.a. no-label controls) are crucial to detect potential biases introduced by labeling (e.g., dorpout of labeled RNA).</li>
 <li>No-label controls can be used to both assess and correct for these biases in some cases. grandR and EZbakR provide strategies for this task.</li>
 <li>Bias correction strategies make assumptions like any statistical method, and these assumptions should be assessed when interpreting the output of bias correction.</li>
 <li>Pulse-chase experimental designs are mostly unnecessary and usually sub-optimal relative to a pulse-label experimental design. Classic studies using pulse-chases to study RNA degradation were designed such that the pulse created an RNA species whose transcription was shut off during the chase. This meant that the dynamics of these RNA were completely driven by their degradation kinetics. In pulse-label metabolic labeling experiments, the pulse already achievest his end goal: the dynamics of the pre-existing unlabeled RNA will only be driven by their degradation.</li>
-<li>While unique analysis strategies have been proposed that may be strictly compatible with pulse-chases, pulse-chases suffer from the follwing serious shortcomings:
+<li>While unique analysis strategies have been proposed that may be strictly compatible with pulse-chases, pulse-chases suffer from the following serious shortcomings:
 <ul>
 <li>Prolonged exposure to metabolic label, which can lead to adverse effects</li>
 <li>Increased variance in kinetic parameter estimation due to having to compare the estimated fraction of reads that are labeled at the end of the pulse to that at the end of the chase. Compare this with a steady-state pulse-label analysis where the only source of variance is that of the fraction labeled estimate for the pulse.</li>
@@ -277,17 +277,16 @@ window.Quarto = {
 <p>Originally, two ideas were proposed. The simplest was to use a mutation content cutoff to classify reads as coming from labeled or unlabeled RNA. In other words, all reads with N or more (N usually being 1 or 2) mutations were classified as “labeled”, and all other reads were classified as “unlabeled”. This strategy is intuitive and computationally efficient. Despite this, it suffers from some serious shortcomings. For one, the mutational content of reads from labeled RNA is largely a function of three factors: 1) the U-content of the region of the RNA from which the read is derived, 2) the metabolic label incorporation and chemical recoding efficiencies, and 3) the background mutation rate. While the background mutation rate is often fairly constant across samples and RNAs, the other two factors are subject to large amounts of read-to-read and sample-to-sample variability. For example, different RNAs can have very different average U-contents. In addition, perturbing cellular metabolism often decreases label incorporation rates. This latter point is an especially concerning batch effect, as it can cause the mutation content of reads from a given feature to vary not because the amount of labeled RNA differs between two conditions, but because the incorporation rate is lower in one condition versus the other. The result is that mutation content cutoffs often provide a simple but biased estimate for the amount of labeled RNA from a given feature.</p>
 <p>A more robust analysis strategy is mixture modeling. In this strategy, assumptions are made about the distributions that best describe the expected mutational content from labeled and unlabeled RNA. For eample, the number of mutations in reads from these two populations could be modeled as following a Poisson distribution with some mean, a mean which is necessarily higher in the labeled RNA reads than the unlabeled RNA reads. Due to the high amounts of read-to-read variance in U-content though, modeling the mutational content as a binomial distribution that takes into account both the incorporation/recoding rate as well as the read’s U-content is optimal. This strategy (or slight variants of it), known as two-component binomial mixture modeling (TCBMM), was thus implemened in analysis software such as GRAND-SLAM, bakR, HalfPipe, and EZbakR. Mixture modeling has been shown to provide unbiased estimates of labeled RNA abundance, even in the face of relatively low incorporation/recoding rates (Figure 2).</p>
 <p>The likelihood function for TCBMM (Figure 3) can be generalized as such:</p>
-<p>$$ <span class="math display">\[\begin{gather}
+<p><span class="math display">\[
+\begin{gather}
 L(\theta, p_{\text{new}}, p_{\text{old}}) = \theta \cdot \text{Binomial}(\text{nM}, \text{nN}, p_{\text{new}}) + (1 - \theta) \cdot \text{Binomial}(\text{nM}, \text{nN}, p_{\text{old}})  \\
 \text{Binomial}(\text{nM}, \text{nN}, p_{\text{old}}) =  \binom{\text{nN}}{\text{nM}}p^{\text{nM}}(1-p)^{\text{nN} - \text{nM}} \\
-
 \theta = \text{fraction of reads from labeled RNA (aka the new-to-total ratio, or NTR)} \\
 \text{nM} = \text{number of mutations (e.g., T-to-C mutations in a standard }\text{s}^{4}\text{U} \text{ NR-seq analysis)} \\
 \text{nN} = \text{number of mutable nucleotides (e.g., Ts in a standard }\text{s}^{4}\text{U} \text{ NR-seq analysis)} \\
-
 p_{\text{new}}, p_{\text{old}} = \text{mutation probability in reads from new (labeled) and old (unlabeled) RNA}
-
-\end{gather}\]</span> $$</p>
+\end{gather}
+\]</span></p>
 </section>
 <section id="modifying-tcbmm" class="level3">
 <h3 class="anchored" data-anchor-id="modifying-tcbmm">Modifying TCBMM</h3>
@@ -330,10 +329,10 @@ p_{\text{new}}, p_{\text{old}} = \text{mutation probability in reads from new (l
 <p>Similarly, a relationship exists between the true expected read counts from a given feature and the observed, labeled sample read count:</p>
 <p><span class="math display">\[
 \begin{gather}
-\text{R}_{\text{true}} = \text{R}_{\text{do}} \cdot \frac{\theta_{\text{G}}\cdot(1-\text{p}_{\text{do}}) + (1-\theta_{\text{G}})}{\theta_{\text{true}}\cdot(1-\text{p}_{\text{do}}) + (1-\theta_{\text{G}})}
-\end{gather} \\
+\text{R}_{\text{true}} = \text{R}_{\text{do}} \cdot \frac{\theta_{\text{G}}\cdot(1-\text{p}_{\text{do}}) + (1-\theta_{\text{G}})}{\theta_{\text{true}}\cdot(1-\text{p}_{\text{do}}) + (1-\theta_{\text{G}})} \\
 \theta_{\text{G}} = \frac{\theta_{\text{G,do}}}{(1-\text{p}_{\text{do}}) + \theta_{\text{G,do}} \cdot \text{p}_{\text{do}}} \\
 \theta_{\text{G,do}} = \frac{\sum_{\text{j=1}}^{\text{NF}} \theta_{\text{do,j}} \cdot \text{R}_{\text{j}}}}{\sum_{\text{j=1}}^{\text{NF} \text{R}_{\text{j}}}
+\end{gather}
 \]</span></p>
 <p>Using these theoretical relationships, a dropout rate can be estimated that, after correcting read counts, yields no correlation between the labeled vs.&nbsp;no-label read count ratio and the turnover kinetics of an RNA. This strategy is implemented in grandR. bakR implements a similar strategy by which the relationship between dropout and the NTR is modeled and fit with the method of maximum likelihood. EZbakR implements both of these strategies.</p>
 <p>Dropout correction is a powerful addition to the NR-seq analysis toolkit. Despite this, it is not without its limitations. The requirement for matched no-label samples in all conditions tested adds to the experimental burden. In addition, even when no-label data is colelcted, resource constraints often lead researchers to only collect a single replicate of this data, as it is not itself a useful NR-seq sample. This can make the dropout metric, the ratio of labeled:no-label read counts, noisy.</p>

@@ -209,7 +209,7 @@ window.Quarto = {
 <section id="nr-seq-a-reminder" class="level2">
 <h2 class="anchored" data-anchor-id="nr-seq-a-reminder">NR-seq: a reminder</h2>
 <p>In an NR-seq experiment, there are two populations of RNA: those synthesized in the presence of label (a.k.a. labeled, or new, RNA) and those which were synthesized prior to metabolic labeling (a.k.a unlabeled, or old, RNA). The first task of any NR-seq analysis is for a given species of RNA (e.g., RNA transcribed from a particular gene), quantify the relative amounts of these two populations. This is referred to as that species’ “fraction new” or “new-to-total ratio (NTR)”. Downstream analyses are then aimed at interpreting these fraction news/NTRs. This post will only concern itself with fraction new estimation. I will use the term “fraction new” for the remainder of this post.</p>
-<p>To estimate the fraction new, we rely on the mutational content of mapped sequencing reads. NR-seq involves chemically recoding metabolic label (e.g., s4U) so that reverse transcriptase reads it as a different nucleotide (e.g., a cytosine). Thus, reads from new RNA will have, on average, more mutations than reads from old RNA. This observation is the key to analyzing NR-seq data.</p>
+<p>To estimate the fraction new, we rely on the mutational content of mapped sequencing reads. NR-seq involves chemically recoding metabolic label (e.g., s<sup>4</sup>U) so that reverse transcriptase reads it as a different nucleotide (e.g., a cytosine). Thus, reads from new RNA will have, on average, more mutations than reads from old RNA. This observation is the key to analyzing NR-seq data.</p>
 <p>To test the strategies discussed, we will use simulated data. This allows us to know the ground truth and explore the robustness of any approach. Here is the function that we will use to simulate data, as well as some helper functions we can use to assess analysis strategies:</p>
 <div class="cell" data-edit="false">
 <div>
@@ -236,7 +236,7 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyMjIFNpbXVsYXRlIGRhdGFc
 </div>
 </div>
 <p>If you run this code with the default simulation parameters, you’ll see that the estimates are decent. The 1+ mutation cutoff for newness looks better than the 2+ cutoff, with the former yielding estimates that consistently correlate pretty well with the simulated ground truth.</p>
-<p>So that’s all it takes to analyze NR-seq data? Not so fast. In our simulation, there is a default metabolic label incorporation + conversion rate of 5%. While this is a standard “good” incorporation rate, if you analyze as many NR-seq datasets as I have you will quickly notice that there is a lot of dataset-to-dataset variation in the incorporation rate. For example, there is a tremendous amount of cell line-to-cell line variation in the readiness of s4U incorporation, with some cell lines (e.g., HEK293 and HeLa) uptaking s4U with great tenacity and others (e.g., neuronal cell lines) having typically much lower s4U incorporation rates. In addition, incorporation rates also can correlate with biological condition. For example, knocking out key factors in RNA metabolism (e.g., degradation factors) can significantly impact incorporation rates. In general, incorporation rates seem to correlate strongly with general metabolic rates, and anything that perturbs these rates will likely affect incorporation rates.</p>
+<p>So that’s all it takes to analyze NR-seq data? Not so fast. In our simulation, there is a default metabolic label incorporation + conversion rate of 5%. While this is a standard “good” incorporation rate, if you analyze as many NR-seq datasets as I have you will quickly notice that there is a lot of dataset-to-dataset variation in the incorporation rate. For example, there is a tremendous amount of cell line-to-cell line variation in the readiness of s<sup>4</sup>U incorporation, with some cell lines (e.g., HEK293 and HeLa) uptaking s<sup>4</sup>U with great tenacity and others (e.g., neuronal cell lines) having typically much lower s<sup>4</sup>U incorporation rates. In addition, incorporation rates also can correlate with biological condition. For example, knocking out key factors in RNA metabolism (e.g., degradation factors) can significantly impact incorporation rates. In general, incorporation rates seem to correlate strongly with general metabolic rates, and anything that perturbs these rates will likely affect incorporation rates.</p>
 <p>This lattermost observation is particularly dangerous when it comes to applying the simple mutation content cutoff analysis strategy. Often, we don’t just care about what an RNA’s dynamics look like in one biological condition, but rather how it differs between two more different conditions (e.g., WT vs.&nbsp;KO of your favorite gene, untreated vs.&nbsp;drug treated, etc.). If an analysis method is not robust to variation in incorporation rates, it risks making technical variability look like biological signal.</p>
 <p>Thus, what happens if we simulate a different incorporation rate? If you tweak the simulation above (set <code>phigh</code> in <code>simulate_nrseq()</code> to a different value than its default of 0.05 and rerun code):</p>
 <div class="quarto-figure quarto-figure-center">
@@ -274,7 +274,7 @@ What is a data point’s “likelihood”?
 </div>
 <p>In practice, this often involves specifying a convenient to work with probability distribution that describes the variability in your data. To do this, you need to make some assumptions about your data. For NR-seq data, it is common to assume:</p>
 <ol type="1">
-<li>For reads from new RNA, there is a set probability (call it phigh) that a given mutable nucleotide (e.g., uridines in an s4U labeling NR-seq experiment) is mutated. This phigh is the same for all such reads, regardless of the RNA species of origin.</li>
+<li>For reads from new RNA, there is a set probability (call it phigh) that a given mutable nucleotide (e.g., uridines in an s<sup>4</sup>U labeling NR-seq experiment) is mutated. This phigh is the same for all such reads, regardless of the RNA species of origin.</li>
 <li>For reads from old RNA, there is also a set probability of mutation (call it pold) for all such reads.</li>
 <li>All nucleotides are independent. Whether or not a given nucleotide is mutated has no impact on the probability that other nucleotides in that read are also mutated (given the status of the read as coming from old or new RNA).</li>
 </ol>
@@ -316,11 +316,11 @@ What is an “RNA feature”?
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Our goal is to estimate the fraction of RNA molecules that are new/labeled for a given species of RNA. Our definition of “species” is technically flexible, and is what I refer to as an “RNA feature”. The most common choice for a feature is a gene. That is, we estimate the fraction of RNA molecules produced from a given gene that are new. In practice though, there are a lot more features we may be interested in analyzing. See the <a href="https://www.biorxiv.org/content/10.1101/2024.10.14.617411v1">EZbakR preprint</a> for a description of some other options.</p>
+<p>Our goal is to estimate the fraction of RNA molecules that are new/labeled for a given species of RNA. Our definition of “species” is technically flexible, and is what I refer to as an “RNA feature”. The most common choice for a feature is a gene. That is, we estimate the fraction of RNA molecules produced from a given gene that are new. In practice though, there are a lot more features we may be interested in analyzing. See the <a href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1013179">EZbakR paper</a> for a description of some other options.</p>
 </div>
 </div>
 </div>
-<p>In this post, we will estimate these via the method of maximum likelihood. That means we will find parameter estimates that maximum the likelihood of our data. In theory, this is simple: just write a function to calculate the likelihood for any combination of parameter values and data, and use the optimization algorithm of your choice. Here’s what that might look like for the TCBMM:</p>
+<p>In this post, we will estimate these via the method of maximum likelihood. That means we will find parameter estimates that maximize the likelihood of our data. In theory, this is simple: just write a function to calculate the likelihood for any combination of parameter values and data, and use the optimization algorithm of your choice. Here’s what that might look like for the TCBMM:</p>
 <div class="cell">
 <div>
 <div id="webr-3" class="exercise-cell">
@@ -335,7 +335,7 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiXG4jIyMgRGVmaW5lIHRoZSBk
 </section>
 <section id="complete-pooling-to-improve-estimate-stability" class="level3">
 <h3 class="anchored" data-anchor-id="complete-pooling-to-improve-estimate-stability">Complete pooling to improve estimate stability</h3>
-<p>One thing you should note though is that there are a handful of highly inaccurate estimates. These are almost always low coverage features, but can we do better? I will argue yes, thanks to a two-step fitting approach that is implemented in tools like bakR/EZbakR and GRAND-SLAM.</p>
+<p>One thing you should note though is that there are a handful of highly inaccurate estimates. The frequency of these increases if you decrease the simulated s<sup>4</sup>U incorporation rate (e.g., try phigh = 0.02 for instance). These are usually lower coverage features, but can we do better? I will argue yes, thanks to a two-step fitting approach that is implemented in tools like bakR/EZbakR and GRAND-SLAM.</p>
 <p>Having to estimate both the labeled/unlabeled read mutation rates as well as the fraction of reads from each population is fundamentally challenging. While it is technically identifiable (ignoring label flipping, which is easy to deal with in this setting), low coverage features typically have too little information to accurately estimate all of these parameters. Does a feature have only a few high mutation content reads because the fraction new is low, or because the mutation rate in reads from new RNA (phigh) low? Tough to distinguish these two if you only have 10s of reads. The common solution to this problem is “complete pooling of the mutation rate estimates”.</p>
 <p>Complete pooling refers to a spectrum of model archetypes possible in multi-group analyses (e.g., estimating the fraction new for multiple different RNAs, like RNAs produced from different genes). Instead of estimating a separate phigh and plow for each feature, how about we use all of the data to calculate a single phigh and plow for all features? Doing this means assuming that there is very little feature-to-feature phigh or plow variation, but there is decent evidence that this assumption often holds, especially if analyzing data with standard label times (e.g., multi-hour label times in human cell lines).</p>
 <p>The modified strategy might look like:</p>
@@ -363,8 +363,8 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiXG4jIyMgRGVmaW5lIHRoZSBk
 <h2 class="anchored" data-anchor-id="going-beyond-tcbmm">Going beyond TCBMM</h2>
 <p>The power of mixture modeling lies both in its robustness as well as its extensibility. TCBMM makes several assumptions about the mutational content of NR-seq reads. Namely that:</p>
 <ol type="1">
-<li>Every uridine in a labeled RNA was equally likely to get replaced with s4U</li>
-<li>Every uridine captured by a sequencing read was equally likely to give rise to a non-s4U-related mutation due to sequencing errors, alignment errors, etc.</li>
+<li>Every uridine in a labeled RNA was equally likely to get replaced with s<sup>4</sup>U</li>
+<li>Every uridine captured by a sequencing read was equally likely to give rise to a non-s<sup>4</sup>U-related mutation due to sequencing errors, alignment errors, etc.</li>
 </ol>
 <p>In future posts, I will discuss a number of ideas for how to extend and improve NR-seq TCBMM’s. These include:</p>
 <ol type="1">
