@@ -344,7 +344,7 @@ p_{\text{new}}, p_{\text{old}} = \text{mutation probability in reads from new (l
 <section id="modeling-and-correcting-for-dropout-in-nr-seq-data" class="level3">
 <h3 class="anchored" data-anchor-id="modeling-and-correcting-for-dropout-in-nr-seq-data">Modeling and correcting for dropout in NR-seq data</h3>
 <p>Like all other RNA-seq based methods, NR-seq data can be plagued by various biases. The most prominent example of this is dropout, a phenomenon observed across many distinct datasets. Dropout is the underrepresentation of reads from labeled RNA. While its origins are not fully understood, it has been proposed to be caused by a combination of disproportionate loss of labeled RNA during RNA extraction and library preparation, loss of high mutation content reads during alignment, and toxicity due to s<sup>4</sup>U labeling.</p>
-<p>Dropout in NR-seq data can be detected and quantified with the help of no-label controls. A no-label control refers to data from samples not fed with a metabolic label. These are important controls that should be included in all NR-seq datasets. A simple model of dropout is that there exists a global rate at which label-containing RNA is lost relative to unlabeled RNA, referred to as the dropout rate. Thus, rapidly turned over RNA that are more highly labeled will be disproportionately affected compared to more stable, relatively unlabeled RNA. Comparing the estimated turnover rate in the labeled samples to the no-label vs.&nbsp;labeled read counts can thus reveal dropout. More specifically, dropout looks like a strong correlation between these quantities. Plots like those shown in Figure 4 can be easily made with both grandR and EZbakR.</p>
+<p>Dropout in NR-seq data can be detected and quantified with the help of no-label controls. A no-label control refers to data from samples not fed with a metabolic label. These are important controls that should be included in all NR-seq datasets. A simple model of dropout is that there exists a global rate at which label-containing RNA is lost relative to unlabeled RNA, referred to as the dropout rate. Thus, rapidly turned over RNA that are more highly labeled will be disproportionately affected compared to more stable, relatively unlabeled RNA. Comparing the estimated turnover rate in the labeled samples to the no-label vs. labeled read counts can thus reveal dropout. More specifically, dropout looks like a strong correlation between these quantities. Plots like those shown in Figure 4 can be easily made with both grandR and EZbakR.</p>
 <p>If your NR-seq data suffers from non-trivial amounts of dropout, you can employ strategies to correct for dropout. grandR was the first tool to implement such a strategy. It follows from a model alluded to above and assumes that there is a sample-wide rate (call it <span class="math inline">\(\text{p}_{\text{do}}\)</span>) at which labeled RNA is disproportinately lost relative to unlabeled RNA. If this is the case, then then true fraction of reads from labeled RNA (<span class="math inline">\(\theta_{\text{true}}\)</span>) is related to the dropout-biased estimate (<span class="math inline">\(\theta_{\text{do}}\)</span>) like so:</p>
 <p><span class="math display">\[
 \begin{gather}
@@ -410,10 +410,10 @@ p_{\text{new}}, p_{\text{old}} = \text{mutation probability in reads from new (l
 <p>EZbakR makes use of the fact that the most common identifiable models of RNA dynamics that subcellular NR-seq has been used to fit can be formalized as a linear system of ordinary differential equations (ODEs) of the form:</p>
 <p><span class="math display">\[
 \begin{gather}
-\textbf{R} = \text{M} \cdot \dot\textbf{R} + \textbf{b} \\
+\textbf{R} = \text{M} \cdot \dot{\textbf{R}} + \textbf{b} \\
 \textbf{R} = \text{vector of RNA species abundances of length N} \\
 \text{M} = \text{NxN matrix of first-order kinetic parameters} \\
-\dot\textbf{R} = \text{time derivative of } \textbf{R} \\
+\dot{\textbf{R}} = \text{time derivative of } \textbf{R} \\
 \textbf{b} = \text{vector of zeroth-order rate constants (e.g., synthesis rate)}
 \end{gather}
 \]</span></p>
