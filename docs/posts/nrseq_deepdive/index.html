@@ -275,7 +275,6 @@ window.Quarto = {
 <li>Label-free control samples (a.k.a. no-label controls) are crucial to detect potential biases introduced by labeling (e.g., dorpout of labeled RNA).</li>
 <li>No-label controls can be used to both assess and correct for these biases in some cases. grandR and EZbakR provide strategies for this task.</li>
 <li>Bias correction strategies make assumptions like any statistical method, and these assumptions should be assessed when interpreting the output of bias correction.</li>
-<li>Pulse-chase experimental designs are mostly unnecessary and usually sub-optimal relative to a pulse-label experimental design. Classic studies using pulse-chases to study RNA degradation were designed such that the pulse created an RNA species whose transcription was shut off during the chase. This meant that the dynamics of these RNA were completely driven by their degradation kinetics. In pulse-label metabolic labeling experiments, the pulse already achievest his end goal: the dynamics of the pre-existing unlabeled RNA will only be driven by their degradation.</li>
 <li>While unique analysis strategies have been proposed that may be strictly compatible with pulse-chases, pulse-chases suffer from the following serious shortcomings:
 <ul>
 <li>Prolonged exposure to metabolic label, which can lead to adverse effects</li>
@@ -411,7 +410,7 @@ p_{\text{new}}, p_{\text{old}} = \text{mutation probability in reads from new (l
 <p>EZbakR makes use of the fact that the most common identifiable models of RNA dynamics that subcellular NR-seq has been used to fit can be formalized as a linear system of ordinary differential equations (ODEs) of the form:</p>
 <p><span class="math display">\[
 \begin{gather}
-\textbf{R} = \text{M}\cdot \dot\textbf{R} + \textbf{b} \\
+\textbf{R} = \text{M} \cdot \dot\textbf{R} + \textbf{b} \\
 \textbf{R} = \text{vector of RNA species abundances of length N} \\
 \text{M} = \text{NxN matrix of first-order kinetic parameters} \\
 \dot\textbf{R} = \text{time derivative of } \textbf{R} \\

@@ -60,7 +60,6 @@ Below I will briefly summarize the main takeaways that are expanded upon through
 - Label-free control samples (a.k.a. no-label controls) are crucial to detect potential biases introduced by labeling (e.g., dorpout of labeled RNA).
 - No-label controls can be used to both assess and correct for these biases in some cases. grandR and EZbakR provide strategies for this task.
 - Bias correction strategies make assumptions like any statistical method, and these assumptions should be assessed when interpreting the output of bias correction.
-- Pulse-chase experimental designs are mostly unnecessary and usually sub-optimal relative to a pulse-label experimental design. Classic studies using pulse-chases to study RNA degradation were designed such that the pulse created an RNA species whose transcription was shut off during the chase. This meant that the dynamics of these RNA were completely driven by their degradation kinetics. In pulse-label metabolic labeling experiments, the pulse already achievest his end goal: the dynamics of the pre-existing unlabeled RNA will only be driven by their degradation.
 - While unique analysis strategies have been proposed that may be strictly compatible with pulse-chases, pulse-chases suffer from the following serious shortcomings:
   - Prolonged exposure to metabolic label, which can lead to adverse effects
   - Increased variance in kinetic parameter estimation due to having to compare the estimated fraction of reads that are labeled at the end of the pulse to that at the end of the chase. Compare this with a steady-state pulse-label analysis where the only source of variance is that of the fraction labeled estimate for the pulse.
@@ -224,7 +223,7 @@ EZbakR makes use of the fact that the most common identifiable models of RNA dyn
 
 $$
 \begin{gather}
-\textbf{R} = \text{M}\cdot \dot\textbf{R} + \textbf{b} \\
+\textbf{R} = \text{M} \cdot \dot\textbf{R} + \textbf{b} \\
 \textbf{R} = \text{vector of RNA species abundances of length N} \\
 \text{M} = \text{NxN matrix of first-order kinetic parameters} \\
 \dot\textbf{R} = \text{time derivative of } \textbf{R} \\
