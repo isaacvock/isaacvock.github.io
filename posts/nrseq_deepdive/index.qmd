@@ -66,6 +66,9 @@ induced mutations in sequencing reads (Figure 1). NR-seq is thus a
 powerful method for resolving the kinetic ambiguities of standard
 RNA-seq.
 
+![**Figure 1:** Overview of a standard NR-seq analysis, adapted from (Vock and Simon 2023). NR-seq typically involves labeling cells with s4U and chemically recoding s4U to a cytosine. The data provided by this method is counts of sequencing reads containing a certain number of mutations and a certain number of mutable nucleotides. This data can be used to infer the abundance of labeled and unlabeled RNA, which can be modeled as a function of kinetic parameters (e.g., synthesis and degradation rate constants). An important quantity in this task is the fraction of reads from new RNA, or new-to-total ratio (NTR; denoted θ throughout this chapter) whose estimation is a key part of any NR-seq analysis.](NRseq.png)
+
+
 Unlocking the full potential of NR-seq data requires rigorous and
 well-founded analysis strategies. While such strategies have been put
 forth and implemented in a number of bioinformatic tools,
@@ -328,6 +331,9 @@ EZbakR. Mixture modeling has been shown to provide unbiased estimates of
 labeled RNA abundance, even in the face of relatively low
 incorporation/recoding rates (Figure 2).
 
+![**Figure 2:** (From (Vock et al. 2025)) Simple mutation cutoff analysis strategies are less accurate than mixture modeling. Comparison of accuracy of 3 analysis strategies on 3 simulated datasets. Each column represents analysis for a particular dataset. Datasets differ in their simulated plabeled (pnew in formalism presented here; 1%, 2.5%, and 5% mutation rates). Each row represents a particular analysis strategy. Top row: labeled reads are defined as those with at least 1 (> 0) mutation. This is the strategy implemented in SLAMDUNK by default. Middle row: labeled reads are defined as those with at least 2 (> 1) mutations. Represents another commonly used NR-seq analysis cutoff. Bottom row: EZbakR analysis with two-component mixture modeling. Points are colored by density in all plots. $\theta$ = fraction of reads from labeled RNA. Red dotted lines represent perfect estimation.](Figure_S1.png)
+
+
 The likelihood function for TCBMM (Figure 3) can be generalized as such:
 
 $$
@@ -340,6 +346,8 @@ L(\theta, p_{\text{new}}, p_{\text{old}}) = \theta \cdot \text{Binomial}(\text{n
 p_{\text{new}}, p_{\text{old}} = \text{mutation probability in reads from new (labeled) and old (unlabeled) RNA}
 \end{gather}
 $$
+
+![**Figure 3:** (Adapted from (Vock et al. 2023)) Two-component binomial mixture model. The counts of T-to-C mutations, given a number of mutable nucleotides, can be modeled as coming from a mixture of two binomial distribution. One of these (that describing the mutation content of reads from new RNA), has a higher probability of a “success” (mutation) than the other.](TCBMM.png)
 
 ### Modifying TCBMM
 
@@ -523,6 +531,8 @@ labeled read counts can thus reveal dropout. More specifically, dropout
 looks like a strong correlation between these quantities. Plots like
 those shown in Figure 4 can be easily made with both grandR and EZbakR.
 
+![**Figure 4**: Visualizing dropout. A simple model of dropout was simulated using EZbakR’s EZSimulate() function, where labeled RNA is lost relative to unlabeled RNA at a rate denoted above each pair of plots (pdo). grandR implements a visualization strategy that correlates the NTR rank (1 = smallest) vs. the log-difference in +label and -label read coverage (dropout). The strength of correlation between these is related to the rate of dropout. bakR implements a visualization strategy that allows for direct assessment of the fit of a simple dropout model on the data. The quantities plotted are similar to those in grandR, just on different model-relevant scales. EZbakR implements both of these visualization strategies.](Dropout_plots.png)
+
 If your NR-seq data suffers from non-trivial amounts of dropout, you can
 employ strategies to correct for dropout. grandR was the first tool to
 implement such a strategy. It follows from a model alluded to above and
@@ -699,6 +709,8 @@ necessarily lower than that of the biased steady-state analysis. This
 problem can partially be addressed through greater sequencing depth,
 label time optimization, and more replicates, but it is a challenge that
 users should be aware of.
+
+![**Figure 5:** Comparison of steady-state and non-steady-state (NSS) analysis strategies. Steady-state data was simulated using EZSimulate() at 3 different label times (2, 4, and 6 hours). Both of these analysis strategies are appropriate in this setting; this comparison is meant to show differences in the best-case variance properties of these two approaches. 2 replicates of labeled and 2 replicates of no-label data were simulated. The simulated (true) and estimated degradation rate constants are compared in all plots. Points are colored by their local density. Red dotted line represents perfect estimation.](NSS.png)
 
 ### Subcellular NR-seq
 
@@ -1075,6 +1087,8 @@ $$
 In practice, uncertainties in the half-life estimate get larger the
 further the true half-life is from the label time (Figure 6).
 
+![**Figure 6**: Estimate accuracy as a function of NTR. EZbakR’s SimulateOneRep() function was used to simulate data for 10,000 features, all of which were given 100, 1000, or 10000 reads. Features had a range of NTR values, evenly spaced from 0.01 to 0.99. NTRs were estimated with EZbakR. Top: comparison of EZbakR NTR estimates to the simulated truth (both on a logit-scale). Bottom: The logit(NTR) uncertainty as a function of NTR. The uncertainty is computed from the Hessian and can thus be thought of as how steeply the likelihood falls off around the maximum likelihood value. Larger values represent slow decreases in likelihood and high uncertainty (lots of logit(NTR) estimates explain the data reasonably well).](Uncertainties.png)
+
 Despite these theoretical arguments, shorter label times are usually
 preferable to longer ones. Long-term exposure to s^4^U can have
 cytotoxic effects, so minimizing this risk is advisable. In addition,
@@ -1129,6 +1143,8 @@ suggestion is further backed up by a recent meta-analysis I performed of
 published NR-seq datasets, where I found that estimates from pulse-label
 NR-seq experiments were far more consistent across cell lines, labs,
 method variations, etc. than those from pulse-chases.
+
+![**Figure 7:** Two NR-seq labeling strategies. Pulse-labeling refers to labeling cells for a certain amount of time, after which RNA is extracted. A pulse-chase refers to labeling cells for (typically) a much longer period of time, chasing with the regulate nucleotide (e.g., uridine), and extracting RNA after the chase. These two designs are symmetric (the unlabeled RNA in one behaves like the labeled RNA in another). Despite this, pulse-labels provide a number of technical advantages to a pulse-chase, and thus should be the default NR-seq labeling strategy (see text for discussion).](Labeling.png)
 
 ## NR-seq extensions
 
