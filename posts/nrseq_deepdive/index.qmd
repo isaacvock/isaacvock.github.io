@@ -340,7 +340,7 @@ EZbakR. Mixture modeling has been shown to provide unbiased estimates of
 labeled RNA abundance, even in the face of relatively low
 incorporation/recoding rates (Figure 2).
 
-![**Figure 2:** (From (Vock et al. 2025)) Simple mutation cutoff
+![**Figure 2:** (From [@RN180]) Simple mutation cutoff
 analysis strategies are less accurate than mixture modeling. Comparison
 of accuracy of 3 analysis strategies on 3 simulated datasets. Each
 column represents analysis for a particular dataset. Datasets differ in
@@ -368,7 +368,7 @@ p_{\text{new}}, p_{\text{old}} = \text{mutation probability in reads from new (l
 \end{gather}
 $$
 
-![**Figure 3:** (Adapted from (Vock et al. 2023)) Two-component binomial
+![**Figure 3:** (Adapted from [@RN159]) Two-component binomial
 mixture model. The counts of T-to-C mutations, given a number of mutable
 nucleotides, can be modeled as coming from a mixture of two binomial
 distribution. One of these (that describing the mutation content of
@@ -871,7 +871,7 @@ rigorous simulation benchmark was performed to compare HISAT-3N and STAR
 alignment of NR-seq data [@RN222]. It concluded that neither is strictly superior
 to the other, with each having unique strengths and weaknesses. It
 remains to be seen if the same holds true for more recent 3N-aligners
-like rmapalign3N (Muller et al. 2025). As STAR is more widely used and actively maintained
+like rmapalign3N ([Muller et al. 2025](https://pmc.ncbi.nlm.nih.gov/articles/PMC12509878/)). As STAR is more widely used and actively maintained
 aligner than HISAT-3N, we and others typically opt for STAR when
 aligning full-length RNA NR-seq data.
 
@@ -929,7 +929,7 @@ calling strategies in NR-seq data is understudied. Several approaches
 have been suggested, including a simple cutoff of the fraction of times
 a given nucleotide is identified as having a mismatch with the
 reference, or the use of established variant calling software like
-VarScan [@RN461] or BCFtools (Danecek et al. 2021). Also, while SNP calling has been shown to
+VarScan [@RN461] or BCFtools ([Danecek et al. 2021](https://academic.oup.com/gigascience/article/10/2/giab008/6137722)). Also, while SNP calling has been shown to
 significantly impact analyses relying on simple mutation-content cutoffs
 for quantifying labeled read abundances, mixture modeling may be more
 robust to high background mutation rates and uncalled SNPs. Despite
@@ -1196,7 +1196,7 @@ strongly suggest preferring a pulse-label to a pulse-chase design. This
 suggestion is further backed up by a recent meta-analysis I performed of
 published NR-seq datasets, where I found that estimates from pulse-label
 NR-seq experiments were far more consistent across cell lines, labs,
-method variations, etc. than those from pulse-chases (Vock et al. 2025).
+method variations, etc. than those from pulse-chases [(Vock et al. 2025)](https://www.biorxiv.org/content/10.1101/2025.08.19.671151v1.full).
 
 ![**Figure 7:** Two NR-seq labeling strategies. Pulse-labeling refers to
 labeling cells for a certain amount of time, after which RNA is
@@ -1396,7 +1396,7 @@ implement a number of strategies to mitigate these challenges, further
 denoising of the analysis may be achievable through collection of
 matched, unperturbed scRNA-seq data. This data could be used to generate
 an atlas of initial cell states that the noisy inferred cell states are
-mapped onto (Lotfollahi et al. 2022; Lotfollahi et al. 2024).
+mapped onto ([Lotfollahi et al. 2022](https://www.nature.com/articles/s41587-021-01001-7); [Lotfollahi et al. 2024](https://pubmed.ncbi.nlm.nih.gov/38729109/)).
 
 ### PerturbSci-Kinetics
 
