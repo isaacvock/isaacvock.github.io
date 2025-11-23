@@ -591,7 +591,7 @@ $$
 \begin{gather}
 \text{R}_{\text{true}} = \text{R}_{\text{do}} \cdot \frac{\theta_{\text{G}}\cdot(1-\text{p}_{\text{do}}) + (1-\theta_{\text{G}})}{\theta_{\text{true}}\cdot(1-\text{p}_{\text{do}}) + (1-\theta_{\text{G}})} \\
 \theta_{\text{G}} = \frac{\theta_{\text{G,do}}}{(1-\text{p}_{\text{do}}) + \theta_{\text{G,do}} \cdot \text{p}_{\text{do}}} \\
-\theta_{\text{G,do}} = \frac{\sum_{\text{j=1}}^{\text{NF}} \theta_{\text{do,j}} \cdot \text{R}_{\text{j}}}}{\sum_{\text{j=1}}^{\text{NF} \text{R}_{\text{j}}}
+\theta_{\text{G,do}} = \frac{\sum_{\text{j=1}}^{\text{NF}} \theta_{\text{do,j}} \cdot \text{R}_{\text{j}}}{\sum_{\text{j=1}}^{\text{NF}} \text{R}_{\text{j}}}
 \end{gather}
 $$
 
