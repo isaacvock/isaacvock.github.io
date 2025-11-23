@@ -400,7 +400,7 @@ p_{\text{new}}, p_{\text{old}} = \text{mutation probability in reads from new (l
 \begin{gather}
 \text{R}_{\text{true}} = \text{R}_{\text{do}} \cdot \frac{\theta_{\text{G}}\cdot(1-\text{p}_{\text{do}}) + (1-\theta_{\text{G}})}{\theta_{\text{true}}\cdot(1-\text{p}_{\text{do}}) + (1-\theta_{\text{G}})} \\
 \theta_{\text{G}} = \frac{\theta_{\text{G,do}}}{(1-\text{p}_{\text{do}}) + \theta_{\text{G,do}} \cdot \text{p}_{\text{do}}} \\
-\theta_{\text{G,do}} = \frac{\sum_{\text{j=1}}^{\text{NF}} \theta_{\text{do,j}} \cdot \text{R}_{\text{j}}}}{\sum_{\text{j=1}}^{\text{NF} \text{R}_{\text{j}}}
+\theta_{\text{G,do}} = \frac{\sum_{\text{j=1}}^{\text{NF}} \theta_{\text{do,j}} \cdot \text{R}_{\text{j}}}{\sum_{\text{j=1}}^{\text{NF}} \text{R}_{\text{j}}}
 \end{gather}
 \]</span></p>
 <p>Using these theoretical relationships, a dropout rate can be estimated that, after correcting read counts, yields no correlation between the labeled vs.&nbsp;no-label read count ratio and the turnover kinetics of an RNA. This strategy is implemented in grandR. bakR implements a similar strategy by which the relationship between dropout and the NTR is modeled and fit with the method of maximum likelihood. EZbakR implements both of these strategies.</p>
