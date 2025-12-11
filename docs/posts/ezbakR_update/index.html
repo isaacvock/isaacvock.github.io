@@ -174,45 +174,31 @@ ul.task-list li input[type="checkbox"] {
 <h3 class="anchored" data-anchor-id="the-future-of-ezbakr">The future of EZbakR</h3>
 <p>As mentioned above, the first official CRAN release of EZbakR is more symbolic than it is an actual major release. There have not been major expansions to EZbakR’s core functionality for several months. The CRAN submission process was just meant to force me to clean up various technical aspects of the code base and settle into an official versioning scheme, both of which are signals for a more consistent development cycle to come.</p>
 <p>To keep this brief, the following is a nearly exhaustive list of functionalities that I would currently like to implement in EZbakR over the next year:</p>
-<ol type="1">
-<li>Extensive model fit assessment. This will include assessing mixture model fits (i.e., how well does a two-component binomial mixture model fit your data; fit assessed for each +label sample) as well as dynamical systems model fits (i.e., how well does your assumed model of RNA dynamics fit your data; fit assessed across multiple different label times).</li>
-</ol>
+<p><strong>Extensive model fit assessment.</strong> This will include assessing mixture model fits (i.e., how well does a two-component binomial mixture model fit your data; fit assessed for each +label sample) as well as dynamical systems model fits (i.e., how well does your assumed model of RNA dynamics fit your data; fit assessed across multiple different label times).</p>
 <ul>
 <li>Significance: This will hopefully facilitate filtering out problematic features plagued by various artifacts.</li>
 </ul>
-<ol start="2" type="1">
-<li>Alternative mixture models. It is currently unclear what this will specifically look like, but I will be exploring various iterations of models of overdispersion and other deviations from binomially distributed mutational data.</li>
-</ol>
+<p><strong>Alternative mixture models.</strong> It is currently unclear what this will specifically look like, but I will be exploring various iterations of models of overdispersion and other deviations from binomially distributed mutational data.</p>
 <ul>
 <li>Significance: These alternative models will likely be useful for applications involving shorter label times, where overdispersion can become a bigger problem.</li>
 </ul>
-<ol start="3" type="1">
-<li>Expanded data visualization capabilities.</li>
-</ol>
+<p>Expanded data visualization capabilities.</p>
 <ul>
 <li>Significance: NR-seq data is rich and EZbakR’s current visualization toolkit is limited.</li>
 </ul>
-<ol start="4" type="1">
-<li>Refinement of existing functionality. Namely, I will be exploring potential improvements to the generalized linear modeling, generalized dynamical systems modeling, and transcript isoform modeling performed by EZbakR.</li>
-</ol>
+<p><strong>Refinement of existing functionality.</strong> Namely, I will be exploring potential improvements to the generalized linear modeling, generalized dynamical systems modeling, and transcript isoform modeling performed by EZbakR.</p>
 <ul>
 <li>Significance: Small but potentially impactful improvements to the unique analysis strategies currently implemented by no other tool but EZbakR.</li>
 </ul>
-<ol start="5" type="1">
-<li>Single-cell NR-seq compatibility, paired with updates to fastq2EZbakR.</li>
-</ol>
+<p><strong>Single-cell NR-seq compatibility, paired with updates to fastq2EZbakR.</strong></p>
 <ul>
 <li>Significance: The last couple years has seen a relative explosion of single-cell NR-seq methods. I think EZbakR has a lot to offer users in terms of the insights they could be extracting from this data.</li>
 </ul>
-<ol start="6" type="1">
-<li>Better support for single-nucleotide NR-seq analyses.</li>
-</ol>
+<p><strong>Better support for single-nucleotide NR-seq analyses.</strong></p>
 <ul>
 <li>Significance: I’ve been invovlved in several collaborations that use the EZbakR-suite to analyze single-nucleotide NR-seq data (that is, they are interested in mutation rates at specific nucleotides). In fact, there is a whole universe of methods that you could lump under the NR-seq umbrella, that while not technically using metabolic labeling and nucleotide recoding chemistry, could be processed and analyzed by the EZbakR-suite (structure probing methods like DMS-MaP-seq, RNA modification mapping methods like DART-seq, RBP interaction mapping methods like TRIBE-ID, etc.)</li>
 </ul>
-<ol start="7" type="1">
-<li>Better support for time series analyses.</li>
-</ol>
+<p><strong>Better support for time series analyses.</strong></p>
 </section>
 <section id="the-future-of-fastq2ezbakr" class="level3">
 <h3 class="anchored" data-anchor-id="the-future-of-fastq2ezbakr">The future of fastq2EZbakR</h3>

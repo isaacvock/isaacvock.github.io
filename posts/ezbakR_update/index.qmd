@@ -24,19 +24,31 @@ As mentioned above, the first official CRAN release of EZbakR is more symbolic t
 
 To keep this brief, the following is a nearly exhaustive list of functionalities that I would currently like to implement in EZbakR over the next year:
 
-1. Extensive model fit assessment. This will include assessing mixture model fits (i.e., how well does a two-component binomial mixture model fit your data; fit assessed for each +label sample) as well as dynamical systems model fits (i.e., how well does your assumed model of RNA dynamics fit your data; fit assessed across multiple different label times).
+**Extensive model fit assessment.** This will include assessing mixture model fits (i.e., how well does a two-component binomial mixture model fit your data; fit assessed for each +label sample) as well as dynamical systems model fits (i.e., how well does your assumed model of RNA dynamics fit your data; fit assessed across multiple different label times).
+  
   - Significance: This will hopefully facilitate filtering out problematic features plagued by various artifacts. 
-2. Alternative mixture models. It is currently unclear what this will specifically look like, but I will be exploring various iterations of models of overdispersion and other deviations from binomially distributed mutational data.
+  
+**Alternative mixture models.** It is currently unclear what this will specifically look like, but I will be exploring various iterations of models of overdispersion and other deviations from binomially distributed mutational data.
+  
   - Significance: These alternative models will likely be useful for applications involving shorter label times, where overdispersion can become a bigger problem.
-3. Expanded data visualization capabilities.
+  
+Expanded data visualization capabilities.
+  
   - Significance: NR-seq data is rich and EZbakR's current visualization toolkit is limited. 
-4. Refinement of existing functionality. Namely, I will be exploring potential improvements to the generalized linear modeling, generalized dynamical systems modeling, and transcript isoform modeling performed by EZbakR.
+  
+**Refinement of existing functionality.** Namely, I will be exploring potential improvements to the generalized linear modeling, generalized dynamical systems modeling, and transcript isoform modeling performed by EZbakR.
+  
   - Significance: Small but potentially impactful improvements to the unique analysis strategies currently implemented by no other tool but EZbakR.
-5. Single-cell NR-seq compatibility, paired with updates to fastq2EZbakR.
+  
+**Single-cell NR-seq compatibility, paired with updates to fastq2EZbakR.**
+  
   - Significance: The last couple years has seen a relative explosion of single-cell NR-seq methods. I think EZbakR has a lot to offer users in terms of the insights they could be extracting from this data.
-6. Better support for single-nucleotide NR-seq analyses.
+  
+**Better support for single-nucleotide NR-seq analyses.**
+  
   - Significance: I've been invovlved in several collaborations that use the EZbakR-suite to analyze single-nucleotide NR-seq data (that is, they are interested in mutation rates at specific nucleotides). In fact, there is a whole universe of methods that you could lump under the NR-seq umbrella, that while not technically using metabolic labeling and nucleotide recoding chemistry, could be processed and analyzed by the EZbakR-suite (structure probing methods like DMS-MaP-seq, RNA modification mapping methods like DART-seq, RBP interaction mapping methods like TRIBE-ID, etc.)
-7. Better support for time series analyses.
+  
+**Better support for time series analyses.**
 
 
 ### The future of fastq2EZbakR
