@@ -1,0 +1,88 @@
+---
+title: "The future of the EZbakR-suite"
+author: "Isaac Vock"
+date: "2025-12-11"
+categories: [nrseq]
+format: 
+  html:
+    toc: true
+engine: knitr
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+## The EZbakR-suite: an update
+
+With the first official CRAN release of EZbakR (version 0.1.0) and the (unrelated) release of fastq2EZbakR (version 0.8.0), I decided to write this brief blog to discuss the present and future of the EZbakR suite.
+
+EZbakR version 0.1.0 isn't an update as much as it is a more official roll out. This is EZbakR's first CRAN release, and the first release I have assigned an official version to. Thus, in this post I will mainly discuss my future plans for EZbakR. fastq2EZbakR version 0.8.0 introduces an exciting piece of novel functionality, so I will discuss this change as well as future functionality.
+
+### The future of EZbakR
+
+As mentioned above, the first official CRAN release of EZbakR is more symbolic than it is an actual major release. There have not been major expansions to EZbakR's core functionality for several months. The CRAN submission process was just meant to force me to clean up various technical aspects of the code base and settle into an official versioning scheme, both of which are signals for a more consistent development cycle to come.
+
+To keep this brief, the following is a nearly exhaustive list of functionalities that I would currently like to implement in EZbakR over the next year:
+
+1. Extensive model fit assessment. This will include assessing mixture model fits (i.e., how well does a two-component binomial mixture model fit your data; fit assessed for each +label sample) as well as dynamical systems model fits (i.e., how well does your assumed model of RNA dynamics fit your data; fit assessed across multiple different label times).
+  - Significance: This will hopefully facilitate filtering out problematic features plagued by various artifacts. 
+2. Alternative mixture models. It is currently unclear what this will specifically look like, but I will be exploring various iterations of models of overdispersion and other deviations from binomially distributed mutational data.
+  - Significance: These alternative models will likely be useful for applications involving shorter label times, where overdispersion can become a bigger problem.
+3. Expanded data visualization capabilities.
+  - Significance: NR-seq data is rich and EZbakR's current visualization toolkit is limited. 
+4. Refinement of existing functionality. Namely, I will be exploring potential improvements to the generalized linear modeling, generalized dynamical systems modeling, and transcript isoform modeling performed by EZbakR.
+  - Significance: Small but potentially impactful improvements to the unique analysis strategies currently implemented by no other tool but EZbakR.
+5. Single-cell NR-seq compatibility, paired with updates to fastq2EZbakR.
+  - Significance: The last couple years has seen a relative explosion of single-cell NR-seq methods. I think EZbakR has a lot to offer users in terms of the insights they could be extracting from this data.
+6. Better support for single-nucleotide NR-seq analyses.
+  - Significance: I've been invovlved in several collaborations that use the EZbakR-suite to analyze single-nucleotide NR-seq data (that is, they are interested in mutation rates at specific nucleotides). In fact, there is a whole universe of methods that you could lump under the NR-seq umbrella, that while not technically using metabolic labeling and nucleotide recoding chemistry, could be processed and analyzed by the EZbakR-suite (structure probing methods like DMS-MaP-seq, RNA modification mapping methods like DART-seq, RBP interaction mapping methods like TRIBE-ID, etc.)
+7. Better support for time series analyses.
+
+
+### The future of fastq2EZbakR
+
+fastq2EZbakR version 0.8.0 (released 12/4/2025) brought a promising brand new piece of functionality: the ability to assign reads to 3'-ends. You can read more about this strategy [here](https://fastq2ezbakr.readthedocs.io/en/latest/features/).
+
+Over the next year, I will strive to implement the following improvements/changes:
+
+1. Faster and improved SNP calling. This can be the major bottleneck in some datasets. I will also be inspecting the SNP calling strategy more closely in hopes of refining several aspects of it.
+1. Improved TEC assignment. There are currently a couple quirky edge cases where RSEM assigns reads to the wrong transcript isoform; I would like to get rid of these mistakes. I would also like to expand compatibility of this assignment strategy to aligners other than STAR, which will require incorporating tools like [mudskipper](https://github.com/OceanGenomics/mudskipper) into the workflow.
+1. Single-cell NR-seq compatibility. We have seen a relative explosion of single-cell NR-seq methods. While tools like GRAND-SLAM can support analyses of this data, and tools like dynast are specifically designed for this one class of NR-seq experiment, I believe that fastq2EZbakR has a lot to offer in this space. In particular, I think giving users the power to explore their mutational data more deeply and giving bioinformaticians a simple starting point for model development could prove very useful to the community.
+1. Better single-nucleotide support with [perbase](https://github.com/sstadick/perbase). fastq2EZbakR can provide nucleotide-specific mutational data, but this is currently done with some old custom Python/Shell scripts that are a bit rough around the edges. I would like to clean this up, and perbase will be key to that.
+
+
+### Timeline
+
+I completed my PhD in Matt Simon's lab (where I developed the EZbakR suite) in August of 2025. I am now a post-doc in Anshul Kundaje's lab. Despite this, maintaining the EZbakR suite has not been completely relegated to "side project" status. I am still an active user of the EZbakR suite for some of the work I have planned during my post-doc. Because of this, I am planning to stick to a roughly monthly update schedule, with new minor versions of both EZbakR and fastq2EZbakR released around the end of every month.
+
+A very hesitant rough draft of what the schedule of changes might look like is below:
+
+End of January:
+
+  - fastq2EZbakR single-cell NR-seq support
+  - EZbakR single-cell NR-seq support
+  - Expanded EZbakR data vis
+  
+End of February:
+
+  - Improved EZbakR core functionality
+  - Expanded EZbakR data vis
+  - fastq2EZbakR perbase refactor
+  
+End of March:
+
+  - EZbakR model fit assessment
+  - fastq2EZbakR improve SNP calling
+  
+End of April:
+
+  - EZbakR single-nucleotide support
+  - fastq2EZbakR improve TEC assignment
+  
+End of May:
+
+  - EZbakR time series analyses
+  - EZbakR alternative mixture models
+  
+
+Suggestions for changes/new features or prioritization of features can be made on the relevant Github Issues page ([EZbakR's](https://github.com/isaacvock/EZbakR/issues) or [fastq2EZbakR's](https://github.com/isaacvock/fastq2EZbakR/issues)).
