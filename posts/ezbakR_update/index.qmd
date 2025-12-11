@@ -14,7 +14,7 @@ editor:
 
 ## The EZbakR-suite: an update
 
-With the first official CRAN release of EZbakR (version 0.1.0) and the (unrelated) release of fastq2EZbakR (version 0.8.0), I decided to write this brief blog to discuss the present and future of the EZbakR suite.
+With the first official CRAN release of [EZbakR](https://cran.r-project.org/web/packages/EZbakR/index.html) (version 0.1.0) and the (unrelated) release of fastq2EZbakR [version 0.8.0](https://github.com/isaacvock/fastq2EZbakR/releases/tag/v0.8.0), I decided to write this brief blog to discuss the present and future of the EZbakR suite.
 
 EZbakR version 0.1.0 isn't an update as much as it is a more official roll out. This is EZbakR's first CRAN release, and the first release I have assigned an official version to. Thus, in this post I will mainly discuss my future plans for EZbakR. fastq2EZbakR version 0.8.0 introduces an exciting piece of novel functionality, so I will discuss this change as well as future functionality.
 
