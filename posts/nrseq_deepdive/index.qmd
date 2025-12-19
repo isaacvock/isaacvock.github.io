@@ -45,7 +45,7 @@ developers.
 ## Introduction
 
 From birth to death, an RNA's life cycle is tightly regulated. A key
-aspect of this regulation is fine-tuning of the rate at whcih each stage
+aspect of this regulation is fine-tuning of the rate at which each stage
 progresses, from transcription initiation to RNA degradation. Developing
 a mechanistic understanding of gene expression regulation requires
 methods to probe the kinetics of the RNA life cycle (transcription,
@@ -66,9 +66,9 @@ labeled RNA via chemically induced mutations in sequencing reads
 (@fig-1). NR-seq is thus a powerful method for resolving the kinetic
 ambiguities of standard RNA-seq.
 
-![**Overview of a standard NR-seq analysis**, adapted from
-(Vock and Simon 2023). NR-seq typically involves labeling cells with s^4^U
-and chemically recoding s^4^U to a cytosine. The data provided by this
+![**Overview of a standard NR-seq analysis**, adapted from (Vock and
+Simon 2023). NR-seq typically involves labeling cells with s^4^U and
+chemically recoding s^4^U to a cytosine. The data provided by this
 method is counts of sequencing reads containing a certain number of
 mutations and a certain number of mutable nucleotides. This data can be
 used to infer the abundance of labeled and unlabeled RNA, which can be
@@ -86,7 +86,7 @@ interpret and analyze NR-seq data are common. Therefore, it is crucial
 to create gold-standard analysis guidelines for users and developers of
 NR-seq methods.
 
-Towards that end, I present a comprehensive overview of the analyses of
+Towards that end, I present a comprehensive overview of the analysis of
 NR-seq data. I will provide a combination of accessible big-picture
 summaries of my main points, as well as rigorous mathematical formalism
 to back up key assertions. I also will conclude with a brief overview of
@@ -112,8 +112,11 @@ each of these points:
 
 -   Mixture modeling is the most robust and accurate strategy by which
     to assess the fraction of reads from a given mutational population.
-    This strategy is implemented in tools such as GRAND-SLAM, bakR,
-    Halfpipe, and EZbakR.
+    This strategy is implemented in tools such as
+    [GRAND-SLAM](https://github.com/erhard-lab/gedi),
+    [bakR](https://github.com/simonlabcode/bakR),
+    [Halfpipe](https://github.com/IMSBCompBio/Halfpipe), and
+    [EZbakR](https://github.com/isaacvock/EZbakR).
 -   Mutation content cutoffs (e.g., classifying reads as "labeled" if
     they have a certain number of T-to-C mutations) can yield highly
     biased estimates of labeled RNA abundance.
@@ -155,7 +158,7 @@ each of these points:
 
 -   Aligning NR-seq reads is difficult due to the chemically induced
     T-to-C mismatches. While 3-base genome alignment strategies, popular
-    in analyses of bisfulite sequencing data, are a potential solution,
+    in analyses of bisulfite sequencing data, are a potential solution,
     they often provide only minimal advantages over standard 4-base
     alignment approaches while also suffering from their own unique
     biases and limitations. This is in large part due to the fact that
@@ -172,13 +175,13 @@ each of these points:
     genomic features you want to assign reads to and perform analyses
     on. Most tools support performing analyses at the gene- (or 3'-UTR
     if using 3'-end sequencing) level, but fastq2EZbakR significantly
-    expands the set of features you can analyze to incldue transcript
+    expands the set of features you can analyze to include transcript
     isoforms, exon-exon junctions, etc.
 
 **Experimental design:**
 
 -   Label-free control samples (a.k.a. no-label controls) are crucial to
-    detect potential biases introduced by labeling (e.g., dorpout of
+    detect potential biases introduced by labeling (e.g., dropout of
     labeled RNA).
 -   No-label controls can be used to both assess and correct for these
     biases in some cases. grandR and EZbakR provide strategies for this
@@ -209,7 +212,7 @@ each of these points:
 -   Accurate kinetic parameter estimates are obtainable with standard
     RNA-seq sequencing depth. More depth can significantly improve these
     analyses though. Sequencing depth is particularly important if
-    wanting ot perform analyses on the sub-gene (e.g., exon-exon
+    wanting to perform analyses on the sub-gene (e.g., exon-exon
     junction) level.
 
 Additionally, an exciting advance in the NR-seq field is the number of
@@ -264,22 +267,22 @@ strategies.
 
 Several labs (including the Simon lab, where I did my PhD) addressed
 these shortcomings by developing nucleotide recoding RNA-seq methods
-(NR-seq). These techniques combine s^4^U metabolic labeling and nucleotide
-recoding chemistry (TimeLapse [@RN88], SLAM [@RN89], TUC [@RN192], etc.)
-to either convert or disrupt the hydrogen bonding pattern of
-incorporated s^4^U. This yields apparent T-to-C mutations in the RNA-seq
-data that indicate sites of s^4^U incorporation and can be used to
-estimate the fraction of extracted RNA that was synthesized after the
-introduction of metabolic label. This adds kinetic information to the
-snapshot provided by RNA-seq while eliminating the need for enrichment
-of labeled RNA. A simplified schematic of NR-seq data and its analysis
-is presented in @fig-1. T-to-C mutations in sequencing reads can be used
-to bioinformatically quantify the levels of labeled and unlabeled RNA,
-with the Simon lab originally introducing the now gold-standard mixture
-modeling approach for this task [@RN88]. Simple kinetic models of the
-trajectories of these two species relate the kinetic parameters of
-interest to the data obtained. This is how NR-seq can quantify the
-kinetics of gene expression.
+(NR-seq). These techniques combine s^4^U metabolic labeling and
+nucleotide recoding chemistry (TimeLapse [@RN88], SLAM [@RN89], TUC
+[@RN192], etc.) to either convert or disrupt the hydrogen bonding
+pattern of incorporated s^4^U. This yields apparent T-to-C mutations in
+the RNA-seq data that indicate sites of s^4^U incorporation and can be
+used to estimate the fraction of extracted RNA that was synthesized
+after the introduction of metabolic label. This adds kinetic information
+to the snapshot provided by RNA-seq while eliminating the need for
+enrichment of labeled RNA. A simplified schematic of NR-seq data and its
+analysis is presented in @fig-1. T-to-C mutations in sequencing reads
+can be used to bioinformatically quantify the levels of labeled and
+unlabeled RNA, with the Simon lab originally introducing the now
+gold-standard mixture modeling approach for this task [@RN88]. Simple
+kinetic models of the trajectories of these two species relate the
+kinetic parameters of interest to the data obtained. This is how NR-seq
+can quantify the kinetics of gene expression.
 
 ## Analyzing NR-seq data
 
@@ -301,7 +304,7 @@ originating from RNA synthesized prior to metabolic labeling (the
 unlabeled RNA; old RNA in a pulse-label design), and those originating
 from RNA synthesized during metabolic labeling (the labeled RNA; new RNA
 in a pulse-label design). On average, the mutational content of the
-latter will be higher than that of the former. Analyzing NR-seq dat
+latter will be higher than that of the former. Analyzing NR-seq data
 requires making use of this fact to infer the fraction of reads coming
 from each of these two populations for a given read.
 
@@ -339,24 +342,24 @@ U-content though, modeling the mutational content as a binomial
 distribution that takes into account both the incorporation/recoding
 rate as well as the read's U-content is optimal [@RN88; @RN155]. This
 strategy (or slight variants of it), known as two-component binomial
-mixture modeling (TCBMM), was thus implemened in analysis software such
-as GRAND-SLAM, bakR, HalfPipe, and EZbakR. Mixture modeling has been
+mixture modeling (TCBMM), was thus implemented in analysis software such
+as GRAND-SLAM, bakR, Halfpipe, and EZbakR. Mixture modeling has been
 shown to provide unbiased estimates of labeled RNA abundance, even in
 the face of relatively low incorporation/recoding rates (@fig-2).
 
-![**Simple mutation cutoff analysis strategies are less accurate than mixture modeling.** 
-From [@RN180]. Comparison of
-accuracy of 3 analysis strategies on 3 simulated datasets. Each column
-represents analysis for a particular dataset. Datasets differ in their
-simulated plabeled (pnew in formalism presented here; 1%, 2.5%, and 5%
-mutation rates). Each row represents a particular analysis strategy. Top
-row: labeled reads are defined as those with at least 1 (\> 0) mutation.
-This is the strategy implemented in SLAMDUNK by default. Middle row:
-labeled reads are defined as those with at least 2 (\> 1) mutations.
-Represents another commonly used NR-seq analysis cutoff. Bottom row:
-EZbakR analysis with two-component mixture modeling. Points are colored
-by density in all plots. $\theta$ = fraction of reads from labeled RNA.
-Red dotted lines represent perfect estimation.](Figure_S1.png){#fig-2}
+![**Simple mutation cutoff analysis strategies are less accurate than
+mixture modeling.** From [@RN180]. Comparison of accuracy of 3 analysis
+strategies on 3 simulated datasets. Each column represents analysis for
+a particular dataset. Datasets differ in their simulated plabeled (pnew
+in formalism presented here; 1%, 2.5%, and 5% mutation rates). Each row
+represents a particular analysis strategy. Top row: labeled reads are
+defined as those with at least 1 (\> 0) mutation. This is the strategy
+implemented in SLAMDUNK by default. Middle row: labeled reads are
+defined as those with at least 2 (\> 1) mutations. Represents another
+commonly used NR-seq analysis cutoff. Bottom row: EZbakR analysis with
+two-component mixture modeling. Points are colored by density in all
+plots. $\theta$ = fraction of reads from labeled RNA. Red dotted lines
+represent perfect estimation.](Figure_S1.png){#fig-2}
 
 The likelihood function for TCBMM (@fig-3) can be generalized as such:
 
@@ -371,12 +374,12 @@ p_{\text{new}}, p_{\text{old}} = \text{mutation probability in reads from new (l
 \end{gather}
 $$
 
-![**Two-component binomial mixture model.** 
-Adapted from [@RN159]. The counts of T-to-C mutations, given a number of mutable
-nucleotides, can be modeled as coming from a mixture of two binomial
-distribution. One of these (that describing the mutation content of
-reads from new RNA), has a higher probability of a “success” (mutation)
-than the other.](TCBMM.png){#fig-3}
+![**Two-component binomial mixture model.** Adapted from [@RN159]. The
+counts of T-to-C mutations, given a number of mutable nucleotides, can
+be modeled as coming from a mixture of two binomial distribution. One of
+these (that describing the mutation content of reads from new RNA), has
+a higher probability of a “success” (mutation) than the
+other.](TCBMM.png){#fig-3}
 
 ### Modifying TCBMM
 
@@ -391,7 +394,7 @@ content of NR-seq reads; namely that:
     give rise to a non-s^4^U-related mutation due to sequencing errors,
     alignment errors, etc. This is formalized above by there being only
     one $p_{\text{old}}$.
--   By default, all existing tools (GRAND-SLAM, bakR, HalfPipe, and
+-   By default, all existing tools (GRAND-SLAM, bakR, Halfpipe, and
     EZbakR) assume that the mutation rate in reads from labeled and
     unlabeled RNA are sample-wide global parameters. That is, all RNAs
     transcribed from all genes are assumed to have the same rate of
@@ -401,7 +404,7 @@ content of NR-seq reads; namely that:
     above formalism.
 
 If users find one or more of these assumptions to be violated, they can
-attempt to modify and extend this model. Towards thate end, several
+attempt to modify and extend this model. Towards that end, several
 modification of standard TCBMM have been proposed. These include:
 
 -   Three-component mixture modeling, where a second population of reads
@@ -411,7 +414,7 @@ modification of standard TCBMM have been proposed. These include:
     distribution (e.g., a beta-binomial) replaces one or both of the
     binomial distribution components, or where a different incorporation
     rate parameter is estimated for fast and slow turnover RNA.
--   Hierarchical mixture modelign where a sample-wide average
+-   Hierarchical mixture modeling where a sample-wide average
     incorporation rate is inferred and used as a strongly regularizing
     prior to estimate feature-specific incorporation rates.
 -   Modeling the transcription process, which at short label times leads
@@ -421,7 +424,7 @@ While all of these are theoretically promising, the challenge of fitting
 more complex models is two-fold. 1) Their increased flexibility comes
 with an increased risk of overfitting. This can lead to estimate
 instability, where a better model fit yields extreme conclusions about
-RNA dynamics (e.g., unusualy high fraction new and thus unrealistically
+RNA dynamics (e.g., unusually high fraction new and thus unrealistically
 rapid turnover kinetics). 2) While an alternative model may capture one
 aspect of the true data generating process unaccounted for by TCBMM, it
 may amplify biases that arise from not accounting for some other aspect
@@ -446,7 +449,7 @@ modeling overdispersion in mutation rates from new RNA reads. A
 three-component mixture model will classify many moderate mutation rate
 reads as "old", when in fact they may represent a preponderance of low
 mutation rate new reads. This kind of overdispersion is made even more
-likely by the fact that metabolic label availability will likeloy ramp
+likely by the fact that metabolic label availability will likely ramp
 up and down over time [@RN193]. Thus, reads from RNA synthesized at
 different time points may have different true mutation rates.
 
@@ -496,7 +499,7 @@ explained. Finally, one should assess model robustness through
 simulations from a data generating process more complicated than that
 used for model fitting [@RN159]. If the bias introduced by these true
 vs. assumed data generating process discrepancies is amplified by use of
-a more complex model relative to TCBMM, we urge cautio nin adopting the
+a more complex model relative to TCBMM, we urge caution in adopting the
 more complex model. The simplicity and robustness of TCBMM makes it an
 effective baseline with which to compare alternative models.
 
@@ -565,23 +568,23 @@ labeled read counts can thus reveal dropout. More specifically, dropout
 looks like a strong correlation between these quantities. Plots like
 those shown in @fig-4 can be easily made with both grandR and EZbakR.
 
-![**Visualizing dropout.** A simple model of dropout was
-simulated using EZbakR’s EZSimulate() function, where labeled RNA is
-lost relative to unlabeled RNA at a rate denoted above each pair of
-plots (pdo). grandR implements a visualization strategy that correlates
-the NTR rank (1 = smallest) vs. the log-difference in +label and -label
-read coverage (dropout). The strength of correlation between these is
-related to the rate of dropout. bakR implements a visualization strategy
-that allows for direct assessment of the fit of a simple dropout model
-on the data. The quantities plotted are similar to those in grandR, just
-on different model-relevant scales. EZbakR implements both of these
-visualization strategies.](Dropout_plots.png){#fig-4}
+![**Visualizing dropout.** A simple model of dropout was simulated using
+EZbakR’s EZSimulate() function, where labeled RNA is lost relative to
+unlabeled RNA at a rate denoted above each pair of plots (pdo). grandR
+implements a visualization strategy that correlates the NTR rank (1 =
+smallest) vs. the log-difference in +label and -label read coverage
+(dropout). The strength of correlation between these is related to the
+rate of dropout. bakR implements a visualization strategy that allows
+for direct assessment of the fit of a simple dropout model on the data.
+The quantities plotted are similar to those in grandR, just on different
+model-relevant scales. EZbakR implements both of these visualization
+strategies.](Dropout_plots.png){#fig-4}
 
 If your NR-seq data suffers from non-trivial amounts of dropout, you can
 employ strategies to correct for dropout. grandR was the first tool to
 implement such a strategy. It follows from a model alluded to above and
 assumes that there is a sample-wide rate (call it
-$\text{p}_{\text{do}}$) at which labeled RNA is disproportinately lost
+$\text{p}_{\text{do}}$) at which labeled RNA is disproportionately lost
 relative to unlabeled RNA. If this is the case, then then true fraction
 of reads from labeled RNA ($\theta_{\text{true}}$) is related to the
 dropout-biased estimate ($\theta_{\text{do}}$) like so:
@@ -615,7 +618,7 @@ Dropout correction is a powerful addition to the NR-seq analysis
 toolkit. Despite this, it is not without its limitations. The
 requirement for matched no-label samples in all conditions tested adds
 to the experimental burden. In addition, even when no-label data is
-colelcted, resource constraints often lead researchers to only collect a
+collected, resource constraints often lead researchers to only collect a
 single replicate of this data, as it is not itself a useful NR-seq
 sample. This can make the dropout metric, the ratio of labeled:no-label
 read counts, noisy.
@@ -632,7 +635,7 @@ proven particularly useful as dropout rates often correlate with
 biological conditions, which risks confounding comparative analyses if
 not properly accounted for. The downside of dropout normalization is
 that it tends to normalize out global differences in half-life
-estimates, even if tehse are biologically real and not solely the result
+estimates, even if these are biologically real and not solely the result
 of dropout. Dropout is thus similar in spirit to RNA-seq read count
 normalization methods such as the median-of-ratios or TMM, as well as a
 simpler median-kdeg normalization strategy implemented in grandR, which
@@ -745,31 +748,32 @@ In addition, even with the proper experimental design, this analysis
 approach has some weaknesses. Its statistical properties are suboptimal
 relative to the steady-state analysis. In particular, the variance of
 the $\text{k}_{\text{deg}}$ estimation is typically higher than that of
-the steady-state estimate, especially at low NTRs (@fig-5).
-Intuitively, this is because the steady-state estimate is only a
-function of a single sample's NTR, while the non-steady-state estimate
-requires comparing an NTR estimate combined with a normalized read count
-in one sample to a normalized read count in another sample. Thus, while
-the estimate is technically unbiased, its mean-squared error is not
-necessarily lower than that of the biased steady-state analysis. This
-problem can partially be addressed through greater sequencing depth,
-label time optimization, and more replicates, but it is a challenge that
-users should be aware of.
+the steady-state estimate, especially at low NTRs (@fig-5). Intuitively,
+this is because the steady-state estimate is only a function of a single
+sample's NTR, while the non-steady-state estimate requires comparing an
+NTR estimate combined with a normalized read count in one sample to a
+normalized read count in another sample. Thus, while the estimate is
+technically unbiased, its mean-squared error is not necessarily lower
+than that of the biased steady-state analysis. This problem can
+partially be addressed through greater sequencing depth, label time
+optimization, and more replicates, but it is a challenge that users
+should be aware of.
 
-![**Comparison of steady-state and non-steady-state (NSS) analysis strategies.** 
-Steady-state data was simulated using EZSimulate()
-at 3 different label times (2, 4, and 6 hours). Both of these analysis
+![**Comparison of steady-state and non-steady-state (NSS) analysis
+strategies.** Steady-state data was simulated using EZSimulate() at 3
+different label times (2, 4, and 6 hours). Both of these analysis
 strategies are appropriate in this setting; this comparison is meant to
 show differences in the best-case variance properties of these two
 approaches. 2 replicates of labeled and 2 replicates of no-label data
 were simulated. The simulated (true) and estimated degradation rate
 constants are compared in all plots. Points are colored by their local
-density. Red dotted line represents perfect estimation.](NSS.png){#fig-5}
+density. Red dotted line represents perfect
+estimation.](NSS.png){#fig-5}
 
 ### Subcellular NR-seq
 
 Several studies have combined NR-seq with subcellular fractionation to
-invesigate the kinetics of subcellular RNA trafficking. To date, such
+investigate the kinetics of subcellular RNA trafficking. To date, such
 efforts have included sequencing chromatin-associated RNA [@RN91;
 @RN220], nuclear RNA [@RN91; @RN220; @RN151; @RN162; @RN177; @RN149],
 cytoplasmic RNA [@RN91; @RN220; @RN151; @RN162; @RN177; @RN149],
@@ -795,7 +799,7 @@ $$
 $$
 
 Any such system of ODEs has an analytic solution inferrable from the
-matrix M and forcing vecetor $\textbf{b}$. EZbakR makes use of this fact
+matrix M and forcing vector $\textbf{b}$. EZbakR makes use of this fact
 to efficiently fit these models without needing to rely on numerical
 integration. It also provides means for uncertainty quantification that
 is capable of flagging instances of practical unidentifiability, i.e.,
@@ -1015,7 +1019,7 @@ strategy.
 For this reason, fastq2EZbakR (and bam2bakR before it) provides user
 with the processed data necessary to fit state-of-the-art models of
 NR-seq data. For each feature and sample, fastq2EZbakR reports the
-number of redas with a given number of mismatches of the relevant type
+number of reads with a given number of mismatches of the relevant type
 (e.g., T-to-C in a single label, s^4^U-fed, NR-seq experiment) and a
 given number of mutable nucleotides (e.g., T's in the reference). The
 Simon lab termed this file format a "counts binomial", or cB, file. The
@@ -1024,7 +1028,7 @@ format. With this information, users can either make use of mixture
 model fitting strategies implemented in tools like EZbakR or develop
 their own unique analysis strategy.
 
-Processed NR-seq data formats lik cB files significantly democratizes
+Processed NR-seq data formats like cB files significantly democratizes
 the analysis of NR-seq data. Despite this, it is not without its
 limitations. Unlike with GRAND-SLAM's output, the size of a cB file
 scales with the sequencing depth. While the scaling is sub-linear, as
@@ -1032,7 +1036,7 @@ data can be compressed by tracking the number of reads with identical
 mutation and mutable nucleotide content, the output is still often far
 more unwieldy than GRAND-SLAM's simple table. To address this
 limitation, fastq2EZbakR implements an alternative output type that
-involves creating separate files for separate smaples. While the size of
+involves creating separate files for separate samples. While the size of
 these individual files will still scale with the sequencing depth,
 splitting the files in this manner supports analysis strategies that
 effectively load only a single sample into RAM at a time. EZbakR
@@ -1113,7 +1117,7 @@ more important consideration [@RN94]. On the other hand, if performing
 depth due to the lower complexity of these libraries.
 
 Optimization of s^4^U labeling conditions is a more subtle challenge.
-First, it is important to assess the extent to whcih s^4^U is getting
+First, it is important to assess the extent to which s^4^U is getting
 incorporated into the system that you are studying. This can be done
 through low-throughput assays such as TAMRA dot blots, or small scale
 sequencing experiments [@RN178]. We have found there to be a significant
@@ -1150,10 +1154,10 @@ $$
 In practice, uncertainties in the half-life estimate get larger the
 further the true half-life is from the label time (@fig-6).
 
-![**Estimate accuracy as a function of NTR.** EZbakR’s
-SimulateOneRep() function was used to simulate data for 10,000 features,
-all of which were given 100, 1000, or 10000 reads. Features had a range
-of NTR values, evenly spaced from 0.01 to 0.99. NTRs were estimated with
+![**Estimate accuracy as a function of NTR.** EZbakR’s SimulateOneRep()
+function was used to simulate data for 10,000 features, all of which
+were given 100, 1000, or 10000 reads. Features had a range of NTR
+values, evenly spaced from 0.01 to 0.99. NTRs were estimated with
 EZbakR. Top: comparison of EZbakR NTR estimates to the simulated truth
 (both on a logit-scale). Bottom: The logit(NTR) uncertainty as a
 function of NTR. The uncertainty is computed from the Hessian and can
@@ -1182,7 +1186,7 @@ that the longest label time is closest to be the ground-truth
 smallest percentage of that label time), and identifies adjusted label
 times for the other time points that yield, on average, estimates in
 agreement with the longest label time. More generally, having multiple
-label times is useful for asessing the extent to whcih models assumed in
+label times is useful for assessing the extent to which models assumed in
 your NR-seq analysis accurately describe the dynamics of RNAs assayed.
 
 ### Pulse-label vs. pulse-chase
@@ -1218,15 +1222,15 @@ NR-seq experiments were far more consistent across cell lines, labs,
 method variations, etc. than those from pulse-chases [(Vock et al.
 2025)](https://www.biorxiv.org/content/10.1101/2025.08.19.671151v1.full).
 
-![**Two NR-seq labeling strategies.** Pulse-labeling refers to
-labeling cells for a certain amount of time, after which RNA is
-extracted. A pulse-chase refers to labeling cells for (typically) a much
-longer period of time, chasing with the regulate nucleotide (e.g.,
-uridine), and extracting RNA after the chase. These two designs are
-symmetric (the unlabeled RNA in one behaves like the labeled RNA in
-another). Despite this, pulse-labels provide a number of technical
-advantages to a pulse-chase, and thus should be the default NR-seq
-labeling strategy (see text for discussion).](Labeling.png){#fig-7}
+![**Two NR-seq labeling strategies.** Pulse-labeling refers to labeling
+cells for a certain amount of time, after which RNA is extracted. A
+pulse-chase refers to labeling cells for (typically) a much longer
+period of time, chasing with the regulate nucleotide (e.g., uridine),
+and extracting RNA after the chase. These two designs are symmetric (the
+unlabeled RNA in one behaves like the labeled RNA in another). Despite
+this, pulse-labels provide a number of technical advantages to a
+pulse-chase, and thus should be the default NR-seq labeling strategy
+(see text for discussion).](Labeling.png){#fig-7}
 
 ## NR-seq extensions
 
@@ -1347,16 +1351,16 @@ sequencing experiments. Despite this, it and other potential dual
 labeling approaches are not without their unique challenges. s6G is more
 cytotoxic than s^4^U, raising the concern of adverse effects due to
 labeling [@RN232; @RN233]. In addition, s^6^G may not be readily
-incorporated into the NTP pool to the same extent that s^4^U is. Finally,
-for true dual labeling approaches (i.e., labeling the same population of
-RNA with both s^4^U and s^6^G), we have found that incorporation of
-these two labels may interfere with one another. This combined with the
-unique bioinformatic challenge of aligning reads with high levels of
-both T-to-C and G-to-A conversions makes generating high quality, dual
-labeled NR-seq data challenging. Despite this, we suspect that
-strategies to address these challenges could open novel and exciting
-routes for finer-grained dissection of RNA kinetics (e.g., investigation
-of RNA aging dynamics).
+incorporated into the NTP pool to the same extent that s^4^U is.
+Finally, for true dual labeling approaches (i.e., labeling the same
+population of RNA with both s^4^U and s^6^G), we have found that
+incorporation of these two labels may interfere with one another. This
+combined with the unique bioinformatic challenge of aligning reads with
+high levels of both T-to-C and G-to-A conversions makes generating high
+quality, dual labeled NR-seq data challenging. Despite this, we suspect
+that strategies to address these challenges could open novel and
+exciting routes for finer-grained dissection of RNA kinetics (e.g.,
+investigation of RNA aging dynamics).
 
 ### NascentRibo-seq
 
