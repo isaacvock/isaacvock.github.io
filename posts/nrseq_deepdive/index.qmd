@@ -449,8 +449,8 @@ modeling overdispersion in mutation rates from new RNA reads. A
 three-component mixture model will classify many moderate mutation rate
 reads as "old", when in fact they may represent a preponderance of low
 mutation rate new reads. This kind of overdispersion is made even more
-likely by the fact that metabolic label availability will likely ramp
-up and down over time [@RN193]. Thus, reads from RNA synthesized at
+likely by the fact that metabolic label availability will likely ramp up
+and down over time [@RN193]. Thus, reads from RNA synthesized at
 different time points may have different true mutation rates.
 
 How can one navigate building more complex models while avoiding some of
@@ -769,6 +769,61 @@ were simulated. The simulated (true) and estimated degradation rate
 constants are compared in all plots. Points are colored by their local
 density. Red dotted line represents perfect
 estimation.](NSS.png){#fig-5}
+
+### Do you need to account for growth rates?
+
+Every now and then, you'll see a paper/review claim that cellular growth
+rates need to be accounted for when modeling the kinetics of RNA
+synthesis, and especially, degradation. For example, a recent preprint
+from Brian Cleary's lab made the following claim:
+
+> If growth rate is unmeasured and not accounted for, \[the degradation
+> rate constant estimate γ\*\] captures a mixture of distinct biological
+> processes – RNA degradation and cell growth and division – where
+> effects of the latter are slightly mismodeled. If the variations in
+> γ\* across conditions, cell lines, or datasets simply reflected
+> variations in RNA degradation rates, then it would be promising to
+> study those variations to reveal principles or mechanisms of
+> regulation, as some have proposed^51^. However, such variations can
+> arise from differences in degradation rate, growth rate, experimental
+> efficiency, or experimental design, complicating analysis and
+> interpretation.
+
+Citation 51 is to work I was involved in (RNAdecayCafe), a database of
+half-lives derived from reprocessing and analyzing bulk metabolic
+labeling data. Is this true? In short, the answer is no, growth rates do
+not directly influence kinetic parameter estimates. In more detail:
+
+-   As discussed in earlier sections, when an RNA's levels are at
+    steady-state, the fraction of RNA that is new (i.e., the
+    new-to-total ratio, or NTR) is purely a function of RNA degradation
+    kinetics. If the levels of that RNA are changing during the
+    labeling, the NTR can be a function of both synthesis and
+    degradation kinetics. In either case, growth rates never directly
+    influence these measurements.
+-   This is because growth in the absence of kinetic parameter
+    regulation leads to changes in RNA concentrations. The NTR is not a
+    function of absolute RNA concentration. Thus NTR-based kinetic
+    parameter inference is not directly influenced by growth rates.
+-   Cell's respond to growth by regulating their RNA synthesis and
+    degradation kinetics. This is so that they can maintain RNA
+    concentration homeostasis. Thus, actively dividing cells are rarely
+    ever at steady-state.
+-   Thus, growth can indirectly bias kinetic parameter estimates if the
+    ensuing regulation of synthesis and degradation kinetics causes the
+    steady-state assumption to be violated.
+-   If the cells you are probing are actively dividing, growth matters a
+    lot in the single-cell setting. This is because the steady-state
+    assumption is almost always violated in this setting (again, not
+    directly because of growth, but because of what cells do in response
+    to growth). It matters a lot less in the bulk setting if probing an
+    asynchronous population of cells, though it can be a cause of
+    differences in kinetic parameters across cell lines (though again
+    not through direct influence).
+    
+In summary, cell growth can induce non-steady state dynamics that complicates
+analysis of single-cell NR-seq data, but these concerns are often lessened in the
+bulk setting.
 
 ### Subcellular NR-seq
 
@@ -1186,8 +1241,9 @@ that the longest label time is closest to be the ground-truth
 smallest percentage of that label time), and identifies adjusted label
 times for the other time points that yield, on average, estimates in
 agreement with the longest label time. More generally, having multiple
-label times is useful for assessing the extent to which models assumed in
-your NR-seq analysis accurately describe the dynamics of RNAs assayed.
+label times is useful for assessing the extent to which models assumed
+in your NR-seq analysis accurately describe the dynamics of RNAs
+assayed.
 
 ### Pulse-label vs. pulse-chase
 
