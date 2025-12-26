@@ -774,7 +774,7 @@ estimation.](NSS.png){#fig-5}
 
 Every now and then, you'll see a paper/review claim that cellular growth
 rates need to be accounted for when modeling the kinetics of RNA
-synthesis, and especially, degradation. For example, a recent preprint
+synthesis, and especially, degradation. For example, a [recent preprint](https://www.biorxiv.org/content/10.64898/2025.12.18.695252v1)
 from Brian Cleary's lab made the following claim:
 
 > If growth rate is unmeasured and not accounted for, \[the degradation
