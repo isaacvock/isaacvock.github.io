@@ -792,7 +792,7 @@ from Brian Cleary's lab made the following claim:
 Citation 51 is to work I was involved in (RNAdecayCafe), a database of
 half-lives derived from reprocessing and analyzing bulk metabolic
 labeling data. Is this true? In short, the answer is no, growth rates do
-not directly influence kinetic parameter estimates. In more detail:
+not directly influence NR-seq kinetic parameter estimates. In more detail:
 
 -   As discussed in earlier sections, when an RNA's levels are at
     steady-state, the fraction of RNA that is new (i.e., the
@@ -823,7 +823,11 @@ not directly influence kinetic parameter estimates. In more detail:
     
 In summary, cell growth can induce non-steady state dynamics that complicates
 analysis of single-cell NR-seq data, but these concerns are often lessened in the
-bulk setting.
+bulk setting. While differences in cell growth can lead to differences in estimated bulk
+turnover kinetics across cell lines (e.g., if degradation is in part regulated to maintain
+RNA concentration homeostasis, these differences are real, can be accurately estimated
+with standard NR-seq analyses. Dissecting the biochemical causes of this regulation would
+be interesting and feasible from this data.
 
 ### Subcellular NR-seq
 
