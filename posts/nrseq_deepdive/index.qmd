@@ -791,8 +791,8 @@ from Brian Cleary's lab made the following claim:
 
 Citation 51 is to work I was involved in (RNAdecayCafe), a database of
 half-lives derived from reprocessing and analyzing bulk metabolic
-labeling data. Is this true? In short, the answer is no, growth rates do
-not directly influence NR-seq kinetic parameter estimates. In more detail:
+labeling data. Is this true? In short, the answer is mostly no, growth rates have only
+a minor influence on NR-seq kinetic parameter estimates. In more detail:
 
 -   As discussed in earlier sections, when an RNA's levels are at
     steady-state, the fraction of RNA that is new (i.e., the
@@ -808,10 +808,17 @@ not directly influence NR-seq kinetic parameter estimates. In more detail:
 -   Cell's respond to growth by regulating their RNA synthesis and
     degradation kinetics. This is so that they can maintain RNA
     concentration homeostasis. Thus, actively dividing cells are rarely
-    ever at steady-state.
--   Thus, growth can indirectly bias kinetic parameter estimates if the
+    ever at steady-state. Thus, growth can indirectly bias kinetic parameter estimates if the
     ensuing regulation of synthesis and degradation kinetics causes the
     steady-state assumption to be violated.
+-   In addition, as a population of cells grows and divides,
+    the number of cells increase. Thus, if an RNA has a constant per-cell average synthesis
+    rate, the effective bulk synthesis rate ([per-cell rate] x [# of cells]) increases
+    throughout the course of labeling. This introduces a deviation from the steady-state
+    constant synthesis rate assumption, but it is typically very slight. This is because the 
+    label time used for a standard pulse-label NR-seq experiment (or the chase time
+    for a pulse-chase) is often much shorter than the doubling time of a given cell,
+    especially in mammalian contexts.
 -   If the cells you are probing are actively dividing, growth matters a
     lot in the single-cell setting. This is because the steady-state
     assumption is almost always violated in this setting (again, not
