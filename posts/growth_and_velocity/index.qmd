@@ -1,0 +1,147 @@
+---
+title: "On 'Fundamental errors in RNA velocity arising from the omission of cell growth'"
+author: "Isaac Vock"
+date: "2025-12-30"
+categories: [nrseq]
+format: 
+  html:
+    toc: true
+engine: knitr
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+## Introduction
+
+Recently, [a
+preprint](https://www.biorxiv.org/content/10.64898/2025.12.18.695252v1.full)
+made some interesting claims about a widespread flaw in the analysis of
+metabolic labeling RNA-seq/scRNA-seq data. I've worked extensively in
+this space and have written in-depth reviews of metabolic labeling
+analysis strategies, and thus my interest was piqued. After reading the
+preprint a couple times, I have a lot of thoughts.
+
+## TLDR
+
+In summary, there are some things I really like about this work, and
+even more things that I am critical of.
+
+### The Good
+
+-   This work accurately points out that cellular growth introduces
+    deviations from steady-state in bulk RNA dynamics. This risks
+    biasing standard analyses of RNA degradation kinetics, but as I
+    discuss in **The Bad**, this bias will often be pretty small.
+-   RNA velocity analyses have gotten pretty complicated. There are a
+    litany of ideas of how to take a collection of gene-wise velocity
+    estimates and do things like estimate vector fields, map cell state
+    dynamics, and predict the impacts of perturbations. Instead of
+    tackling all of this complexity head on, the authors focus on a
+    simpler, sometimes neglected, part of the pipeline: actually
+    estimating the gene-wise velocities. I suspect that there are a ton
+    of challenges that need to be intelligently tackled at this first
+    stage, so more work like this is needed.
+-   The authors focus on metabolic labeling-based velocity analyses,
+    which promise to overcome some fundamental weaknesses of
+    splicing-based analyses (e.g., reliance on biased or low intronic
+    coverage, in ability to estimate absolute velocities).
+
+### The Bad
+
+-   The authors put forth a flawed analysis workflow that is not
+    accurately reflective of how previous work has formalized estimating
+    velocities with metabolic labeling data. They model absolute
+    molecular content of cells, and assume that UMI counts represent
+    accurate estimates of these quantities.
+-   The authors seem unaware of an existing strategy to address the
+    growth-induced non-steady-state dynamics.
+-   Growth rates assumed throughout the work are fairly high (12 hours
+    is number they often quote). Growth rates differ from
+    context-to-context, but even the fastest growing cell lines that
+    researchers often work with have doubling times on the order of
+    days. Since these typical growth rates are on much longer time
+    scales than RNA degradation (median half-life \< 4 hours), as well
+    as the labeling done in these experiments, the impact of
+    growth-induced non-steady-state dynamics are usually going to be
+    quite limited.
+-   Even when growth rates matter though, its affect is global. That is,
+    the growth rate is a global parameter that affects all bulk RNA
+    synthesis kinetics equally. Looking beyond RNA velocity analyses for
+    a minute, many investigations of RNA turnover kinetics using
+    metabolic labeling data only need the ordering of RNA degradation
+    kinetic estimates to be accurate. If there are some biases in the
+    global scale of informed RNA degradation, this can be normalized out
+    when comparing estimates across cell lines, training ML models on
+    degradation rate constant estimates, etc. There are plenty other,
+    much larger sources of such bias (dropout, label concentration ramp
+    up), which can be similarly navigated.
+-   The discussion of several aspects of metabolic labeling experiments
+    is a bit naive or ill-informed.
+
+### The Ugly
+
+Not necessarily worse than anything covered in **The Bad**, but I
+couldn't resist the movie reference.
+
+It's obvious that the analysis framework but forth by the authors is
+deeply flawed and not representative of how these data are typically
+analyzed, in that they seemed to have tried to apply it to their own
+data only for the facade to crumble:
+
+> We ran a pulse-chase experiment with an additional dye allowing us to
+> identify cells that had not divided during the chase (Methods). ...
+> However, the scRNA-Seq results do not display a concordant increase in
+> mRNA (UMI) counts per cell, even after correction for sequencing depth
+> (Figure S5B-D; Methods), including in a repeated experiment. We
+> interpretate [sic] this difference as a technical problem, rather than as an
+> accurate representation of the biology. Because the observed counts
+> are not scaling appropriately with true counts, it is not possible to
+> cleanly estimate the isolated degradation rate, as hoped. More work is
+> needed, therefore, to develop technology or methods to isolate
+> degradation and dilution effects.
+
+## My criticisms
+
+Here I go in to more depth about some of the grievances covered above.
+
+### A flawed analysis paradigm
+
+The authors put forth an analysis framework that they claim is
+representative of how metabolic labeling data should be analyzed, at
+least for the purposes of RNA velocity analyses. In summary:
+
+-   The authors put forth a reasonable and standard model of labeled and
+    unlabeled RNA abundance. The key observation is that the bulk
+    synthesis rate is a function of the number of cells, and this number
+    increases due to cell growth. Formalized:
+
+$$
+\begin{gather}
+\frac{dR}{dt} = k_{syn}(t) - k_{deg} \cdot R \\
+k_{syn}(t) = n \cdot k_{syn}^{sc} \\
+k_{syn}^{sc} := \text{Average transcription rate in a single-cell}
+\end{gather}
+$$
+
+- The authors then propose to effectively fit said model to data on absolute single-cell molecular abundances.
+
+Step 2 is where some of the challenges arise. First off, how does one even estimate the absolute counts of molecules in a single cell? Given the quote in **The Ugly** in the above section, it seems that the authors assume that UMI counts are the key to this. This is a flawed assumption. If sequenced to saturation (i.e., you sequence every unique molecule), then UMI counts are a measure of the absolute molecular content of **that which made it to the sequencer**. Absolute molecular content that got sequenced is not the same as absolute molecular content of the cells. The authors seem to have learned the hard way that UMI counts can vary for entirely technical reasons that prevent their use as truly quantitative metrics of RNA molecule counts in a cell. 
+
+How are metabolic labeling datasets actually analyzed then? I would argue that there are two "gold-standard" analysis strategies:
+
+1. Steady-state NTRs: In this approach, the ratio of labeled (new) to total RNA is analyzed (discussed [here](https://isaacvock.github.io/posts/nrseq_deepdive/#standard-kinetic-analyses)). At steady-state, there is a clean relationship between this quantity and
+turnover kinetics. While a single-cell is rarely at steady-state, the ability to rely on an internally normalized ratio computed on a per-sample basis has a number of statistical advantages, as discussed [here](https://isaacvock.github.io/posts/nrseq_deepdive/#non-steady-state-modeling).
+2. Non-steady-state NTRs: An NTR is calculated, but using two samples (discussed [here](https://isaacvock.github.io/posts/nrseq_deepdive/#non-steady-state-modeling)). A sample subjected to metabolic labeling is used to estimate the labeled RNA abundance, and a sample collected at the start of labeling is used to estimate the initial total RNA abundance. RNA abundance estimates come from normalized read counts (e.g., using normalization approaches such as median-of-ratios). Such normalization approaches should be robust in this case, as it is unlikely that there are radical changes in RNA content between the start and end of labeling, especially when using a label time of around 2 hours. 
+
+The author's approach is close in essence to 2. But if properly applied, any of the growth rate-induced biases should be eliminated. Thus, I suspect that their choice to think about things on the scale of absolute molecular abundances is leading to the biases they find in their approach when analyzing simulated data.
+
+It is worth noting that many previous studies using metabolic labeling to perform scRNA-seq have relied on something closer to the steady-state NTR approach. 
+
+### Flawed discussions of metabolic labeling data
+
+
+
+### Ignoring the bigger problems
+
+

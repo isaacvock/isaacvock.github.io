@@ -772,9 +772,7 @@ estimation.](NSS.png){#fig-5}
 
 ### Do you need to account for growth rates?
 
-Every now and then, you'll see a paper/review claim that cellular growth
-rates need to be accounted for when modeling the kinetics of RNA
-synthesis, and especially, degradation. For example, a [recent preprint](https://www.biorxiv.org/content/10.64898/2025.12.18.695252v1)
+A [recent preprint](https://www.biorxiv.org/content/10.64898/2025.12.18.695252v1)
 from Brian Cleary's lab made the following claim:
 
 > If growth rate is unmeasured and not accounted for, \[the degradation
@@ -791,8 +789,8 @@ from Brian Cleary's lab made the following claim:
 
 Citation 51 is to work I was involved in (RNAdecayCafe), a database of
 half-lives derived from reprocessing and analyzing bulk metabolic
-labeling data. Is this true? In short, the answer is mostly no, growth rates have only
-a minor influence on NR-seq kinetic parameter estimates. In more detail:
+labeling data. Is this true? In short, the answer is technically yes but practically
+no (in most cases). In more detail:
 
 -   As discussed in earlier sections, when an RNA's levels are at
     steady-state, the fraction of RNA that is new (i.e., the
@@ -819,6 +817,17 @@ a minor influence on NR-seq kinetic parameter estimates. In more detail:
     label time used for a standard pulse-label NR-seq experiment (or the chase time
     for a pulse-chase) is often much shorter than the doubling time of a given cell,
     especially in mammalian contexts.
+-   Failure to account for the non-steady-state increase in synthesis rates over the
+    course of labeling causes the growth rate to get absorbed into degradation rate
+    constant estimates. Since there is one growth rate, estimates for all genes are approximately
+    shifted equally. Thus, the general scale of one's degradation rate constant
+    estimates may be biased if not accounting for growth. This makes it difficult to compare
+    absolute kinetic parameter values across datasets/conditions, but unless you are directly
+    testing assumptions about true scale changes (i.e., true global increases or decreases
+    in degradation kinetics), then it is often sufficient to normalize any global scale
+    differences out. In many (arguably most) use cases, what matters is that you can accurately
+    distinguish stable from unstable RNA, and identify RNA that go from being stable/unstable
+    to unstable/stable across conditions. 
 -   If the cells you are probing are actively dividing, growth matters a
     lot in the single-cell setting. This is because the steady-state
     assumption is almost always violated in this setting (again, not
